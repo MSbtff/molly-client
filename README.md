@@ -21,7 +21,7 @@ comment : 주석
 
 ## 폴더 구조
 
-```
+```javascript
 ├── app/                    # Next.js app router 폴더
 │   ├── layout.tsx
 │   └── page.tsx
