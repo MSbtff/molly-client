@@ -10,14 +10,13 @@ export default {
     './src/shared/**/*.{js,ts,jsx,tsx,mdx}',
     './src/widgets/**/*.{js,ts,jsx,tsx,mdx}',
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/views/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './src/**/*.{js,jsx,ts,tsx}',
   ],
   theme: {
     extend: {
       colors: {
-        gray: '#E2E2E2',
-        gray2: '#acacac',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
