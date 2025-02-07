@@ -17,6 +17,7 @@ export default {
   theme: {
     extend: {
       colors: {
+        gray2: '#acacac',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
