@@ -3,7 +3,7 @@ import {cn} from '../util/lib/utils';
 
 type ButtonProps = {
   children: string;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent) => void;
   width?: string;
   height?: string;
   color?: string;

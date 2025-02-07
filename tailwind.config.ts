@@ -13,6 +13,7 @@ export default {
     './src/views/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './src/**/*.{js,jsx,ts,tsx}',
+    './public/src/**/*.{js,jsx,ts,tsx}',
   ],
   theme: {
     extend: {
