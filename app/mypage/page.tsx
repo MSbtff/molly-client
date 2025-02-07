@@ -1,4 +1,5 @@
 import {PointMyPage} from '../../public/src/views/mypage/ui/PointMyPage';
+import {ProductList} from '../../public/src/views/mypage/ui/ProductList';
 import {ProfileMyPage} from '../../public/src/views/mypage/ui/ProfileMyPage';
 import {PurchasePage} from '../../public/src/views/mypage/ui/PurchasePage';
 import {SideMyPage} from '../../public/src/views/mypage/ui/SideMyPage';
@@ -18,6 +19,7 @@ export default function Mypage() {
             <PointMyPage />
           </div>
           <PurchasePage />
+          <ProductList />
         </div>
       </div>
     </>
