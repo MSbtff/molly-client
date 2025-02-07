@@ -13,6 +13,7 @@ export default function Page({params}: Params) {
       <div className="flex items-center justify-center ">
         <div className="w-[420px] h-full flex flex-col gap-10 border-b-2">
           <strong>프로필 관리</strong>
+          {/* profile 컴퍼넌트 재사용가능하게 수정 필요 */}
           <ProfileMyPage />
           <div className=" flex flex-col gap-4 border-b-2">
             <p className="text-gray2">닉네임</p>

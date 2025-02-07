@@ -1,1 +1,3 @@
-export default function CartPage() {}
+export default function CartPage() {
+  <div></div>;
+}
