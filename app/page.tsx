@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Banner from "../public/src/assets/images/banner.webp";
 import Slider1 from "../public/src/assets/images/slider1.webp";
+// import Slider2 from '../public/src/assets/images/slider1-1.svg';
 import Default from "../public/src/assets/images/default.webp";
 import { useState, useEffect } from 'react';
 
@@ -14,23 +15,45 @@ export default function Main() {
     { id: 4, src: Slider1, title: "@183.h.g" },
     { id: 5, src: Slider1, title: "Dior" },
     { id: 6, src: Slider1, title: "아미" },
-    { id: 7, src: Slider1, title: "롤렉스 설날 세일 전격 90%" },
-    { id: 8, src: Slider1, title: "랜덤박스 오픈" },
-    { id: 9, src: Slider1, title: "뉴발란스 잡스 신발 팔아요" },
-    { id: 10, src: Slider1, title: "@sw_g_48" },
-    { id: 11, src: Slider1, title: "루이비통 짭 팝니다" },
-    { id: 12, src: Slider1, title: "룰루레몬 파격 세일" },
+    { id: 7, src: 'src/assets/images/slider1-1.svg', title: "롤렉스 설날 세일 전격 90%" },
+    { id: 8, src: 'src/assets/images/slider1-1.svg', title: "랜덤박스 오픈" },
+    { id: 9, src: 'src/assets/images/slider1-1.svg', title: "뉴발란스 잡스 신발 팔아요" },
+    { id: 10, src: 'src/assets/images/slider1-1.svg', title: "@sw_g_48" },
+    { id: 11, src: 'src/assets/images/slider1-1.svg', title: "루이비통 짭 팝니다" },
+    { id: 12, src: 'src/assets/images/slider1-1.svg', title: "룰루레몬 파격 세일" },
   ];
-  const items_per_slider1 = 6;//슬라이드1 이미지 개수
+  // const items_per_slider1 = 6;//슬라이드1 이미지 개수
   const categories = ["아우터", "상의", "바지", "원피스/스커트", "패션소품"];
+  const [itemsPerSlide, setItemsPerSlide] = useState(6); // 기본 6개
   const [activeIndex, setActiveIndex] = useState(0);//슬라이드1 인덱스 그룹
-  const totalSlides = Math.ceil(trendingItems.length / items_per_slider1);
+  // const totalSlides = Math.ceil(trendingItems.length / items_per_slider1);
+  const totalSlides = Math.ceil(trendingItems.length / itemsPerSlide);
+
+  //동적으로 슬라이드1 이미지 개수 조정 
+  useEffect(() => {
+    const updateItemsPerSlide = () => {
+      if (window.innerWidth >= 1024) {
+        setItemsPerSlide(6); // 1024px 이상 → 6개
+      } else if (window.innerWidth >= 768) {
+        setItemsPerSlide(4); // 768px 이상 → 4개
+      } else {
+        setItemsPerSlide(2); // 768px 미만 → 2개
+      }
+    };
+
+    updateItemsPerSlide();
+    window.addEventListener("resize", updateItemsPerSlide);
+
+    return () => window.removeEventListener("resize", updateItemsPerSlide);
+  }, []);
+
   //현재 슬라이드 아이템 6개
   const currentItems = trendingItems.slice(
-    activeIndex * items_per_slider1,
-    (activeIndex + 1) * items_per_slider1
+    activeIndex * itemsPerSlide,
+    (activeIndex + 1) * itemsPerSlide
   );
 
+  // 자동 슬라이드1
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveIndex((prevIndex) => (prevIndex + 1) % totalSlides);
@@ -57,12 +80,14 @@ export default function Main() {
       </section>
 
 
-      {/* 슬라이드1 */}
-      <section className="text-center px-6">
-        <h2 className="text-left text-xl font-semibold mb-4">연휴 다 갔다. 열일하고 싶게 만드는 럭셔리 위시템</h2>
-        <div className="flex justify-center gap-2">
+      {/* 연휴 다 갔다. 열일하고 싶게 만드는 럭셔리 위시템 */}
+      <section className="text-center px-6 scale-90">
+        <h2 className="text-center text-xl font-semibold mb-4">연휴 다 갔다. 열일하고 싶게 만드는 럭셔리 위시템</h2>
+
+        {/* <div className="grid grid-cols-6 md:grid-cols-4 sm:grid-cols-2 gap-2 overflow-hidden transition-all"> */}
+        <div className="flex justify-center gap-2 overflow-hidden transition-all">
           {currentItems.map((item) => (
-            <div key={item.id}>
+            <div key={item.id} >
               <Image src={item.src} alt={item.title} width={250} height={300} className="rounded-lg" />
               <p className="text-sm mt-2">{item.title}</p>
             </div>
@@ -74,7 +99,7 @@ export default function Main() {
             <button
               key={index}
               onClick={() => setActiveIndex(index)}
-              className={`w-3 h-3 rounded-full transition ${activeIndex === index ? "bg-[hsl(var(--muted-foreground))]" : "bg-red-400"
+              className={`w-3 h-3 rounded-full transition ${activeIndex === index ? "bg-[hsl(var(--muted-foreground))]" : "bg-gray-300"
                 // bg-[hsl(var(--foreground))]
                 }`}
             />
@@ -94,7 +119,7 @@ export default function Main() {
           ))}
         </div>
         {/* 상품 리스트 */}
-        <div className="grid grid-cols-6 gap-2">
+        <div className="grid grid-cols-6 lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 gap-2">
           {[...Array(10)].map((_, index) => (
             <div key={index} className="flex flex-col w-full overflow-hidden">
               <Image
@@ -105,8 +130,8 @@ export default function Main() {
               />
               <button className="flex flex-col items-start w-full overflow-hidden">
                 <span className="text-left mt-1 text-sm font-semibold">더라우스트</span>
-                <span className="text-left text-sm text-gray-300 truncate w-full">[단독]HILDA BOOTS_5color</span>
-                <span className="text-left text-black-500 font-semibold">10% 150,000</span>
+                <span className="text-left text-sm text-gray-500 truncate w-full">[단독]HILDA BOOTS_5color</span>
+                <span className="text-left text-black-500 font-semibold">150,000</span>
               </button>
             </div>
           ))}
@@ -121,19 +146,20 @@ export default function Main() {
       </section>
 
 
-      {/* 핫한 신상템 섹션 */}
+      {/* 지금 핫한 신상템 */}
       <section className="px-6">
         <h3 className="text-xl font-semibold mb-4">지금 핫한 신상템</h3>
+
         {/* 메인 배너 map으로 돌릴거임*/}
         <div className="grid grid-cols-2 gap-2">
-          <div className="relative w-full h-[300px]">
+          {/* 메인 배너 1 */}
+          <div className="relative w-full h-auto">
             <Image
               src="/src/assets/images/slider2.webp"
               alt="JINDO 코트"
-              // fill
               width={611}
               height={350}
-            // className="object-cover rounded-lg" 
+              className="object-cover w-full h-auto rounded"
             />
             <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center p-6">
               <div className="text-white">
@@ -145,11 +171,15 @@ export default function Main() {
               </div>
             </div>
           </div>
-          <div className="relative w-full h-[300px]">
+          {/* 메인 배너 2 */}
+          <div className="relative w-full h-auto">
             <Image
               src="/src/assets/images/slider2.webp"
               alt="ANNE KLEIN 코트"
-              fill
+              // fill <- 부모 크기에 맞춰 자동 조정. 부모 높이가 없다면 메인배너1 크기에 맞춰짐
+              width={611}
+              height={350}
+              className="object-cover w-full h-auto rounded"
             />
             <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center p-6">
               <div className="text-white">
@@ -162,8 +192,8 @@ export default function Main() {
             </div>
           </div>
         </div>
-        {/* 상품 리스트 */}
-        <div className="grid grid-cols-6 gap-2 mt-4">
+        {/* 신상템 상품 리스트 */}
+        <div className="grid grid-cols-6 lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 gap-2 mt-4">
           {[...Array(6)].map((_, index) => (
             <div key={index} className="flex flex-col w-full overflow-hidden">
               <Image
@@ -175,7 +205,7 @@ export default function Main() {
               <button className="flex flex-col items-start w-full overflow-hidden">
                 <span className="text-sm mt-1 font-semibold">루에브르</span>
                 <span className="text-left text-sm text-gray-500 truncate w-full">BOA FLEECE PADDING JACKET_2COLOR</span>
-                <span className="text-left text-black-500 font-semibold"><span>10%</span> <span>150,000원</span></span>
+                <span className="text-left text-black-500 font-semibold">150,000원</span>
               </button>
             </div>
           ))}
@@ -189,19 +219,21 @@ export default function Main() {
       </section>
 
 
-      {/* 주목할 브랜드 섹션 */}
+      {/* 주목할 브랜드 */}
       <section className="px-6 mt-16">
         <h3 className="text-xl font-semibold mb-4">주목할 브랜드</h3>
 
         {/* 메인 배너 */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-2">
           {/* 왼쪽 큰 배너 */}
-          <div className="relative w-full h-[300px]">
+          <div className="relative w-full h-fit"> {/* 부모를 자식에게 맞춤 */}
             <Image
               src="/src/assets/images/slider2.webp"
               alt="J.ESTINA 브랜드"
-              fill
-              className="object-cover rounded-lg" />
+              width={611}
+              height={350}
+              className="object-cover w-full h-auto rounded"
+            />
             <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center p-6">
               <div className="text-white">
                 <h4 className="text-2xl font-bold">J.ESTINA</h4>
@@ -212,24 +244,24 @@ export default function Main() {
               </div>
             </div>
           </div>
-
-          {/* 오른쪽 상품 리스트 (3개) */}
-          <div className="grid grid-cols-2 gap-2">
-            {[...Array(2)].map((_, index) => (
-              <div key={index} className="flex flex-col items-center">
+          {/* 오른쪽 상품 리스트 (2개) */}
+          <div className="grid grid-cols-3">
+            {[...Array(3)].map((_, index) => (
+              <div key={index} className="flex flex-col items-center text-center mt-auto">
+                {/* <div key={index} className="relative"> */}
                 <Image
                   src={`/src/assets/images/default.webp`}
                   alt={`추천 브랜드 ${index + 1}`}
-                  width={220}
-                  height={250}
+                  width={170}
+                  height={200}
+                  className="object-cover mt-4"
                 />
-                <button className="flex flex-col items-start w-full overflow-hidden">
-                  <span className="text-xs text-gray-500">[선택된PICK] 브랜드명</span>
-                  <span className="text-sm text-gray-700">상품명 {index + 1}</span>
-                  <span >
-                    <span className="text-red-500 font-semibold text-sm">24%</span> 
-                    <span className="text-black-500 font-semibold text-sm">180,880원</span>
-                  </span>
+                <button className="flex flex-col items-start items-center w-full overflow-hidden mt-2">
+                  <span className="text-left text-sm text-gray-700">[선택된PICK] 브랜드명</span>
+                  <span className="text-xs text-gray-500">상품명 {index + 1}</span>
+                  {/* <span className="text-red-500 font-semibold text-sm">24%</span>  */}
+                  <span className="text-black-500 font-semibold text-sm">180,880원</span>
+
                 </button>
               </div>
             ))}
@@ -246,7 +278,7 @@ export default function Main() {
                 width={300}
                 height={350}
               />
-              <p className="mt-2 font-semibold text-sm">파사드 패턴</p>
+              <p className="text-left mt-2 font-semibold text-sm">파사드 패턴</p>
             </div>
           ))}
         </div>
@@ -264,7 +296,7 @@ export default function Main() {
         <h3 className="text-xl font-semibold mb-4">고객님이 좋아할 만한 상품</h3>
 
         {/* 상품 리스트 (2줄, 5개씩) */}
-        <div className="grid grid-cols-6 gap-2">
+        <div className="grid grid-cols-6 lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 gap-2">
           {[...Array(10)].map((_, index) => (
             <div key={index} className="flex flex-col items-center w-full overflow-hiddens">
               <Image
