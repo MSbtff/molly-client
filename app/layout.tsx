@@ -8,6 +8,12 @@ export const metadata = {
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="en">
+      <head>
+        <link
+          href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined"
+          rel="stylesheet"
+        />
+      </head>
       <body className="bg-white">{children}</body>
     </html>
   );
