@@ -1,12 +1,19 @@
 'use client'
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useState } from "react";
 import ProfileModal from "./ProfileModal";
+import SearchModal from "./SearchModal";
+import NotificationSidebar from "./NotificationSidebar";
+
 
 export default function Navbar() {
-    const [isOpen, setIsOpen] = useState(false); //프로필 모달
+    const [isProfileOpen, setProfileIsOpen] = useState(false); //프로필 모달
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+    const router = useRouter();
 
     return (
         <>
@@ -32,11 +39,12 @@ export default function Navbar() {
                 </div>
 
                 {/* 우측 아이콘들 */}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
                     {/* 검색 */}
-                    <div className="flex items-center w-[150px] bg-[#F5F5F5] rounded-full px-3 py-1 border-none">
+                    <div className="flex items-center w-[150px] bg-[#F5F5F5] rounded-full px-3 py-1 border-none hover:bg-gray-200"
+                        onClick={() => setIsSearchOpen(true)}
+                    >
                         <Image
-                            // src={SearchIcon}
                             src="/src/assets/icons/search.svg"
                             alt="search"
                             width={20}
@@ -47,39 +55,38 @@ export default function Navbar() {
                     </div>
 
                     {/* 프로필 */}
-                    <div className="relative">
-                        <button onClick={() => {
-                                            setIsOpen(!isOpen);
-                                            console.log("isOpen상태", !isOpen);
-                                        }}>
-                            <div className="rounded-full overflow-hidden">
-                                <Image
-                                    src="/src/assets/icons/profile.svg"
-                                    alt="Profile"
-                                    width={27}
-                                    height={27}
-                                />
-                            </div>
-                        </button>
-                    </div>
+                    <button onClick={() => { setProfileIsOpen(!isProfileOpen); }}
+                        className="relative p-2 rounded-[10px] hover:bg-gray-200 transition flex items-center justify-center">
+                        <div className="rounded-full overflow-hidden">
+                            <Image
+                                src="/src/assets/icons/profile.svg"
+                                alt="Profile"
+                                width={27}
+                                height={27}
+                            />
+                        </div>
+                    </button>
 
-
+                   
                     {/* 장바구니 */}
-                    <Link href="/cart">
-                        {/* <div className="w-8 h-8 flex items-center justify-center"> */}
+                    <button
+                        onClick={() => router.push("/cart")} // 버튼 클릭 시 /cart로 이동
+                        className="p-2 rounded-[10px] hover:bg-gray-200 transition flex items-center justify-center"
+                    >
                         <Image
                             src="/src/assets/icons/cart.svg"
                             alt="cart"
                             width={36}
                             height={36}
                         />
-                        {/* </div> */}
-                    </Link>
+                    </button>
                 </div>
             </nav>
 
-            {/* 프로필 모달 */}
-            {isOpen && <ProfileModal setIsOpen={setIsOpen} />}
+            {/* 모달 */}
+            {isProfileOpen && <ProfileModal setIsOpen={setProfileIsOpen} setIsNotificationOpen={setIsNotificationOpen}/>}
+            {isSearchOpen && <SearchModal setIsOpen={setIsSearchOpen} />}
+            {isNotificationOpen && <NotificationSidebar setIsOpen={setIsNotificationOpen} />}
         </>
 
 
