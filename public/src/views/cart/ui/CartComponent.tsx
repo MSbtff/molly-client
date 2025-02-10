@@ -1,7 +1,5 @@
 'use client';
 
-import Image from 'next/image';
-import product from '../../../assets/product.png';
 import {Button} from '../../../shared/ui/Button';
 import React, {useState} from 'react';
 import {OptionModal} from './OptionModal';
@@ -10,11 +8,11 @@ import {CartOrderButton} from './CartOrderButton';
 import {CartProductInfo} from './CartProductInfo';
 
 export const CartComponent = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
     <>
       {isOpen && <OptionModal onClose={() => setIsOpen(false)} />}
-      <div className={`w-[1440px] h-screen flex flex-col justify-center`}>
+      <div className={`w-screen h-screen flex flex-col justify-center`}>
         <div className="w-full h-full bg-[#EFF2F1] flex flex-col  items-center">
           <div className="text-2xl">쇼핑 정보</div>
           <div className="w-[680px]">
@@ -32,18 +30,7 @@ export const CartComponent = () => {
               <div>✅</div>
               <div>삭제</div>
             </div>
-            <div className="flex gap-x-6">
-              <div>
-                <Image
-                  src={product}
-                  alt="product"
-                  width={80}
-                  height={80}
-                  loading="eager"
-                />
-              </div>
-              <CartProductInfo />
-            </div>
+            <CartProductInfo />
             <div className="flex gap-8">
               <Button
                 width="330px"
