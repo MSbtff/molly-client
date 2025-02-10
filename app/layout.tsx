@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="bg-white">
                 <Navbar />
-          <main className="container mx-auto">{children}</main>
+          <main>{children}</main>
                 <Footer />
       </body>
 
