@@ -2,6 +2,14 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import ReviewModal from '../../public/src/views/detail/ui/ReviewModal';
+import { Heart } from "lucide-react";
+interface Review {
+    image: string;
+    user: {name: string; profileImage: string;};
+    comment: string;
+    date: string;
+}
 
 // 샘플 이미지 데이터 (백엔드 연동 시 API 요청으로 변경)
 const product = {
@@ -34,17 +42,167 @@ const product = {
     ],
 
 };
+//리뷰 데이터 (백엔드 연동 시 API 요청으로 변경)
+const reviews: Review[] = [
+    {
+        image: "/src/assets/images/review.jpg",
+        user: { name: "S_w_g01", profileImage: "/src/assets/icons/profile.svg" },
+        comment: "예쁜데 간지 나요~",
+        date: "2025.1.26",
+    },
+    {
+        image: "/src/assets/images/review.jpg",
+        user: { name: "sd896", profileImage: "/src/assets/icons/profile.svg" },
+        comment: "예쁜데 간지 나요~ 엄청 고민하다가 샀는데 당장 사세요!! 모두에게 잘 어울릴 핏이입니다. 이거 입고 나간 날은 살 5키로 빠졌냐고 듣는 날입니다:)",
+        date: "2025.1.26",
+    },
+    {
+        image: "/src/assets/images/review.jpg",
+        user: { name: "기요미", profileImage: "/src/assets/icons/profile.svg" },
+        comment: "예쁜데 간지 나요~",
+        date: "2025.1.26",
+    },
+    {
+        image: "/src/assets/images/review.jpg",
+        user: { name: "성동구 불주먹", profileImage: "/src/assets/icons/profile.svg" },
+        comment: "예쁜데 간지 나요~",
+        date: "2025.1.26",
+    },
+    {
+        image: "/src/assets/images/review.jpg",
+        user: { name: "slvkx09_09", profileImage: "/src/assets/icons/profile.svg" },
+        comment: "예쁜데 간지 나요~",
+        date: "2025.1.26",
+    },
+    {
+        image: "/src/assets/images/review.jpg",
+        user: { name: "핵사곤ck90", profileImage: "/src/assets/icons/profile.svg" },
+        comment: "예쁜데 간지 나요~",
+        date: "2025.1.26",
+    },
+    {
+        image: "/src/assets/images/review.jpg",
+        user: { name: "핵사곤ck90", profileImage: "/src/assets/icons/profile.svg" },
+        comment: "예쁜데 간지 나요~",
+        date: "2025.1.26",
+    },
+    {
+        image: "/src/assets/images/review.jpg",
+        user: { name: "핵사곤ck90", profileImage: "/src/assets/icons/profile.svg" },
+        comment: "예쁜데 간지 나요~",
+        date: "2025.1.26",
+    },
+    {
+        image: "/src/assets/images/review.jpg",
+        user: { name: "핵사곤ck90", profileImage: "/src/assets/icons/profile.svg" },
+        comment: "예쁜데 간지 나요~",
+        date: "2025.1.26",
+    },
+    {
+        image: "/src/assets/images/review.jpg",
+        user: { name: "핵사곤ck90", profileImage: "/src/assets/icons/profile.svg" },
+        comment: "예쁜데 간지 나요~",
+        date: "2025.1.26",
+    },
+    {
+        image: "/src/assets/images/review.jpg",
+        user: { name: "핵사곤ck90", profileImage: "/src/assets/icons/profile.svg" },
+        comment: "예쁜데 간지 나요~",
+        date: "2025.1.26",
+    },
+    {
+        image: "/src/assets/images/review.jpg",
+        user: { name: "핵사곤ck90", profileImage: "/src/assets/icons/profile.svg" },
+        comment: "예쁜데 간지 나요~",
+        date: "2025.1.26",
+    },
+    {
+        image: "/src/assets/images/review.jpg",
+        user: { name: "핵사곤ck90", profileImage: "/src/assets/icons/profile.svg" },
+        comment: "예쁜데 간지 나요~",
+        date: "2025.1.26",
+    },
+    {
+        image: "/src/assets/images/review.jpg",
+        user: { name: "핵사곤ck90", profileImage: "/src/assets/icons/profile.svg" },
+        comment: "예쁜데 간지 나요~",
+        date: "2025.1.26",
+    },
+    {
+        image: "/src/assets/images/review.jpg",
+        user: { name: "핵사곤ck90", profileImage: "/src/assets/icons/profile.svg" },
+        comment: "예쁜데 간지 나요~",
+        date: "2025.1.26",
+    },
+    {
+        image: "/src/assets/images/review.jpg",
+        user: { name: "핵사곤ck90", profileImage: "/src/assets/icons/profile.svg" },
+        comment: "예쁜데 간지 나요~",
+        date: "2025.1.26",
+    },
+    {
+        image: "/src/assets/images/review.jpg",
+        user: { name: "핵사곤ck90", profileImage: "/src/assets/icons/profile.svg" },
+        comment: "예쁜데 간지 나요~",
+        date: "2025.1.26",
+    },
+    {
+        image: "/src/assets/images/review.jpg",
+        user: { name: "핵사곤ck90", profileImage: "/src/assets/icons/profile.svg" },
+        comment: "예쁜데 간지 나요~",
+        date: "2025.1.26",
+    },
+    {
+        image: "/src/assets/images/review.jpg",
+        user: { name: "핵사곤ck90", profileImage: "/src/assets/icons/profile.svg" },
+        comment: "예쁜데 간지 나요~",
+        date: "2025.1.26",
+    },
+    {
+        image: "/src/assets/images/review.jpg",
+        user: { name: "핵사곤ck90", profileImage: "/src/assets/icons/profile.svg" },
+        comment: "예쁜데 간지 나요~",
+        date: "2025.1.26",
+    },
+
+];
+
 
 export default function ProductDetail() {
     // const [selectedOption, setSelectedOption] = useState(product.options[0]);
     const selectedOption = product.options[0];
     const [quantity, setQuantity] = useState(1);
     const [showDetails, setShowDetails] = useState(false); // 상품 정보 더보기
+    const [visibleReviews, setVisibleReviews] = useState(6); // 처음엔 리뷰 6개만 표시
+    const [reviewExpanded, setreviewExpanded] = useState(false); // 리뷰 펼침 여부
+    const [selectedReview, setSelectedReview] = useState<Review | null>(null); // 선택한 리뷰 정보 저장
+    const [isreviewModalOpen, setIsreviewModalOpen] = useState(false); // 모달 열림 상태
+
 
     const handleIncrease = () => setQuantity((prev) => prev + 1);
     const handleDecrease = () => {
         if (quantity > 1) setQuantity((prev) => prev - 1);
     };
+    //리뷰 더보기 클릭 시 토글 함수
+    const toggleReviews = () => {
+        if (reviewExpanded) {
+            setVisibleReviews(6); // 다시 6개만 보이도록 설정
+        } else {
+            setVisibleReviews(reviews.length); // 모든 리뷰 보이도록 설정
+        }
+        setreviewExpanded(!reviewExpanded); // 상태 반전
+    };
+    //리뷰 클릭 시 모달창 여부 함수
+    const reviewOopenModal = (review: Review) => {
+        setSelectedReview(review); // 선택한 리뷰 데이터 저장
+        setIsreviewModalOpen(true); // 모달 열기
+    };
+    
+    const reviewCloseModal = () => {
+        setIsreviewModalOpen(false); // 모달 닫기
+        setSelectedReview(null); // 선택한 리뷰 데이터 초기화
+    };
+
 
     return (
         <>
@@ -169,7 +327,7 @@ export default function ProductDetail() {
                 {/* 상품 정보 더보기 버튼을 그라데이션 끝에 배치 */}
                 {!showDetails && (
                     // <div className="text-center mt-4">
-                    <div className="text-center mt-[-2rem] relative z-10">
+                    <div className="text-center mt-8 relative z-10">
                         <button
                             className="px-6 py-3 border border-gray-400 rounded-lg text-lg font-medium hover:bg-gray-100 transition"
                             onClick={() => setShowDetails(true)}
@@ -211,9 +369,62 @@ export default function ProductDetail() {
 
             {/* 구분선 */}
             <hr className="my-8 mt-20 border-gray-300" />
-            <p className="text-lg font-semibold pl-4">리뷰 440</p>
 
             {/* 리뷰 섹션 */}
+            <section className="max-w-screen-xl mx-auto mt-16 px-4">
+                {/* 리뷰 헤더 */}
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-lg font-semibold">리뷰 {reviews.length}</h2>
+                </div>
+
+                {/* 리뷰 리스트 */}
+                <div className={`${reviewExpanded ? "h-auto" : "h-[600px] overflow-hidden relative"} grid grid-cols-3 gap-6`}>
+                    {reviews.slice(0, visibleReviews).map((review, index) => (
+                        <div key={index} className="flex flex-col items-center">
+                            {/* 리뷰 이미지 */}
+                            <Image
+                                src={review.image} alt={`리뷰 이미지 ${index + 1}`}
+                                width={300} height={300} className="rounded-lg w-full h-full object-cover"
+                                onClick={()=> reviewOopenModal(review)}
+                            />
+                            {/* 사용자 정보 및 좋아요 버튼 */}
+                            <div className="flex justify-between items-center w-full mt-2 text-sm text-gray-700">
+                                <div className="flex items-center" onClick={()=> reviewOopenModal(review)}>
+                                    <Image
+                                        src={review.user.profileImage}
+                                        alt="User Profile"
+                                        width={24}
+                                        height={24}
+                                        className="rounded-full"
+                                    />
+                                    <span className="ml-2 font-semibold">{review.user.name}</span>
+                                </div>
+                                <button className="text-gray-500 hover:bg-gray-200 rounded-full transition px-1 py-1">
+                                    <Heart className='w-5 h-5'/>
+                                </button>
+                            </div>
+
+                            {/* 리뷰 내용 */}
+                            <span className="text-gray-600 mt-1 text-left w-full" onClick={()=> reviewOopenModal(review)}>{review.comment}</span>
+                        </div>
+                    ))}
+                    {/* 그라데이션 효과 */}
+                    {!reviewExpanded && (
+                        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white to-transparent"></div>
+                    )}
+                </div>
+
+                {/* 리뷰 더보기 버튼 */}
+                <div className="text-center mt-8">
+                    <button className="px-6 py-3 border border-gray-400 rounded-lg text-lg font-medium hover:bg-gray-100 transition"
+                        onClick={toggleReviews} >
+                        {reviewExpanded ? "접기" : "리뷰 더보기"}
+                    </button>
+                </div>
+            </section>
+
+            {/* 리뷰 모달 창 */}
+            {isreviewModalOpen && selectedReview && <ReviewModal review={selectedReview} onClose={reviewCloseModal} />}
 
             {/* 이 브랜드의 다른 상품 섹션 */}
         </>
