@@ -1,6 +1,6 @@
 import {GoogleIcon} from '../../public/src/shared/ui/GoogleIcon';
 import {Address} from '../../public/src/views/buy/ui/Address';
-import ContactInfo from '../../public/src/views/buy/ui/ContactInfo';
+// import ContactInfo from '../../public/src/views/buy/ui/ContactInfo';
 import {CartOrderButton} from '../../public/src/views/cart/ui/CartOrderButton';
 import {CartProductInfo} from '../../public/src/views/cart/ui/CartProductInfo';
 

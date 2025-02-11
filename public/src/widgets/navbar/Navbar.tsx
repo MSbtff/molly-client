@@ -1,19 +1,18 @@
 'use client'
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useState } from "react";
 import ProfileModal from "./ProfileModal";
 import SearchModal from "./SearchModal";
 import NotificationSidebar from "./NotificationSidebar";
 
-
 export default function Navbar() {
     const [isProfileOpen, setProfileIsOpen] = useState(false); //프로필 모달
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-    const router = useRouter();
+    // const router = useRouter();
 
     return (
         <>
@@ -69,17 +68,19 @@ export default function Navbar() {
 
                    
                     {/* 장바구니 */}
-                    <button
+                    {/* <button
                         onClick={() => router.push("/cart")} // 버튼 클릭 시 /cart로 이동
                         className="p-2 rounded-[10px] hover:bg-gray-200 transition flex items-center justify-center"
-                    >
+                    > */}
+                    <Link href="/cart" className="p-2 rounded-[10px] hover:bg-gray-200 transition flex items-center justify-center">
                         <Image
                             src="/src/assets/icons/cart.svg"
                             alt="cart"
                             width={36}
                             height={36}
                         />
-                    </button>
+                    {/* </button> */}
+                    </Link>
                 </div>
             </nav>
 
