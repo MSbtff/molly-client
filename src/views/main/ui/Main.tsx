@@ -5,8 +5,9 @@ import Banner from "../../../../public/images/banner.webp";
 import Slider1 from "../../../../public/images/slider1.webp";
 import Slider11 from '../../../../public/images/slider1-2.jpg';
 import Slider111 from '../../../../public/images/slider1-3.jpg';
+import Default from '../../../../public/images/default.webp';
+import Slider2 from '../../../../public/images/slider2.webp';
 // import Slider2 from '../public/src/assets/images/slider1-1.svg';
-import Default from "../../../../public/images/default.webp";
 import { useState, useEffect } from 'react';
 import { RotateCcw } from 'lucide-react';
 
@@ -157,7 +158,7 @@ export default function Main() {
           {/* 메인 배너 1 */}
           <div className="relative w-full h-auto">
             <Image
-              src="/src/assets/images/slider2.webp"
+              src={Slider2}
               alt="JINDO 코트"
               width={611}
               height={350}
@@ -176,7 +177,7 @@ export default function Main() {
           {/* 메인 배너 2 */}
           <div className="relative w-full h-auto">
             <Image
-              src="/src/assets/images/slider2.webp"
+              src={Slider2}
               alt="ANNE KLEIN 코트"
               // fill <- 부모 크기에 맞춰 자동 조정. 부모 높이가 없다면 메인배너1 크기에 맞춰짐
               width={611}
@@ -199,7 +200,7 @@ export default function Main() {
           {[...Array(6)].map((_, index) => (
             <div key={index} className="flex flex-col w-full overflow-hidden">
               <Image
-                src="/src/assets/images/default.webp"
+                src={Default}
                 alt={`드메리얼`}
                 width={200}
                 height={250}
@@ -230,7 +231,7 @@ export default function Main() {
           {/* 왼쪽 큰 배너 */}
           <div className="relative w-full h-fit"> {/* 부모를 자식에게 맞춤 */}
             <Image
-              src="/src/assets/images/slider2.webp"
+              src={Slider2}
               alt="J.ESTINA 브랜드"
               width={611}
               height={350}
@@ -252,7 +253,7 @@ export default function Main() {
               <div key={index} className="flex flex-col items-center text-center mt-auto">
                 {/* <div key={index} className="relative"> */}
                 <Image
-                  src={`/src/assets/images/default.webp`}
+                  src={Default}
                   alt={`추천 브랜드 ${index + 1}`}
                   width={170}
                   height={200}
@@ -275,7 +276,7 @@ export default function Main() {
           {[...Array(4)].map((_, index) => (
             <div key={index} className="flex flex-col items-center">
               <Image
-                src={`/src/assets/images/brand.webp`}
+                src={Default}
                 alt={`브랜드 상품 ${index + 1}`}
                 width={300}
                 height={350}
@@ -302,7 +303,7 @@ export default function Main() {
           {[...Array(10)].map((_, index) => (
             <div key={index} className="flex flex-col items-center w-full overflow-hiddens">
               <Image
-                src={`/src/assets/images/default.webp`}
+                src={Default}
                 alt={`추천 상품 ${index + 1}`}
                 width={250}
                 height={250}
