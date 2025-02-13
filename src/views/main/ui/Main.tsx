@@ -1,41 +1,40 @@
 'use client';
 
 import Image from 'next/image';
-
+import Banner from '../../../../public/images/banner.webp';
+import Slider1 from '../../../../public/images/slider1.webp';
+// import Slider2 from '../public/src/assets/images/slider1-1.svg';
+import Default from '../../../../public/images/default.webp';
 import {useState, useEffect} from 'react';
 
 export default function Main() {
   const trendingItems = [
-    {
-      id: 1,
-      src: '/images/slider1-1.svg',
-      title: '까르띠에 전 품목 가격 6% 인상',
-    },
-    {id: 2, src: '/images/slider1-1.svg', title: '루이비통 신상 공개'},
-    {id: 3, src: '/images/slider1-1.svg', title: 'Nike x Tiffany'},
-    {id: 4, src: '/images/slider1-1.svg', title: '@183.h.g'},
-    {id: 5, src: '/images/slider1-1.svg', title: 'Dior'},
-    {id: 6, src: '/images/slider1-1.svg', title: '아미'},
+    {id: 1, src: Slider1, title: '까르띠에 전 품목 가격 6% 인상'},
+    {id: 2, src: Slider1, title: '루이비통 신상 공개'},
+    {id: 3, src: Slider1, title: 'Nike x Tiffany'},
+    {id: 4, src: Slider1, title: '@183.h.g'},
+    {id: 5, src: Slider1, title: 'Dior'},
+    {id: 6, src: Slider1, title: '아미'},
     {
       id: 7,
-      src: '/images/slider1-1.svg',
+      src: 'assets/images/slider1-1.svg',
       title: '롤렉스 설날 세일 전격 90%',
     },
-    {id: 8, src: '/images/slider1-1.svg', title: '랜덤박스 오픈'},
+    {id: 8, src: 'assets/images/slider1-1.svg', title: '랜덤박스 오픈'},
     {
       id: 9,
-      src: '/images/slider1-1.svg',
+      src: 'assets/images/slider1-1.svg',
       title: '뉴발란스 잡스 신발 팔아요',
     },
-    {id: 10, src: '/images/slider1-1.svg', title: '@sw_g_48'},
+    {id: 10, src: 'assets/images/slider1-1.svg', title: '@sw_g_48'},
     {
       id: 11,
-      src: '/images/slider1-1.svg',
+      src: 'assets/images/slider1-1.svg',
       title: '루이비통 짭 팝니다',
     },
     {
       id: 12,
-      src: '/images/slider1-1.svg',
+      src: 'src/assets/images/slider1-1.svg',
       title: '룰루레몬 파격 세일',
     },
   ];
@@ -85,7 +84,7 @@ export default function Main() {
       <section className="relative w-screen h-[500px]">
         {/* <div className="absolute inset-0"> */}
         <Image
-          src={`/images/banner.webp`}
+          src={Banner}
           alt="banner"
           fill
           className="absolute inset-0 object-cover w-screen h-full"
@@ -157,7 +156,7 @@ export default function Main() {
           {[...Array(10)].map((_, index) => (
             <div key={index} className="flex flex-col w-full overflow-hidden">
               <Image
-                src={`/images/default.webp`}
+                src={Default}
                 alt={`상품 ${index + 1}`}
                 width={200}
                 height={250}
@@ -180,7 +179,7 @@ export default function Main() {
         <div className="flex justify-center mt-8">
           <button className="flex items-center gap-2 px-6 py-3 border border-gray-400 rounded-lg text-base font-medium hover:bg-gray-100 transition">
             <Image
-              src={`/icons/refresh.svg`}
+              src={'/src/assets/icons/refresh.svg'}
               alt="새로고침 아이콘"
               width={20}
               height={20}
@@ -199,7 +198,7 @@ export default function Main() {
           {/* 메인 배너 1 */}
           <div className="relative w-full h-auto">
             <Image
-              src={`/images/slider1-1.svg`}
+              src="/src/assets/images/slider2.webp"
               alt="JINDO 코트"
               width={611}
               height={350}
@@ -218,7 +217,7 @@ export default function Main() {
           {/* 메인 배너 2 */}
           <div className="relative w-full h-auto">
             <Image
-              src={`/images/slider1-1.svg`}
+              src="/src/assets/images/slider2.webp"
               alt="ANNE KLEIN 코트"
               // fill <- 부모 크기에 맞춰 자동 조정. 부모 높이가 없다면 메인배너1 크기에 맞춰짐
               width={611}
@@ -241,7 +240,7 @@ export default function Main() {
           {[...Array(6)].map((_, index) => (
             <div key={index} className="flex flex-col w-full overflow-hidden">
               <Image
-                src={`/images/default.webp`}
+                src="/src/assets/images/default.webp"
                 alt={`드메리얼`}
                 width={200}
                 height={250}
@@ -277,7 +276,7 @@ export default function Main() {
             {' '}
             {/* 부모를 자식에게 맞춤 */}
             <Image
-              src={`/images/slider1-1.svg`}
+              src="/src/assets/images/slider2.webp"
               alt="J.ESTINA 브랜드"
               width={611}
               height={350}
@@ -302,13 +301,13 @@ export default function Main() {
               >
                 {/* <div key={index} className="relative"> */}
                 <Image
-                  src={`/images/default.webp`}
+                  src={`/src/assets/images/default.webp`}
                   alt={`추천 브랜드 ${index + 1}`}
                   width={170}
                   height={200}
                   className="object-cover mt-4"
                 />
-                <button className="flex flex-col  items-center w-full overflow-hidden mt-2">
+                <button className="flex flex-col items-start items-center w-full overflow-hidden mt-2">
                   <span className="text-left text-sm text-gray-700">
                     [선택된PICK] 브랜드명
                   </span>
@@ -330,7 +329,7 @@ export default function Main() {
           {[...Array(4)].map((_, index) => (
             <div key={index} className="flex flex-col items-center">
               <Image
-                src={`/images/brand.webp`}
+                src={`/src/assets/images/brand.webp`}
                 alt={`브랜드 상품 ${index + 1}`}
                 width={300}
                 height={350}
@@ -356,16 +355,16 @@ export default function Main() {
         </h3>
 
         {/* 상품 리스트 (2줄, 5개씩) */}
-        <div className="w-full grid grid-cols-6 lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 gap-2">
+        <div className="grid grid-cols-6 lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 gap-2">
           {[...Array(10)].map((_, index) => (
             <div
               key={index}
-              className="flex flex-col items-center w-full overflow-hidden"
+              className="flex flex-col items-center w-full overflow-hiddens"
             >
               <Image
-                src={`/images/default.webp`}
+                src={`/src/assets/images/default.webp`}
                 alt={`추천 상품 ${index + 1}`}
-                width={200}
+                width={250}
                 height={250}
               />
               <button className="flex flex-col items-start w-full overflow-hidden">

@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { X } from 'lucide-react'; // 닫기 버튼 아이콘
+import {useState} from 'react';
+import {X} from 'lucide-react'; // 닫기 버튼 아이콘
 import clsx from 'clsx'; // Tailwind 클래스 조건부 적용
 
 interface FilterSidebarProps {
@@ -11,18 +11,18 @@ interface FilterSidebarProps {
 const categories = ['아우터', '상의', '바지', '원피스/스커트', '패션소품'];
 const genders = ['남성', '여성', '키즈'];
 const colors = [
-  { name: '블랙', color: 'bg-black' },
-  { name: '블루', color: 'bg-blue-500' },
-  { name: '브라운', color: 'bg-yellow-700' },
-  { name: '그린', color: 'bg-green-500' },
-  { name: '그레이', color: 'bg-gray-500' },
-  { name: '멀티컬러', color: 'bg-black border-2 border-white' },
-  { name: '오렌지', color: 'bg-orange-500' },
-  { name: '핑크', color: 'bg-pink-500' },
-  { name: '퍼플', color: 'bg-purple-500' },
-  { name: '레드', color: 'bg-red-500' },
-  { name: '화이트', color: 'bg-white border' },
-  { name: '옐로우', color: 'bg-yellow-500' },
+  {name: '블랙', color: 'bg-black'},
+  {name: '블루', color: 'bg-blue-500'},
+  {name: '브라운', color: 'bg-yellow-700'},
+  {name: '그린', color: 'bg-green-500'},
+  {name: '그레이', color: 'bg-gray-500'},
+  {name: '멀티컬러', color: 'bg-black border-2 border-white'},
+  {name: '오렌지', color: 'bg-orange-500'},
+  {name: '핑크', color: 'bg-pink-500'},
+  {name: '퍼플', color: 'bg-purple-500'},
+  {name: '레드', color: 'bg-red-500'},
+  {name: '화이트', color: 'bg-white border'},
+  {name: '옐로우', color: 'bg-yellow-500'},
 ];
 const priceRanges = [
   '0 - 50,000 원',
@@ -33,8 +33,7 @@ const priceRanges = [
 ];
 const sizes = ['XS', 'S', 'M', 'L', 'XL', '2XL', 'F'];
 
-
-export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
+export default function FilterSidebar({setIsOpen}: FilterSidebarProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedPrice, setSelectedPrice] = useState<string | null>(null);
@@ -46,7 +45,10 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
       {/* 헤더 */}
       <div className="flex items-center justify-between px-4 py-4 border-b">
         <h2 className="text-lg font-semibold">필터</h2>
-        <button onClick={() => setIsOpen(false)} className="text-gray-500 text-xl">
+        <button
+          onClick={() => setIsOpen(false)}
+          className="text-gray-500 text-xl"
+        >
           <X />
         </button>
       </div>
@@ -57,10 +59,14 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
           <button
             key={gender}
             className={clsx(
-              "text-sm px-3 py-2 rounded-md transition",
-              selectedGender === gender ? "bg-gray-200 text-black font-semibold" : "text-gray-600"
+              'text-sm px-3 py-2 rounded-md transition',
+              selectedGender === gender
+                ? 'bg-gray-200 text-black font-semibold'
+                : 'text-gray-600'
             )}
-            onClick={() => setSelectedGender(selectedGender === gender ? null : gender)}
+            onClick={() =>
+              setSelectedGender(selectedGender === gender ? null : gender)
+            }
           >
             {gender}
           </button>
@@ -73,10 +79,16 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
           <button
             key={category}
             className={clsx(
-              "block text-left w-full py-2",
-              selectedCategory === category ? "bg-gray-200 rounded-lg font-bold text-black" : "text-gray-700"
+              'block text-left w-full py-2',
+              selectedCategory === category
+                ? 'bg-gray-200 rounded-lg font-bold text-black'
+                : 'text-gray-700'
             )}
-            onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
+            onClick={() =>
+              setSelectedCategory(
+                selectedCategory === category ? null : category
+              )
+            }
           >
             {category}
           </button>
@@ -87,15 +99,23 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
       <div className="px-4 py-4 border-b">
         <h3 className="text-sm font-semibold mb-3">색상</h3>
         <div className="grid grid-cols-4 gap-2">
-          {colors.map(({ name, color }) => (
+          {colors.map(({name, color}) => (
             <button
               key={name}
-              className={clsx("w-8 h-8 rounded-full flex items-center justify-center", color, {
-                "border-2 border-black": selectedColor === name,
-              })}
-              onClick={() => setSelectedColor(selectedColor === name ? null : name)}
+              className={clsx(
+                'w-8 h-8 rounded-full flex items-center justify-center',
+                color,
+                {
+                  'border-2 border-black': selectedColor === name,
+                }
+              )}
+              onClick={() =>
+                setSelectedColor(selectedColor === name ? null : name)
+              }
             >
-              {selectedColor === name && <span className="text-xs text-white">✓</span>}
+              {selectedColor === name && (
+                <span className="text-xs text-white">✓</span>
+              )}
             </button>
           ))}
         </div>
@@ -105,7 +125,10 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
       <div className="px-4 py-4 border-b">
         <h3 className="text-sm font-semibold mb-3">가격</h3>
         {priceRanges.map((price) => (
-          <label key={price} className="flex items-center space-x-2 text-gray-700">
+          <label
+            key={price}
+            className="flex items-center space-x-2 text-gray-700"
+          >
             <input
               type="radio"
               name="price"
@@ -126,8 +149,8 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
             <button
               key={size}
               className={clsx(
-                "border px-3 py-2 rounded-md text-sm",
-                selectedSize === size ? "bg-black text-white" : "text-gray-700"
+                'border px-3 py-2 rounded-md text-sm',
+                selectedSize === size ? 'bg-black text-white' : 'text-gray-700'
               )}
               onClick={() => setSelectedSize(size)}
             >
@@ -139,12 +162,15 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
 
       {/* 버튼 */}
       <div className="flex items-center justify-between p-4">
-        <button className="border border-gray-500 px-4 py-2 rounded-md text-sm" onClick={() => {
-          setSelectedCategory(null);
-          setSelectedColor(null);
-          setSelectedPrice(null);
-          setSelectedSize(null);
-        }}>
+        <button
+          className="border border-gray-500 px-4 py-2 rounded-md text-sm"
+          onClick={() => {
+            setSelectedCategory(null);
+            setSelectedColor(null);
+            setSelectedPrice(null);
+            setSelectedSize(null);
+          }}
+        >
           초기화
         </button>
         <button className="bg-black text-white px-4 py-2 rounded-md text-sm">
