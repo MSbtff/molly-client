@@ -1,5 +1,4 @@
 import {TestCheckoutPage} from '../../src/features/buy/TestCheckoutPage';
-import {GoogleIcon} from '../../src/shared/ui/GoogleIcon';
 import {Address} from '../../src/views/buy/ui/Address';
 import {CartOrderButton} from '../../src/views/cart/ui/CartOrderButton';
 import {CartProductInfo} from '../../src/views/cart/ui/CartProductInfo';
