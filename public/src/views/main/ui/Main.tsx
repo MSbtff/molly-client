@@ -109,7 +109,7 @@ export default function Main() {
 
 
       {/* 카테고리 */}
-      <section className="px-6">
+      <section className="px-20">
         {/* 카테고리 버튼 */}
         <div className="flex gap-4 mb-4">
           {categories.map((category, index) => (

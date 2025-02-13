@@ -1,14 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { SlidersHorizontal } from 'lucide-react';
+// import { SlidersHorizontal } from 'lucide-react';
 import FilterSidebar from '../../public/src/views/product/FilterSidebar';
+import SortModal from '../../public/src/views/product/SortModal';
 // import FilterSidebar from '';
 
-const categories = ['아우터', '상의', '바지', '원피스/스커트', '패션소품'];
+const categories = ['카테고리', '성별', '색상', '가격', '사이즈', '브랜드'];
 
-const products = [
+const baseProducts = [
   {
     id: 1,
     image: '/src/assets/images/default.webp',
@@ -106,42 +107,114 @@ const products = [
     price: '245,837',
   },
 ];
+const mockProducts = Array.from({ length: 2000 }).map((_, i) => {
+  const baseProduct = baseProducts[i % baseProducts.length];
+  return {
+    id: i + 1,
+    image: baseProduct.image,
+    brand: baseProduct.brand,
+    name: `${baseProduct.name} - ${i + 1}`,
+    discount: baseProduct.discount,
+    price: baseProduct.price,
+  };
+});
 
 export default function Products() {
-  const [selectedCategory, setSelectedCategory] = useState('아우터');
+  const [isSortModalOpen, setIsSortModalOpen] = useState(false);
+  const [selectedSort, setSelectedSort] = useState("추천순");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [rows, setRows] = useState(8); //처음에는 8개의 행(row)만 렌더링
+  // const [page, setPage] = useState(1); //페이지 상태
+  const [loading, setLoading] = useState(false); //로딩 방지
+  const itemsPerRow = 6; //한 행에 6개의 상품
+  const products = mockProducts.slice(0, rows * itemsPerRow); //`rows * 6` 만큼 상품을 가져오기
+
+
+  //무한 스크롤 로드 함수
+  const loadMoreRows = () => {
+    if (loading) return;
+    setLoading(true);
+
+    setTimeout(() => {
+      setRows((prev) => prev + 8); //기존 행 수 +8 (한 번에 8행 추가)
+      setLoading(false);
+    }, 500); //가짜 로딩 시간
+  };
+  //스크롤 이벤트 감지 (60이상% 내려가면 데이터 로드)
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollHeight = document.documentElement.scrollHeight; // 전체 문서 높이
+      const scrollTop = document.documentElement.scrollTop; // 현재 스크롤 위치
+      const clientHeight = window.innerHeight; // 보이는 화면 높이
+      const scrollPosition = (scrollTop + clientHeight) / scrollHeight; // 현재 스크롤 비율
+
+      if (scrollPosition >= 0.8) {
+        loadMoreRows();
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll); // 정리(cleanup)
+  }, [rows, loading]);
 
   return (
-    <div className="px-6">
-      {/* 필터 버튼 */}
+    <div className="px-20 mt-10">
+      {/* 카테고리 버튼 */}
+      <div className="flex gap-2 overflow-x-auto whitespace-nowrap scrollbar-hide">
+        {categories.map((category) => (
+          <button
+            key={category}
+            className={"px-4 py-2 rounded-full text-sm bg-gray-100 hover:bg-gray-300 flex-shrink-0"}
+            onClick={() => setIsFilterOpen(true)}
+          >{category}
+          </button>
+        ))}
+      </div>
+      {/* 품절 체크박스, 정렬 */}
       <div className="flex items-center justify-between mt-6">
-        <button className="border border-gray-300 px-4 py-2 rounded-lg text-sm flex items-center"
-                onClick= {()=>setIsFilterOpen(true)}
-        >
-          필터 <SlidersHorizontal className='ml-2 w-4 h-4'/>
-        </button>
-        <div className="flex gap-2">
-          {categories.map((category) => (
+        <div className='flex itmes-center gap-2'>
+          <label className="flex items-center gap-2 text-sm text-gray-700">
+            <input type="checkbox" id="exclude-sold-out" className="w-4 h-4" />품절 제외
+          </label>
+        </div>
+        {/* <div className='flex gap-4 text-sm text-gray-700'>
+          {["추천순", "신상품순", "판매순", "낮은가격순", "높은가격순", "리뷰순"].map((sort) => (
             <button
-              key={category}
-              className={`px-4 py-2 rounded-full text-sm ${selectedCategory === category ? 'bg-black text-white' : 'bg-gray-200'
-                }`}
-              onClick={() => setSelectedCategory(category)}
-            >{category}
+              key={sort}
+              className="hover:underline"
+              onClick={() => console.log(sort + " 정렬")}
+            > */}
+          {/* 큰 화면에서 정렬 버튼 전체 표시 */}
+        <div className="hidden md:flex gap-4">
+          {["추천순", "신상품순", "판매순", "낮은가격순", "높은가격순", "리뷰순"].map((sort) => (
+            <button
+              key={sort}
+              className="hover:underline"
+              onClick={() => console.log(sort + " 정렬")}
+            >
+              {sort}
             </button>
           ))}
         </div>
+
+        {/* 작은 화면에서는 단일 버튼으로 변경 */}
+        <button
+          className="md:hidden hover:underline"
+          onClick={() => setIsSortModalOpen(true)}
+        >{selectedSort}</button>
       </div>
 
       {/* 상품 리스트 */}
-      <div className="grid grid-cols-6 gap-2 mt-6">
+      <div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-2 sm:grid-cols-2  gap-2 mt-1">
         {products.map((product) => (
-          <div key={product.id} className="flex flex-col items-center">
+          <div key={product.id} className="flex flex-col items-center mt-10">
             <Image
               src={product.image}
               alt={product.name}
               width={250}
               height={300}
+              className="w-full h-auto object-contain"
+            // layout="responsive"
             />
             <button className="flex flex-col items-start w-full overflow-hidden">
               <p className="text-left mt-1 text-sm font-semibold">{product.brand}</p>
@@ -153,6 +226,10 @@ export default function Products() {
       </div>
 
       {isFilterOpen && <FilterSidebar setIsOpen={setIsFilterOpen} />}
+      <SortModal isOpen={isSortModalOpen} 
+                 onClose={()=> setIsSortModalOpen(false)}
+                 onSortSelect={setSelectedSort}
+                 selectedSort={selectedSort}/>
     </div>
   );
 }

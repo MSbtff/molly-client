@@ -42,114 +42,125 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
   const [selectedGender, setSelectedGender] = useState<string | null>(null);
 
   return (
-    <div className="fixed top-0 left-0 w-[320px] h-full bg-white shadow-lg z-50 overflow-y-auto">
-      {/* 헤더 */}
-      <div className="flex items-center justify-between px-4 py-4 border-b">
-        <h2 className="text-lg font-semibold">필터</h2>
-        <button onClick={() => setIsOpen(false)} className="text-gray-500 text-xl">
-          <X />
-        </button>
-      </div>
-
-      {/* 성별 */}
-      <div className="flex gap-4 px-4 py-3 border-b">
-        {genders.map((gender) => (
-          <button
-            key={gender}
-            className={clsx(
-              "text-sm px-3 py-2 rounded-md transition",
-              selectedGender === gender ? "bg-gray-200 text-black font-semibold" : "text-gray-600"
-            )}
-            onClick={() => setSelectedGender(selectedGender === gender ? null : gender)}
-          >
-            {gender}
+    <div className="fixed inset-0 z-50 flex">
+      {/* 블러 배경 오버레이 */}
+      <div
+        className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-md"
+        onClick={() => setIsOpen(false)}
+      ></div>
+      <div className="fixed top-0 left-0 w-[320px] h-full bg-white shadow-lg z-50 overflow-y-auto">
+        {/* 헤더 */}
+        <div className="flex items-center justify-between px-4 py-4">
+          <h2 className="text-lg font-semibold">필터</h2>
+          <button onClick={() => setIsOpen(false)} className="text-gray-500 text-xl">
+            <X />
           </button>
-        ))}
-      </div>
-
-      {/* 카테고리 */}
-      <div className="px-4 py-4 border-b">
-        {categories.map((category) => (
-          <button
-            key={category}
-            className={clsx(
-              "block text-left w-full py-2",
-              selectedCategory === category ? "bg-gray-200 rounded-lg font-bold text-black" : "text-gray-700"
-            )}
-            onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
-
-      {/* 색상 */}
-      <div className="px-4 py-4 border-b">
-        <h3 className="text-sm font-semibold mb-3">색상</h3>
-        <div className="grid grid-cols-4 gap-2">
-          {colors.map(({ name, color }) => (
-            <button
-              key={name}
-              className={clsx("w-8 h-8 rounded-full flex items-center justify-center", color, {
-                "border-2 border-black": selectedColor === name,
-              })}
-              onClick={() => setSelectedColor(selectedColor === name ? null : name)}
-            >
-              {selectedColor === name && <span className="text-xs text-white">✓</span>}
-            </button>
-          ))}
         </div>
-      </div>
 
-      {/* 가격 */}
-      <div className="px-4 py-4 border-b">
-        <h3 className="text-sm font-semibold mb-3">가격</h3>
-        {priceRanges.map((price) => (
-          <label key={price} className="flex items-center space-x-2 text-gray-700">
-            <input
-              type="radio"
-              name="price"
-              className="w-4 h-4"
-              checked={selectedPrice === price}
-              onChange={() => setSelectedPrice(price)}
-            />
-            <span>{price}</span>
-          </label>
-        ))}
-      </div>
-
-      {/* 사이즈 */}
-      <div className="px-4 py-4 border-b">
-        <h3 className="text-sm font-semibold mb-3">사이즈</h3>
-        <div className="grid grid-cols-3 gap-2">
-          {sizes.map((size) => (
+        {/* 성별 */}
+        <div className="flex gap-4 px-4 py-3 border-b">
+          {genders.map((gender) => (
             <button
-              key={size}
+              key={gender}
               className={clsx(
-                "border px-3 py-2 rounded-md text-sm",
-                selectedSize === size ? "bg-black text-white" : "text-gray-700"
+                "text-sm px-3 py-2 rounded-md transition",
+                selectedGender === gender ? "bg-gray-200 text-black font-semibold" : "text-gray-600"
               )}
-              onClick={() => setSelectedSize(size)}
+              onClick={() => setSelectedGender(selectedGender === gender ? null : gender)}
             >
-              {size}
+              {gender}
             </button>
           ))}
         </div>
-      </div>
 
-      {/* 버튼 */}
-      <div className="flex items-center justify-between p-4">
-        <button className="border border-gray-500 px-4 py-2 rounded-md text-sm" onClick={() => {
-          setSelectedCategory(null);
-          setSelectedColor(null);
-          setSelectedPrice(null);
-          setSelectedSize(null);
-        }}>
-          초기화
-        </button>
-        <button className="bg-black text-white px-4 py-2 rounded-md text-sm">
-          465개 상품 보기
-        </button>
+        {/* 카테고리 */}
+        <div className="px-4 py-4 border-b">
+          {categories.map((category) => (
+            <button
+              key={category}
+              className={clsx(
+                "block text-left w-full py-2",
+                selectedCategory === category ? "bg-gray-200 rounded-lg font-bold text-black" : "text-gray-700"
+              )}
+              onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+
+        {/* 색상 */}
+        <div className="px-4 py-4 border-b">
+          <h3 className="text-sm font-semibold mb-3">색상</h3>
+          <div className="grid grid-cols-4 gap-2">
+            {colors.map(({ name, color }) => (
+              <button
+                key={name}
+                className={clsx("w-8 h-8 rounded-full flex items-center justify-center", color, {
+                  "border-2 border-black": selectedColor === name,
+                })}
+                onClick={() => setSelectedColor(selectedColor === name ? null : name)}
+              >
+                {selectedColor === name && <span className="text-xs text-white">✓</span>}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* 가격 */}
+        <div className="px-4 py-4 border-b">
+          <h3 className="text-sm font-semibold mb-3">가격</h3>
+          {priceRanges.map((price) => (
+            <label key={price} className="flex items-center space-x-2 text-gray-700">
+              <input
+                type="radio"
+                name="price"
+                className="w-4 h-4"
+                checked={selectedPrice === price}
+                onChange={() => setSelectedPrice(price)}
+              />
+              <span>{price}</span>
+            </label>
+          ))}
+        </div>
+
+        {/* 사이즈 */}
+        <div className="px-4 py-4 border-b">
+          <h3 className="text-sm font-semibold mb-3">사이즈</h3>
+          <div className="grid grid-cols-3 gap-2">
+            {sizes.map((size) => (
+              <button
+                key={size}
+                className={clsx(
+                  "border px-3 py-2 rounded-md text-sm",
+                  selectedSize === size ? "bg-black text-white" : "text-gray-700"
+                )}
+                onClick={() => setSelectedSize(size)}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+        </div>
+        {/* 선택항목 */}
+        <div className="px-4 py-4 border-b">
+
+        </div>
+
+        {/* 버튼 */}
+        <div className="flex items-center justify-between p-4">
+          <button className="border border-gray-500 px-4 py-2 rounded-md text-sm" onClick={() => {
+            setSelectedCategory(null);
+            setSelectedColor(null);
+            setSelectedPrice(null);
+            setSelectedSize(null);
+          }}>
+            초기화
+          </button>
+          <button className="bg-black text-white px-4 py-2 rounded-md text-sm">
+            상품 보기
+          </button>
+        </div>
       </div>
     </div>
   );

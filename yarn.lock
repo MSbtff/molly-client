@@ -5532,6 +5532,7 @@ __metadata:
     react-dom: "npm:^19.0.0"
     recharts: "npm:^2.15.1"
     tailwind-merge: "npm:^3.0.1"
+    tailwind-scrollbar-hide: "npm:^2.0.0"
     tailwindcss: "npm:^3.4.1"
     tailwindcss-animate: "npm:^1.0.7"
     typescript: "npm:^5"
@@ -6970,6 +6971,15 @@ __metadata:
   version: 3.0.1
   resolution: "tailwind-merge@npm:3.0.1"
   checksum: 10c0/973d754687ad82d25cb55bf16958153999d080cd68dd0a6c1c74909bd92d05bcca01c24d9642e9e6ec95b3a207b15cd4b32bca49d586f2e743d311358ecb584b
+  languageName: node
+  linkType: hard
+
+"tailwind-scrollbar-hide@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "tailwind-scrollbar-hide@npm:2.0.0"
+  peerDependencies:
+    tailwindcss: ">=3.0.0 || >= 4.0.0 || >= 4.0.0-beta.8 || >= 4.0.0-alpha.20"
+  checksum: 10c0/eb320b8fbb4d558fb025420fb21f291201781599b36ef5ff7be500f44daa04e41ff161a484180a180c8a6e38ac863d4f05ecaa73c1c8a58668bcc821fc2725fe
   languageName: node
   linkType: hard
 
