@@ -1,10 +1,12 @@
 'use client';
 
+
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 // import { SlidersHorizontal } from 'lucide-react';
 import FilterSidebar from '../../public/src/views/product/FilterSidebar';
 import SortModal from '../../public/src/views/product/SortModal';
+
 // import FilterSidebar from '';
 
 const categories = ['카테고리', '성별', '색상', '가격', '사이즈', '브랜드'];
@@ -172,6 +174,7 @@ export default function Products() {
       </div>
       {/* 품절 체크박스, 정렬 */}
       <div className="flex items-center justify-between mt-6">
+
         <div className='flex itmes-center gap-2'>
           <label className="flex items-center gap-2 text-sm text-gray-700">
             <input type="checkbox" id="exclude-sold-out" className="w-4 h-4" />품절 제외
@@ -193,6 +196,7 @@ export default function Products() {
               onClick={() => console.log(sort + " 정렬")}
             >
               {sort}
+
             </button>
           ))}
         </div>
@@ -217,9 +221,15 @@ export default function Products() {
             // layout="responsive"
             />
             <button className="flex flex-col items-start w-full overflow-hidden">
-              <p className="text-left mt-1 text-sm font-semibold">{product.brand}</p>
-              <p className="text-left text-sm text-gray-500 truncate w-full">{product.name}</p>
-              <p className="text-left text-black-500 font-semibold">{product.price}원</p>
+              <p className="text-left mt-1 text-sm font-semibold">
+                {product.brand}
+              </p>
+              <p className="text-left text-sm text-gray-500 truncate w-full">
+                {product.name}
+              </p>
+              <p className="text-left text-black-500 font-semibold">
+                {product.price}원
+              </p>
             </button>
           </div>
         ))}
