@@ -1,9 +1,13 @@
-import Main from '../public/src/views/main/ui/Main';
+import Main from '../src/views/main/ui/Main';
+import Footer from '../src/widgets/Footer';
+import Navbar from '../src/widgets/navbar/Navbar';
 
 export default function Page() {
   return (
     <>
-      <Main/>
+      <Navbar />
+      <Main />
+      <Footer />
     </>
   );
 }

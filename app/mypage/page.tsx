@@ -1,13 +1,13 @@
-import {PointMyPage} from '../../public/src/views/mypage/ui/PointMyPage';
-import {ProductList} from '../../public/src/views/mypage/ui/ProductList';
-import {ProfileMyPage} from '../../public/src/views/mypage/ui/ProfileMyPage';
-import {PurchasePage} from '../../public/src/views/mypage/ui/PurchasePage';
-import {SideMyPage} from '../../public/src/views/mypage/ui/SideMyPage';
+import {PointMyPage} from '../../src/views/mypage/ui/PointMyPage';
+import {ProductList} from '../../src/views/mypage/ui/ProductList';
+import {ProfileMyPage} from '../../src/views/mypage/ui/ProfileMyPage';
+import {PurchasePage} from '../../src/views/mypage/ui/PurchasePage';
+import {SideMyPage} from '../../src/views/mypage/ui/SideMyPage';
 
 export default function Mypage() {
   return (
     <>
-      <div className="flex  p-8">
+      <div className="flex p-8">
         <div className="w-[180px] h-full flex flex-col gap-4">
           <SideMyPage />
         </div>
