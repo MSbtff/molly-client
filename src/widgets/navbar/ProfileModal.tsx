@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { useRouter } from "next/navigation";
+import {Bell, Heart, UserRound, LogOut} from 'lucide-react';
 // import { useState } from "react";
 interface ProfileModalProps {
     setIsOpen: (value: boolean) => void;
@@ -29,14 +29,13 @@ export default function ProfileModal({ setIsOpen, setIsNotificationOpen }: Profi
                                 setIsOpen(false)
                                 router.push("/mypage");
                             }}>
-                        <Image src="/src/assets/icons/profile.svg" alt="User Profile" width={24} height={24}
-                               className="rounded-full" />
+                        <UserRound size={24} className="rounded-full" />
                         <span className="ml-3">마이</span>
                     </button>
 
                     <button className="flex items-center w-full text-left hover:bg-gray-200 transition rounded-lg px-6"
                             onClick={() => setIsOpen(false)}>
-                        <Image src="/src/assets/icons/heart.svg" alt="찜하기" width={24} height={24} />
+                        <Heart size={24} />
                         <span className="ml-3">찜하기</span>
                     </button>
 
@@ -46,13 +45,13 @@ export default function ProfileModal({ setIsOpen, setIsNotificationOpen }: Profi
                                 setTimeout ( () => setIsNotificationOpen(true), 200);
                             }}
                             >
-                        <Image src="/src/assets/icons/alarm.svg" alt="알림" width={24} height={24} />
+                        <Bell size={24} />
                         <span className="ml-3">알림</span>
                     </button>
 
                     <button className="flex items-center w-full text-left hover:bg-gray-200 transition rounded-lg px-6"
                         onClick={() => setIsOpen(false)}>
-                        <Image src="/src/assets/icons/logout.svg" alt="로그아웃" width={24} height={24} />
+                        <LogOut size={24} />
                         <span className="ml-3">로그아웃</span>
                     </button>
                 </div>

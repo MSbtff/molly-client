@@ -1,5 +1,7 @@
 // import { useState } from "react";
 // import Image from "next/image";
+import { Search } from 'lucide-react';
+
 
 export default function SearchModal({ setIsOpen }: { setIsOpen: (value: boolean) => void }) {
     return (
@@ -14,9 +16,7 @@ export default function SearchModal({ setIsOpen }: { setIsOpen: (value: boolean)
                     {/* 검색 입력 필드 */}
                     <div className="flex items-center flex-1 mx-4">
                         <div className="relative w-full">
-                            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-                                🔍
-                            </span>
+                            <Search size={23} className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"/>
                             <input
                                 type="text"
                                 placeholder="검색"

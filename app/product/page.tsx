@@ -1,13 +1,9 @@
 'use client';
 
-
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-// import { SlidersHorizontal } from 'lucide-react';
-import FilterSidebar from '../../public/src/views/product/FilterSidebar';
-import SortModal from '../../public/src/views/product/SortModal';
-
-// import FilterSidebar from '';
+import FilterSidebar from '../../src/views/product/FilterSidebar';
+import SortModal from '../../src/views/product/SortModal';
 
 const categories = ['카테고리', '성별', '색상', '가격', '사이즈', '브랜드'];
 

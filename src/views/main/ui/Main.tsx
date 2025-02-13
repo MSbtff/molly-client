@@ -1,11 +1,14 @@
 'use client'
 
 import Image from "next/image";
-import Banner from "/public/src/assets/images/banner.webp";
-import Slider1 from "/public/src/assets/images/slider1.webp";
+import Banner from "../../../../public/images/banner.webp";
+import Slider1 from "../../../../public/images/slider1.webp";
+import Slider11 from '../../../../public/images/slider1-2.jpg';
+import Slider111 from '../../../../public/images/slider1-3.jpg';
 // import Slider2 from '../public/src/assets/images/slider1-1.svg';
-import Default from "/public/src/assets/images/default.webp";
+import Default from "../../../../public/images/default.webp";
 import { useState, useEffect } from 'react';
+import { RotateCcw } from 'lucide-react';
 
 export default function Main() {
   const trendingItems = [
@@ -15,12 +18,12 @@ export default function Main() {
     { id: 4, src: Slider1, title: "@183.h.g" },
     { id: 5, src: Slider1, title: "Dior" },
     { id: 6, src: Slider1, title: "아미" },
-    { id: 7, src: 'src/assets/images/slider1-1.svg', title: "롤렉스 설날 세일 전격 90%" },
-    { id: 8, src: 'src/assets/images/slider1-1.svg', title: "랜덤박스 오픈" },
-    { id: 9, src: 'src/assets/images/slider1-1.svg', title: "뉴발란스 잡스 신발 팔아요" },
-    { id: 10, src: 'src/assets/images/slider1-1.svg', title: "@sw_g_48" },
-    { id: 11, src: 'src/assets/images/slider1-1.svg', title: "루이비통 짭 팝니다" },
-    { id: 12, src: 'src/assets/images/slider1-1.svg', title: "룰루레몬 파격 세일" },
+    { id: 7, src: Slider11, title: "롤렉스 설날 세일 전격 90%" },
+    { id: 8, src: Slider11, title: "랜덤박스 오픈" },
+    { id: 9, src: Slider11, title: "뉴발란스 잡스 신발 팔아요" },
+    { id: 10, src: Slider111, title: "@sw_g_48" },
+    { id: 11, src: Slider111, title: "루이비통 짭 팝니다" },
+    { id: 12, src: Slider111, title: "룰루레몬 파격 세일" },
   ];
   // const items_per_slider1 = 6;//슬라이드1 이미지 개수
   const categories = ["아우터", "상의", "바지", "원피스/스커트", "패션소품"];
@@ -119,7 +122,7 @@ export default function Main() {
           ))}
         </div>
         {/* 상품 리스트 */}
-        <div className="grid grid-cols-6 lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 gap-2">
           {[...Array(10)].map((_, index) => (
             <div key={index} className="flex flex-col w-full overflow-hidden">
               <Image
@@ -139,8 +142,7 @@ export default function Main() {
         {/* "다른 추천 상품 보기" 버튼 */}
         <div className="flex justify-center mt-8">
           <button className="flex items-center gap-2 px-6 py-3 border border-gray-400 rounded-lg text-base font-medium hover:bg-gray-100 transition">
-            <Image src={"/src/assets/icons/refresh.svg"} alt="새로고침 아이콘" width={20} height={20} />
-            다른 추천 상품 보기
+            <RotateCcw size={20} /> 다른 추천 상품 보기
           </button>
         </div>
       </section>
