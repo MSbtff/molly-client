@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import {useState} from 'react';
 import Image from 'next/image';
-import { SlidersHorizontal } from 'lucide-react';
-import FilterSidebar from '../../public/src/views/product/FilterSidebar';
+import {SlidersHorizontal} from 'lucide-react';
+import FilterSidebar from '../../src/views/product/FilterSidebar';
 // import FilterSidebar from '';
 
 const categories = ['아우터', '상의', '바지', '원피스/스커트', '패션소품'];
@@ -115,19 +115,24 @@ export default function Products() {
     <div className="px-6">
       {/* 필터 버튼 */}
       <div className="flex items-center justify-between mt-6">
-        <button className="border border-gray-300 px-4 py-2 rounded-lg text-sm flex items-center"
-                onClick= {()=>setIsFilterOpen(true)}
+        <button
+          className="border border-gray-300 px-4 py-2 rounded-lg text-sm flex items-center"
+          onClick={() => setIsFilterOpen(true)}
         >
-          필터 <SlidersHorizontal className='ml-2 w-4 h-4'/>
+          필터 <SlidersHorizontal className="ml-2 w-4 h-4" />
         </button>
         <div className="flex gap-2">
           {categories.map((category) => (
             <button
               key={category}
-              className={`px-4 py-2 rounded-full text-sm ${selectedCategory === category ? 'bg-black text-white' : 'bg-gray-200'
-                }`}
+              className={`px-4 py-2 rounded-full text-sm ${
+                selectedCategory === category
+                  ? 'bg-black text-white'
+                  : 'bg-gray-200'
+              }`}
               onClick={() => setSelectedCategory(category)}
-            >{category}
+            >
+              {category}
             </button>
           ))}
         </div>
@@ -144,9 +149,15 @@ export default function Products() {
               height={300}
             />
             <button className="flex flex-col items-start w-full overflow-hidden">
-              <p className="text-left mt-1 text-sm font-semibold">{product.brand}</p>
-              <p className="text-left text-sm text-gray-500 truncate w-full">{product.name}</p>
-              <p className="text-left text-black-500 font-semibold">{product.price}원</p>
+              <p className="text-left mt-1 text-sm font-semibold">
+                {product.brand}
+              </p>
+              <p className="text-left text-sm text-gray-500 truncate w-full">
+                {product.name}
+              </p>
+              <p className="text-left text-black-500 font-semibold">
+                {product.price}원
+              </p>
             </button>
           </div>
         ))}
