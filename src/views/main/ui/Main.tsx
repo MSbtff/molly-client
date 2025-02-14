@@ -10,28 +10,41 @@ import Slider2 from '../../../../public/images/slider2.webp';
 // import Slider2 from '../public/src/assets/images/slider1-1.svg';
 import { useState, useEffect } from 'react';
 import { RotateCcw } from 'lucide-react';
+const categories = [
+  { id: 1, title: "에션셜 코드", imgSrc: "images/coat.svg" },
+  { id: 2, title: "무스탕", imgSrc: "images/mustang.svg" },
+  { id: 3, title: "숏패딩", imgSrc: "images/shortPadding.svg" },
+  { id: 4, title: "가방", imgSrc: "images/bag.svg" },
+  { id: 5, title: "슈즈", imgSrc: "images/shoes.svg" },
+  { id: 6, title: "나일론재킷", imgSrc: "images/nylonJacket.svg" },
+  { id: 7, title: "지갑", imgSrc: "images/shortPadding.svg" },
+  { id: 8, title: "키즈", imgSrc: "images/kids.svg" },
+  { id: 9, title: "뷰티", imgSrc: "images/fashion.svg" },
+  { id: 10, title: "악세사리", imgSrc: "images/accessories.svg" },
+];
+const styleClip = [
+  { id: 1, src: Slider1, title: "까르띠에 전 품목 가격 6% 인상" },
+  { id: 2, src: Slider1, title: "루이비통 신상 공개" },
+  { id: 3, src: Slider1, title: "Nike x Tiffany" },
+  { id: 4, src: Slider1, title: "@183.h.g" },
+  { id: 5, src: Slider1, title: "Dior" },
+  { id: 6, src: Slider1, title: "아미" },
+  { id: 7, src: Slider11, title: "롤렉스 설날 세일 전격 90%" },
+  { id: 8, src: Slider11, title: "랜덤박스 오픈" },
+  { id: 9, src: Slider11, title: "뉴발란스 잡스 신발 팔아요" },
+  { id: 10, src: Slider111, title: "@sw_g_48" },
+  { id: 11, src: Slider111, title: "루이비통 짭 팝니다" },
+  { id: 12, src: Slider111, title: "룰루레몬 파격 세일" },
+];
 
 export default function Main() {
-  const trendingItems = [
-    { id: 1, src: Slider1, title: "까르띠에 전 품목 가격 6% 인상" },
-    { id: 2, src: Slider1, title: "루이비통 신상 공개" },
-    { id: 3, src: Slider1, title: "Nike x Tiffany" },
-    { id: 4, src: Slider1, title: "@183.h.g" },
-    { id: 5, src: Slider1, title: "Dior" },
-    { id: 6, src: Slider1, title: "아미" },
-    { id: 7, src: Slider11, title: "롤렉스 설날 세일 전격 90%" },
-    { id: 8, src: Slider11, title: "랜덤박스 오픈" },
-    { id: 9, src: Slider11, title: "뉴발란스 잡스 신발 팔아요" },
-    { id: 10, src: Slider111, title: "@sw_g_48" },
-    { id: 11, src: Slider111, title: "루이비통 짭 팝니다" },
-    { id: 12, src: Slider111, title: "룰루레몬 파격 세일" },
-  ];
+  
   // const items_per_slider1 = 6;//슬라이드1 이미지 개수
-  const categories = ["아우터", "상의", "바지", "원피스/스커트", "패션소품"];
+  const popularCategories = ["아우터", "상의", "바지", "원피스/스커트", "패션소품"];
   const [itemsPerSlide, setItemsPerSlide] = useState(6); // 기본 6개
   const [activeIndex, setActiveIndex] = useState(0);//슬라이드1 인덱스 그룹
   // const totalSlides = Math.ceil(trendingItems.length / items_per_slider1);
-  const totalSlides = Math.ceil(trendingItems.length / itemsPerSlide);
+  const totalSlides = Math.ceil(styleClip.length / itemsPerSlide);
 
   //동적으로 슬라이드1 이미지 개수 조정 
   useEffect(() => {
@@ -52,7 +65,7 @@ export default function Main() {
   }, []);
 
   //현재 슬라이드 아이템 6개
-  const currentItems = trendingItems.slice(
+  const currentItems = styleClip.slice(
     activeIndex * itemsPerSlide,
     (activeIndex + 1) * itemsPerSlide
   );
@@ -84,29 +97,14 @@ export default function Main() {
       </section>
 
 
-      {/* 연휴 다 갔다. 열일하고 싶게 만드는 럭셔리 위시템 */}
-      <section className="text-center px-6 scale-90">
-        <h2 className="text-center text-xl font-semibold mb-4">연휴 다 갔다. 열일하고 싶게 만드는 럭셔리 위시템</h2>
-
-        {/* <div className="grid grid-cols-6 md:grid-cols-4 sm:grid-cols-2 gap-2 overflow-hidden transition-all"> */}
-        <div className="flex justify-center gap-2 overflow-hidden transition-all">
-          {currentItems.map((item) => (
-            <div key={item.id} >
-              <Image src={item.src} alt={item.title} width={250} height={300} className="rounded-lg" />
-              <p className="text-sm mt-2">{item.title}</p>
+      {/* 카테고리 */}
+      <section className="px-20 mt-10">
+        <div className="grid grid-cols-5 gap-6">
+          {categories.map((category) => (
+            <div key={category.id} className="flex flex-col items-center rounded-xl p-4">
+              <Image src={category.imgSrc} alt={category.title} width={160} height={120} className="rounded-lg" />
+              <p className="text-sm font-semibold mt-2">{category.title}</p>
             </div>
-          ))}
-        </div>
-        {/* Dot Pagination */}
-        <div className="flex justify-center mt-4 gap-2">
-          {[...Array(totalSlides)].map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setActiveIndex(index)}
-              className={`w-3 h-3 rounded-full transition ${activeIndex === index ? "bg-[hsl(var(--muted-foreground))]" : "bg-gray-300"
-                // bg-[hsl(var(--foreground))]
-                }`}
-            />
           ))}
         </div>
       </section>
@@ -114,9 +112,11 @@ export default function Main() {
 
       {/* 카테고리 */}
       <section className="px-20">
+        <h3 className="text-xl font-semibold mb-4">지금 인기있는 상품</h3>
+
         {/* 카테고리 버튼 */}
         <div className="flex gap-4 mb-4">
-          {categories.map((category, index) => (
+          {popularCategories.map((category, index) => (
             <button key={index} className={`px-4 py-2 rounded-full border border-gray-600${index === 0 ? "bg-black text-white" : "bg-gray"}`}>
               {category}
             </button>
@@ -145,6 +145,33 @@ export default function Main() {
           <button className="flex items-center gap-2 px-6 py-3 border border-gray-400 rounded-lg text-base font-medium hover:bg-gray-100 transition">
             <RotateCcw size={20} /> 다른 추천 상품 보기
           </button>
+        </div>
+      </section>
+
+      {/*스타일 클립 */}
+      <section className="text-center px-6 scale-90">
+        <h2 className="text-left text-xl font-semibold mb-4">스타일 클립</h2>
+
+        {/* <div className="grid grid-cols-6 md:grid-cols-4 sm:grid-cols-2 gap-2 overflow-hidden transition-all"> */}
+        <div className="flex justify-center gap-2 overflow-hidden transition-all">
+          {currentItems.map((item) => (
+            <div key={item.id} >
+              <Image src={item.src} alt={item.title} width={250} height={300} className="rounded-lg" />
+              <p className="text-sm mt-2">{item.title}</p>
+            </div>
+          ))}
+        </div>
+        {/* Dot Pagination */}
+        <div className="flex justify-center mt-4 gap-2">
+          {[...Array(totalSlides)].map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setActiveIndex(index)}
+              className={`w-3 h-3 rounded-full transition ${activeIndex === index ? "bg-[hsl(var(--muted-foreground))]" : "bg-gray-300"
+                // bg-[hsl(var(--foreground))]
+                }`}
+            />
+          ))}
         </div>
       </section>
 
