@@ -1,4 +1,4 @@
-import type {NextConfig} from 'next';
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   async rewrites() {
@@ -8,6 +8,20 @@ const nextConfig: NextConfig = {
         destination: 'http://3.35.175.203:8080/:path*', // 스프링 백엔드 주소
       },
     ];
+  },
+
+  images: {
+    domains: ["3.35.175.203",
+      "example.com",
+    ], // API에서 제공하는 이미지 도메인(IP) (외부 이미지 도메인 허용)
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "3.35.175.203",
+        port: "8080",
+        pathname: "/**",
+      },
+    ],
   },
 
   webpack(config) {
