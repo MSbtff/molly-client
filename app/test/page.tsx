@@ -1,5 +1,5 @@
 import {TestCheckoutPage} from '../../src/features/buy/TestCheckoutPage';
 
 export default function Page() {
-  return <TestCheckoutPage />;
+  return <div></div>;
 }

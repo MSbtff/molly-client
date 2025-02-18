@@ -61,9 +61,13 @@ export function NavMain({
                       <SidebarMenuSubButton
                         onClick={() => {
                           if (subItem.title === '상품 등록') {
-                            setCurrentView('register');
-                          } else if (subItem.title === '상품 조회') {
-                            setCurrentView('products');
+                            setCurrentView('상품 등록');
+                          } else if (subItem.title === '판매 조회') {
+                            setCurrentView('판매 조회');
+                          } else if (subItem.title === '상품 삭제') {
+                            setCurrentView('상품 삭제');
+                          } else if (subItem.title === '상품 수정') {
+                            setCurrentView('상품 수정');
                           }
                         }}
                       >

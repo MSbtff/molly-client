@@ -163,6 +163,7 @@ export const RegisterContain = () => {
                 errors.email ? ' border-red-500 border-b-1' : ''
               }`}
               onChange={(e) => handleInputChange('email', e.target.value)}
+              ref={(ref) => ref?.focus()}
               onBlur={(e) => validateField('email', e.target.value)}
             />
             {errors.email && (
@@ -178,6 +179,7 @@ export const RegisterContain = () => {
               className="w-full border-b cursor-text font-medium"
               onChange={(e) => handleInputChange('password', e.target.value)}
               onBlur={(e) => validateField('password', e.target.value)}
+              ref={(ref) => ref?.focus()}
             />
             {errors.password && (
               <span className="text-red-500">{errors.password}</span>
@@ -192,6 +194,7 @@ export const RegisterContain = () => {
               className="w-full border-b cursor-text font-medium"
               onChange={(e) => handleInputChange('name', e.target.value)}
               onBlur={(e) => validateField('name', e.target.value)}
+              ref={(ref) => ref?.focus()}
             />
             {errors.name && <span className="text-red-500">{errors.name}</span>}
           </label>
@@ -204,6 +207,7 @@ export const RegisterContain = () => {
               className="w-full border-b cursor-text font-medium"
               onChange={(e) => handleInputChange('nickname', e.target.value)}
               onBlur={(e) => validateField('nickname', e.target.value)}
+              ref={(ref) => ref?.focus()}
             />
             {errors.nickname && (
               <span className="text-red-500">{errors.nickname}</span>
@@ -247,6 +251,7 @@ export const RegisterContain = () => {
               className="w-full border-b cursor-text font-medium"
               onChange={(e) => handleInputChange('cellPhone', e.target.value)}
               onBlur={(e) => validateField('cellPhone', e.target.value)}
+              ref={(ref) => ref?.focus()}
             />
             {errors.cellPhone && (
               <span className="text-red-500">{errors.cellPhone}</span>
