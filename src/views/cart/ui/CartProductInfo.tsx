@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import product from '../../../assets/product.png';
+import product from '../../../../public/product.png';
 
 export const CartProductInfo = () => {
   return (

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import {Button} from '../../../shared/ui/Button';
 import Logo from '../../../../public/moollyLogo.svg';
-import {useState} from 'react';
+import {useRef, useState} from 'react';
 import {useRouter} from 'next/navigation';
 
 interface Input {
@@ -14,6 +14,7 @@ interface Input {
 //server action으로 변경 및 환경변수 오류 찾아야함
 export default function LoginPage({handleLogin}: {handleLogin: Function}) {
   const router = useRouter();
+  const ref = useRef<HTMLInputElement | null>(null);
 
   const [input, setInput] = useState<Input>({
     username: '',
@@ -43,6 +44,7 @@ export default function LoginPage({handleLogin}: {handleLogin: Function}) {
             placeholder="Molly@gmail.com"
             className="w-[435px] border-b-2 text-md "
             value={input.username}
+            ref={ref}
             onChange={(e) =>
               setInput((state) => ({...state, username: e.target.value}))
             }
@@ -56,6 +58,7 @@ export default function LoginPage({handleLogin}: {handleLogin: Function}) {
             placeholder="비밀번호를 입력해주세요"
             className="w-[435px] border-b-2 text-md"
             value={input.password}
+            ref={ref}
             onChange={(e) =>
               setInput((state) => ({...state, password: e.target.value}))
             }

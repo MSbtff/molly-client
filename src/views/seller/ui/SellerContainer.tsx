@@ -15,22 +15,29 @@ import {SidebarInset, SidebarProvider, SidebarTrigger} from './sidebar';
 import {useSellerStore} from '../../../app/provider/Sellerstore';
 import {ProductRegister} from '../components/ProductRegister';
 import {ProductDashboard} from '../components/ProductDashboard';
+import {ProductRetriever} from '../components/ProductRetriever';
+import {ProductModify} from '../components/ProductModify';
+import {ProductDelete} from '../components/ProductDelete';
 
 export default function SellerContainer() {
-  const {currentView} = useSellerStore();
+  const {currentView, setCurrentView} = useSellerStore();
 
   const viewComponents = {
-    products: <ProductDashboard />,
-    register: <ProductRegister />,
-    default: (
-      <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-        {/* 기본 대시보드 컴포넌트 */}
-      </div>
-    ),
+    '상품 삭제': <ProductDelete />,
+    '상품 수정': <ProductModify />,
+    '판매 조회': <ProductRetriever />,
+    '상품 등록': <ProductRegister />,
+    기본: <ProductDashboard />,
   };
 
   const renderContent = () => {
-    return viewComponents[currentView] || viewComponents.default;
+    console.log('currentView:', currentView);
+    console.log('사용 가능한 컴포넌트:', Object.keys(viewComponents));
+    const Component =
+      viewComponents[currentView as keyof typeof viewComponents];
+    console.log('선택된 컴포넌트:', Component ? 'exists' : 'null');
+
+    return viewComponents[currentView] || viewComponents.기본;
   };
   return (
     <SidebarProvider>
@@ -47,7 +54,7 @@ export default function SellerContainer() {
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>상품 등록</BreadcrumbPage>
+                  <BreadcrumbPage>{currentView}</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>

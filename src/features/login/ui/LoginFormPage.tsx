@@ -13,15 +13,16 @@ export const LoginFormPage = () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           email,
           password,
         }),
-        // credentials: 'include', 이 처리를 해야 쿠키 조회 가능 도메인이 같아야 이게 필요 없음
       });
 
       if (res.ok) {
-        console.log('로그인 성공');
+        const data = await res.json();
+        console.log('로그인 성공', data);
         router.push('/');
 
         router.refresh();

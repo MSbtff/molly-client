@@ -20,7 +20,7 @@ const data = {
   user: {
     name: '김구름',
     email: 'molly@example.com',
-    avatar: '/src/assets/logo.webp',
+    avatar: '/logo.webp',
   },
   teams: [
     {
@@ -49,7 +49,7 @@ const data = {
           url: '#',
         },
         {
-          title: '판매 상품 조회',
+          title: '상품 수정',
           url: '#',
         },
       ],

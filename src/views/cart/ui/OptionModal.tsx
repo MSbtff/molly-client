@@ -1,7 +1,7 @@
 import Image from 'next/image';
-import Close from '../../../assets/close.svg';
-import product from '../../../assets/product.png';
-import Down from '../../../assets/down.svg';
+import {X} from 'lucide-react';
+import product from '../../../../public/product.png';
+import {ChevronDown} from 'lucide-react';
 import {Button} from '../../../shared/ui/Button';
 
 interface OptionModalProps {
@@ -16,7 +16,7 @@ export const OptionModal = ({onClose}: OptionModalProps) => {
           <div className="flex justify-between">
             <div className="font-bold text-2xl">옵션 변경</div>
             <div onClick={onClose} className="cursor-pointer">
-              <Close />
+              <X />
             </div>
           </div>
           <div className="w-full flex items-center gap-8 border-b-2 mt-12">
@@ -32,34 +32,33 @@ export const OptionModal = ({onClose}: OptionModalProps) => {
               <p className="text-gray2">브랜드명</p>
             </div>
           </div>
-          <div className="flex flex-col  gap-8">
-            <div className="text-gray2">상품 컬러</div>
-            <div className="w-full flex justify-between items-center border-b-2">
-              <div>블루</div>
-              <Down />
+          <div className="h-full flex flex-col justify-between gap-8">
+            <div className="mt-8">
+              <div className="w-40 font-bold flex gap-4">
+                <div>색상</div>
+                <div>사이즈</div>
+                <div>수량</div>
+              </div>
+              <div className="w-full flex justify-between items-center border-b-2">
+                <div className="w-40 flex gap-8 ">
+                  <div>블루</div>
+                  <div>xl</div>
+                  <div>2</div>
+                </div>
+                <ChevronDown />
+              </div>
             </div>
-            <div className="text-gray2">사이즈</div>
-            <div className="w-full flex justify-between items-center border-b-2">
-              <div>XL</div>
-              <Down />
+            <div className="mt-24">
+              <Button
+                width="460px"
+                height="52px"
+                bg="black"
+                color="white"
+                radius="10px"
+              >
+                확인
+              </Button>
             </div>
-            <div className="text-gray2">수량</div>
-            <div className="w-full flex justify-between items-center border-b-2">
-              <div>2</div>
-              <Down />
-            </div>
-          </div>
-
-          <div className="mt-24">
-            <Button
-              width="460px"
-              height="52px"
-              bg="black"
-              color="white"
-              radius="10px"
-            >
-              확인
-            </Button>
           </div>
         </div>
       </div>

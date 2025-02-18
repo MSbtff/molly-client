@@ -15,15 +15,21 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // 요청 헤더의 쿠키 확인
+  console.log('Request headers:', request.headers);
+  console.log('Request cookies:', request.cookies.getAll());
+
   // 보호된 경로일 때만 인증 체크
   const authToken = request.cookies.get('Authorization');
-  console.log('Current path:', request.nextUrl.pathname);
-  console.log('Auth token:', authToken); // 이 값이 undefined가 아니어야 함
+  // console.log('Current path:', request.nextUrl.pathname);
+  // console.log('Auth token:', authToken); // 이 값이 undefined가 아니어야 함
   if (!authToken) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  return NextResponse.next();
+  // 응답에 토큰 추가 및 쿠키 재설정
+  const response = NextResponse.next();
+  return response;
 }
 
 // 미들웨어를 적용할 경로 설정
