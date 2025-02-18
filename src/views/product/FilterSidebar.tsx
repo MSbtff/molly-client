@@ -35,11 +35,20 @@ const sizes = ['XS', 'S', 'M', 'L', 'XL', '2XL', 'F'];
 
 
 export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedColor, setSelectedColor] = useState<string | null>(null);
-  const [selectedPrice, setSelectedPrice] = useState<string | null>(null);
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
-  const [selectedGender, setSelectedGender] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
+  const [selectedColor, setSelectedColor] = useState<string[]>([]);
+  const [selectedPrice, setSelectedPrice] = useState<string[]>([]);
+  const [selectedSize, setSelectedSize] = useState<string[]>([]);
+  const [selectedGender, setSelectedGender] = useState<string[]>([]);
+
+  // 각 옵션 클릭 함수
+  const toggleSelection = (selectedList: string[], setList: (value: string[]) => void, item: string) => {
+    if (selectedList.includes(item)) {
+      setList(selectedList.filter((i) => i !== item)); // 이미 선택된 경우 제거
+    } else {
+      setList([...selectedList, item]); // 새로 선택된 경우 추가
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex">
@@ -48,6 +57,7 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
         className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-md"
         onClick={() => setIsOpen(false)}
       ></div>
+
       <div className="fixed top-0 left-0 w-[320px] h-full bg-white shadow-lg z-50 overflow-y-auto">
         {/* 헤더 */}
         <div className="flex items-center justify-between px-4 py-4">
@@ -64,9 +74,9 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
               key={gender}
               className={clsx(
                 "text-sm px-3 py-2 rounded-md transition",
-                selectedGender === gender ? "bg-gray-200 text-black font-semibold" : "text-gray-600"
+                selectedGender?.includes(gender) ? "bg-gray-200 text-black font-semibold" : "text-gray-600"
               )}
-              onClick={() => setSelectedGender(selectedGender === gender ? null : gender)}
+              onClick={() => toggleSelection(selectedGender, setSelectedGender, gender)}
             >
               {gender}
             </button>
@@ -80,9 +90,9 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
               key={category}
               className={clsx(
                 "block text-left w-full py-2",
-                selectedCategory === category ? "bg-gray-200 rounded-lg font-bold text-black" : "text-gray-700"
+                selectedCategory?.includes(category) ? "bg-gray-200 rounded-lg font-bold text-black" : "text-gray-700"
               )}
-              onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
+              onClick={() => toggleSelection(selectedCategory, setSelectedCategory, category)}
             >
               {category}
             </button>
@@ -97,11 +107,11 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
               <button
                 key={name}
                 className={clsx("w-8 h-8 rounded-full flex items-center justify-center", color, {
-                  "border-2 border-black": selectedColor === name,
+                  "border-2 border-black": selectedColor.includes(name),
                 })}
-                onClick={() => setSelectedColor(selectedColor === name ? null : name)}
+                onClick={() => toggleSelection(selectedColor, setSelectedColor, name)}
               >
-                {selectedColor === name && <span className="text-xs text-white">✓</span>}
+                {selectedColor.includes(name) && <span className="text-xs text-white">✓</span>}
               </button>
             ))}
           </div>
@@ -111,16 +121,16 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
         <div className="px-4 py-4 border-b">
           <h3 className="text-sm font-semibold mb-3">가격</h3>
           {priceRanges.map((price) => (
-            <label key={price} className="flex items-center space-x-2 text-gray-700">
-              <input
-                type="radio"
-                name="price"
-                className="w-4 h-4"
-                checked={selectedPrice === price}
-                onChange={() => setSelectedPrice(price)}
-              />
-              <span>{price}</span>
-            </label>
+            <button
+              key={price}
+              className={clsx(
+                "border px-3 py-2 rounded-md text-sm",
+                selectedPrice?.includes(price) ? "bg-black text-white" : "text-gray-700"
+              )}
+              onClick={() => toggleSelection(selectedPrice, setSelectedPrice, price)}
+            >
+              {price}
+            </button>
           ))}
         </div>
 
@@ -133,27 +143,60 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
                 key={size}
                 className={clsx(
                   "border px-3 py-2 rounded-md text-sm",
-                  selectedSize === size ? "bg-black text-white" : "text-gray-700"
+                  selectedSize?.includes(size) ? "bg-black text-white" : "text-gray-700"
                 )}
-                onClick={() => setSelectedSize(size)}
+                onClick={() => toggleSelection(selectedSize, setSelectedSize, size)}
               >
                 {size}
               </button>
             ))}
           </div>
         </div>
-        {/* 선택항목 */}
-        <div className="px-4 py-4 border-b">
 
+        {/* 브랜드 */}
+        <div className="px-4 py-4 border-b">
+          <h3 className="text-sm font-semibold mb-3">브랜드</h3>
         </div>
+
+        {/*선택한 옵션*/}
+        {(selectedGender.length > 0 || selectedCategory.length > 0 || selectedColor.length > 0 || selectedPrice.length > 0 || selectedSize.length > 0) && (
+          <div className="px-4 py-4 border-b">
+            <h3 className="text-sm font-semibold mb-3">선택한 필터</h3>
+
+            <div className="flex flex-wrap gap-2">
+              {[...selectedGender, ...selectedCategory, ...selectedColor, ...selectedPrice, ...selectedSize].map((item) => (
+                <button
+                  key={item}
+                  className="flex items-center gap-2 px-3 py-1 text-sm bg-gray-200 rounded-full"
+                  onClick={() => {
+                    if (selectedGender.includes(item)) {
+                      setSelectedGender(selectedGender.filter((i) => i !== item));
+                    } else if (selectedCategory.includes(item)) {
+                      setSelectedCategory(selectedCategory.filter((i) => i !== item));
+                    } else if (selectedColor.includes(item)) {
+                      setSelectedColor(selectedColor.filter((i) => i !== item));
+                    } else if (selectedPrice.includes(item)) {
+                      setSelectedPrice(selectedPrice.filter((i) => i !== item));
+                    } else if (selectedSize.includes(item)) {
+                      setSelectedSize(selectedSize.filter((i) => i !== item));
+                    }
+                  }}
+                >
+                  {item} <X size={14} />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* 버튼 */}
         <div className="flex items-center justify-between p-4">
           <button className="border border-gray-500 px-4 py-2 rounded-md text-sm" onClick={() => {
-            setSelectedCategory(null);
-            setSelectedColor(null);
-            setSelectedPrice(null);
-            setSelectedSize(null);
+            setSelectedCategory([]);
+            setSelectedColor([]);
+            setSelectedPrice([]);
+            setSelectedSize([]);
+            setSelectedGender([]);
           }}>
             초기화
           </button>

@@ -1,7 +1,7 @@
 import Image from 'next/image';
-import Close from '../../../assets/close.svg';
-import product from '../../../assets/product.png';
-import Down from '../../../assets/down.svg';
+import Close from '../../../../public/close.svg';
+import product from '../../../../public/product.png';
+import Down from '../../../../public/down.svg';
 import {Button} from '../../../shared/ui/Button';
 
 interface OptionModalProps {

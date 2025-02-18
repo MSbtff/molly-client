@@ -110,14 +110,14 @@ export default function Main() {
       </section>
 
 
-      {/* 카테고리 */}
+      {/* 지금 인기있는 상품 */}
       <section className="px-20">
         <h3 className="text-xl font-semibold mb-4">지금 인기있는 상품</h3>
 
         {/* 카테고리 버튼 */}
         <div className="flex gap-4 mb-4">
           {popularCategories.map((category, index) => (
-            <button key={index} className={`px-4 py-2 rounded-full border border-gray-600${index === 0 ? "bg-black text-white" : "bg-gray"}`}>
+            <button key={index} className={`px-4 py-2 rounded-full border border-gray-600 ${index === 0 ? "bg-black text-white" : "bg-gray"}`}>
               {category}
             </button>
           ))}
