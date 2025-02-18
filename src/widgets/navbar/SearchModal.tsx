@@ -21,7 +21,7 @@ export default function SearchModal({ setIsOpen }: { setIsOpen: (value: boolean)
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" && searchTerm.trim()) {
             if (!searchTerm.trim()) {
-                console.log("검");
+                console.log("검색");
             }
             router.push(`/product?keyword=${encodeURIComponent(searchTerm)}`);
             setIsOpen(false);

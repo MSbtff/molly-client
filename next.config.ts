@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
 
   images: {
     domains: ["3.35.175.203",
-      "example.com",
+      "172.16.24.53",
     ], // API에서 제공하는 이미지 도메인(IP) (외부 이미지 도메인 허용)
     remotePatterns: [
       {
