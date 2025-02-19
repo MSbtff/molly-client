@@ -15,10 +15,11 @@ export default function Mypage() {
           <div className="w-[1000px] h-[110px]">
             <ProfileMyPage />
           </div>
-          <div className="w-[1000px] h-[110px] border">
+          <div className="w-[1000px] h-[110px] border rounded-[10px]">
             <PointMyPage />
           </div>
           <PurchasePage />
+          <div className="w-full border-b"></div>
           <ProductList />
         </div>
       </div>
