@@ -30,11 +30,12 @@ export const ProductList = () => {
           onClick={(item) => setIsTrue(!isTrue)}
         >
           <strong>배송중</strong>
-          {isTrue ? (
+          {/* {isTrue ? (
             <p className="text-gray2">주문 취소</p>
           ) : (
             <p className="text-gray-400">리뷰</p>
-          )}
+          )} */}
+          <div>리뷰</div>
         </div>
       </div>
     </>

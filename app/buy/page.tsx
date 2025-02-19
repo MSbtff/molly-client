@@ -20,9 +20,7 @@ export default function BuyPage() {
             <h2 className="font-semibold">주문 상품 및 쿠폰</h2>
             <div>총 1건</div>
           </div>
-          <div className="mt-10 h-full">
-            <CartProductInfo />
-          </div>
+          <div className="mt-10 h-full">{/* <CartProductInfo /> */}</div>
           <div className="mt-12 w-full h-9 rounded-[10px] border flex justify-between items-center p-2">
             <div>요청사항 없음</div>
 

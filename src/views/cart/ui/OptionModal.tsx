@@ -1,14 +1,65 @@
 import Image from 'next/image';
 import {X} from 'lucide-react';
-import product from '../../../../public/product.png';
 import {ChevronDown} from 'lucide-react';
 import {Button} from '../../../shared/ui/Button';
+import {CartItem} from '@/features/cart/api/cartRead';
+import {useState, useEffect} from 'react';
+import {cartUpdate} from '@/features/cart/api/cartUpdate';
 
 interface OptionModalProps {
   onClose: () => void;
+  cartItem: CartItem;
+  onUpdate: () => Promise<void>;
 }
 
-export const OptionModal = ({onClose}: OptionModalProps) => {
+export const OptionModal = ({
+  onClose,
+  cartItem,
+  onUpdate,
+}: OptionModalProps) => {
+  const [quantity, setQuantity] = useState(cartItem.cartInfoDto.quantity);
+
+  const {
+    cartId,
+    color,
+    url,
+    productName,
+    brandName,
+    size: cartSize,
+  } = cartItem.cartInfoDto;
+
+  // 현재 선택된 colorDetail 찾기
+  const selectedColorDetail = cartItem.colorDetails.find(
+    (detail) => detail.color === color
+  );
+
+  // 현재 선택된 sizeDetail 찾기
+  const selectedSizeDetail = selectedColorDetail?.sizeDetails.find(
+    (detail) => detail.size === cartSize
+  );
+
+  const handleQuantityChange = (newQuantity: number) => {
+    if (
+      newQuantity > 0 &&
+      selectedSizeDetail &&
+      newQuantity <= selectedSizeDetail.quantity
+    ) {
+      setQuantity(newQuantity);
+    }
+  };
+
+  const handleConfirm = async () => {
+    if (selectedSizeDetail) {
+      try {
+        await cartUpdate(cartId, selectedSizeDetail.id, quantity);
+        await onUpdate(); // 추가된 부분
+        onClose();
+      } catch (error) {
+        console.error('수량 업데이트 실패:', error);
+      }
+    }
+  };
+
   return (
     <>
       <div className="fixed inset-0 flex justify-center items-center w-screen h-screen bg-black bg-opacity-40 z-1000">
@@ -21,31 +72,47 @@ export const OptionModal = ({onClose}: OptionModalProps) => {
           </div>
           <div className="w-full flex items-center gap-8 border-b-2 mt-12">
             <Image
-              src={product}
+              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${url}`}
               alt="product"
               width={80}
               height={80}
               loading="eager"
             />
             <div className="flex flex-col">
-              <strong>상품명</strong>
-              <p className="text-gray2">브랜드명</p>
+              <strong>{productName}</strong>
+              <p className="text-gray2">{brandName}</p>
             </div>
           </div>
           <div className="h-full flex flex-col justify-between gap-8">
             <div className="mt-8">
-              <div className="w-40 font-bold flex gap-4">
-                <div>색상</div>
-                <div>사이즈</div>
-                <div>수량</div>
+              <div className="w-full font-bold flex gap-4 justify-between">
+                <div className="flex gap-8">
+                  <div>색상</div>
+                  <div>사이즈</div>
+                </div>
+
+                <div className="">수량</div>
               </div>
               <div className="w-full flex justify-between items-center border-b-2">
-                <div className="w-40 flex gap-8 ">
-                  <div>블루</div>
-                  <div>xl</div>
-                  <div>2</div>
+                <div className="w-40 flex gap-8">
+                  <div>{color}</div>
+                  <div>{cartSize}</div>
                 </div>
-                <ChevronDown />
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => handleQuantityChange(quantity - 1)}
+                    className="px-2 border rounded"
+                  >
+                    -
+                  </button>
+                  <span>{quantity}</span>
+                  <button
+                    onClick={() => handleQuantityChange(quantity + 1)}
+                    className="px-2 border rounded"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
             </div>
             <div className="mt-24">
@@ -55,6 +122,7 @@ export const OptionModal = ({onClose}: OptionModalProps) => {
                 bg="black"
                 color="white"
                 radius="10px"
+                onClick={handleConfirm}
               >
                 확인
               </Button>

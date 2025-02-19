@@ -4,7 +4,7 @@ export const PurchasePage = () => {
   return (
     <>
       <div className="text-2xl font-bold">구매내역</div>
-      <div className="w-full h-full border ">
+      <div className="w-full h-full  ">
         <div className="flex">
           <BorderBox title="전체" count="10" />
           <BorderBox title="결제대기" count="0" />
