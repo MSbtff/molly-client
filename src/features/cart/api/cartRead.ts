@@ -34,7 +34,7 @@ export type CartItem = {
 };
 
 // 전체 응답 타입
-type CartResponse = CartItem[];
+export type CartResponse = CartItem[];
 
 export async function cartRead(): Promise<CartResponse | undefined> {
   const authToken = (await cookies()).get('Authorization')?.value;

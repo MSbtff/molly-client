@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import product from '../../../../public/product.png';
 import {CartItemDto} from '@/features/cart/api/cartRead';
 
 export const CartProductInfo = (props: CartItemDto) => {

@@ -2,7 +2,7 @@ import {ChevronRight} from 'lucide-react';
 
 import ContactInfo from './ContactInfo';
 
-export const Address = () => {
+export const BuyAddress = () => {
   return (
     <>
       <div className="mt-4 w-[700px] h-[205px] flex flex-col bg-white rounded-[10px] border p-4">

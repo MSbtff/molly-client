@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import product from '../../../../public/product.png';
+
 import {useState} from 'react';
 
 export const ProductList = () => {
@@ -12,7 +12,7 @@ export const ProductList = () => {
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-4">
           <Image
-            src={product}
+            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/product/1.jpg`}
             alt="product"
             width={80}
             height={80}

@@ -8,16 +8,24 @@ import {CartOrderButton} from './CartOrderButton';
 import {CartProductInfo} from './CartProductInfo';
 import {CartItem, CartItemDto, cartRead} from '@/features/cart/api/cartRead';
 import cartDelete from '@/features/cart/api/cartDelete';
+import cartOrder from '@/features/cart/api/cartOrder';
+import {OrderItem, useOrderStore} from '@/app/provider/OrderStore';
+import {useRouter} from 'next/navigation';
+import {useCartStore} from '@/app/provider/CartStore';
 
 export const CartComponent = () => {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
   const [selectedCartItem, setSelectedCartItem] = useState<CartItem | null>(
     null
   );
+
+  const {orders, setOrders} = useOrderStore();
+  const {cartState, setCartState} = useCartStore();
 
   const selectedItemsInfo = useMemo(() => {
     const selectedItemsList = cartItems.filter((item) =>
@@ -41,6 +49,7 @@ export const CartComponent = () => {
         const data = await cartRead();
         if (data) {
           setCartItems(data);
+          setCartState(data);
         }
       } catch (error) {
         setError(
@@ -48,15 +57,20 @@ export const CartComponent = () => {
             ? error.message
             : '알 수 없는 오류가 발생했습니다.'
         );
-      } finally {
-        setIsLoading(false);
       }
     }
     fetchCartItems();
-  }, []);
+  }, [setCartState]);
+
+  useEffect(() => {
+    console.log('orders 상태 업데이트 됨:', orders);
+  }, [orders]);
+
+  useEffect(() => {
+    console.log('cartItems 상태 업데이트 됨:', cartItems);
+  }, [cartItems]);
 
   const refreshCartItems = async () => {
-    console.log('refreshCartItems 실행됨');
     try {
       const data = await cartRead();
       console.log('새로운 데이터:', data);
@@ -96,6 +110,9 @@ export const CartComponent = () => {
     try {
       await cartDelete(cartId);
       await refreshCartItems();
+      const newSelected = new Set(selectedItems);
+      newSelected.delete(cartId);
+      setSelectedItems(newSelected);
     } catch (error) {
       setError(
         error instanceof Error ? error.message : '삭제 중 오류가 발생했습니다.'
@@ -115,6 +132,56 @@ export const CartComponent = () => {
       );
     }
   };
+
+  const handleOrder = async () => {
+    if (selectedItems.size === 0) {
+      setError('주문할 상품을 선택해주세요.');
+      return;
+    }
+    try {
+      const selectedList = cartItems.filter((item) =>
+        selectedItems.has(item.cartInfoDto.cartId)
+      );
+
+      const orderItems = selectedList.map((item) => ({
+        productId: item.cartInfoDto.productId,
+        itemId: item.cartInfoDto.itemId,
+        quantity: item.cartInfoDto.quantity,
+      }));
+
+      console.log('주문 요청:', orderItems); // 주문 요청 데이터 확인
+
+      const orderResponse = await cartOrder(orderItems);
+      console.log('서버 응답:', orderResponse); // 서버 응답 확인
+
+      // OrderItem 타입에 맞게 변환
+      const formattedOrder: OrderItem = {
+        ...orderResponse,
+        pointUsage: orderResponse.pointUsage || null,
+        pointSave: orderResponse.pointSave || null,
+        payment: orderResponse.payment || [],
+        delivery: orderResponse.delivery || [],
+      };
+
+      console.log('변환된 주문:', formattedOrder); // 변환된 데이터 확인
+
+      // store 업데이트
+      setOrders([...orders, formattedOrder]);
+
+      console.log('업데이트된 orders:', orders); // store 업데이트 확인
+
+      await refreshCartItems();
+      setSelectedItems(new Set());
+      router.push('/buy');
+    } catch (error) {
+      console.error('주문 처리 중 에러:', error);
+      setError(
+        error instanceof Error ? error.message : '주문 중 오류가 발생했습니다.'
+      );
+    }
+  };
+
+  console.log(orders);
 
   return (
     <>
@@ -199,6 +266,7 @@ export const CartComponent = () => {
         <CartOrderButton
           totalAmount={selectedItemsInfo.totalAmount}
           totalItems={selectedItemsInfo.totalItems}
+          handleOrder={handleOrder}
         />
       </div>
     </>
