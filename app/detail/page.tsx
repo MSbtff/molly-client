@@ -274,9 +274,8 @@ export default function ProductDetail() {
         {/* 썸네일 이미지 */}
         <div className="w-1/2">
           <Image
-            // src={`${imageUrl}${product?.thumbnail.path || "/images/noImage.svg"}`}
-            src={"/images/noImage.svg"}
-            // src={`${imageUrl}${product.thumbnail.path}`}
+            // src={"/images/noImage.svg"}
+            src={`${imageUrl}${product.thumbnail.path}`}
             alt={product?.productName || "상품 이미지"}
             width={500}
             height={500}
@@ -439,8 +438,8 @@ export default function ProductDetail() {
             {product?.productDescriptionImages.map((img, index) => (
               <Image
                 key={index}
-                // src={`${imageUrl}${img.path}`}
-                src="/images/noImage.svg"
+                src={`${imageUrl}${img.path}`}
+                // src="/images/noImage.svg"
                 alt={`Product Description Image ${index + 1}`}
                 width={800}
                 height={600}
