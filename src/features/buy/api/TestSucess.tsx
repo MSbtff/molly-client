@@ -1,12 +1,15 @@
 'use client';
 
-import {useParams, useSearchParams} from 'next/navigation';
+import {useSearchParams} from 'next/navigation';
 import {useRouter} from 'next/router';
 import {useEffect} from 'react';
+import TossRequest from './tossRequest';
+import {useOrderStore} from '@/app/provider/OrderStore';
 
 export function TestSuccessPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const {orders, setOrders} = useOrderStore();
 
   useEffect(() => {
     // 쿼리 파라미터 값이 결제 요청할 때 보낸 데이터와 동일한지 반드시 확인하세요.
@@ -35,6 +38,17 @@ export function TestSuccessPage() {
       }
 
       // 결제 성공 비즈니스 로직을 구현하세요.
+      // const data = await TossRequest(
+      //   orderId,
+      //   tossOrderId,
+      //   amount,
+      //   point,
+      //   paymentKey,
+      //   paymentType,
+      //   delivery
+      // );
+
+      // console.log(data);
     }
     confirm();
   }, []);

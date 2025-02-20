@@ -2,7 +2,13 @@
 
 import {cookies} from 'next/headers';
 
-export default async function cartOrder() {
+interface OrderItem {
+  productId: number;
+  itemId: number;
+  quantity: number;
+}
+
+export default async function cartOrder(orderItems: OrderItem[]) {
   const authToken = (await cookies()).get('Authorization')?.value;
 
   if (!authToken) {
@@ -10,23 +16,18 @@ export default async function cartOrder() {
   }
 
   try {
-    const res = await fetch(`${process.env.NEXT_SERVER_URL}/order`, {
+    const res = await fetch(`${process.env.NEXT_SERVER_URL}/orders`, {
       method: 'POST',
       headers: {
         Authorization: `${authToken}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        userId: 0,
-        orderRequests: [
-          {
-            productId: 0,
-            itemId: 0,
-            quantity: 0,
-          },
-        ],
+        orderRequests: orderItems,
       }),
     });
+
+    console.log(res.status);
 
     if (!res.ok) {
       const errorData = await res.json();

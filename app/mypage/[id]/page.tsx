@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import {Button} from '../../../src/shared/ui/Button';
 import {ProfileMyPage} from '../../../src/views/mypage/ui/ProfileMyPage';
 import {SideMyPage} from '../../../src/views/mypage/ui/SideMyPage';
@@ -53,9 +54,12 @@ export default function Page({params}: Params) {
               <p className="text-gray2">기본 배송지</p>
               <div className="flex justify-between">
                 <p className="font-semibold">경기도 성남시 분당구 판교로 242</p>
-                <Button width="36px" height="36px" radius="10px">
+                <Link
+                  className="w-9 h-9 rounded-[10px]"
+                  href={'/mypage/address'}
+                >
                   관리
-                </Button>
+                </Link>
               </div>
             </div>
           </div>

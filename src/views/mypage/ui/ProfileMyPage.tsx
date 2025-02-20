@@ -18,9 +18,7 @@ export const ProfileMyPage = () => {
           <strong>구름</strong>
           <p>Molly@gmail.com</p>
         </div>
-        <div className="flex items-center">
-          <div>프로필 관리</div>
-        </div>
+        <div className="flex items-center">{/* <div>프로필 관리</div> */}</div>
       </div>
     </div>
   );
