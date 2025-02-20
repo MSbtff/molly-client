@@ -1,34 +1,41 @@
 import Image from 'next/image';
 import product from '../../../../public/product.png';
+import {CartItemDto} from '@/features/cart/api/cartRead';
 
-export const CartProductInfo = () => {
+export const CartProductInfo = (props: CartItemDto) => {
+  const {productName, brandName, price, size, quantity, color, url} = props;
+  const won = Number(price) * Number(quantity);
+  const sumWon = won.toLocaleString();
+
   return (
     <>
       <div className="w-full h-full">
         <div className="w-full h-20 flex gap-x-6">
           <Image
-            src={product}
+            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${url}`}
             alt="product"
             width={80}
             height={80}
             loading="eager"
           />
           <div className="w-full flex flex-col">
-            <strong>상품명</strong>
+            <strong>
+              {productName} / {brandName}
+            </strong>
             <div className="flex justify-between">
-              <p>컬러/사이즈</p>
-              <strong>black/XL</strong>
+              <p className="text-gray2">color:{color}</p>
+              <strong>{size}</strong>
             </div>
             <div className="flex justify-between">
               <div>수량</div>
-              <div>1</div>
+              <div className="font-bold">{quantity}</div>
             </div>
             <div className="flex justify-between">
               <div>상품 금액</div>
-              <strong>400,000원</strong>
+              <strong>{sumWon}원</strong>
             </div>
             <div className="flex justify-between">
-              <div>배송일</div>
+              <div>배송비용</div>
               <div className="text-gray2">
                 <p className="text-end">무료배송</p>
                 <p className="underline">배송 예정일 3-5일</p>

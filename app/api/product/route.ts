@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
 
-    const response = await fetch('http://3.35.175.203:8080/product', {
+    const response = await fetch(`${process.env.NEXT_SERVER_URL}/product`, {
       method: 'POST',
       headers: {
         Authorization: authToken.value,

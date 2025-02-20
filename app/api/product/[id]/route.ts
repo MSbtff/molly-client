@@ -19,7 +19,7 @@ export async function DELETE(
 
   try {
     const response = await fetch(
-      `http://3.35.175.203:8080/product/${params.id}`,
+      `${process.env.NEXT_SERVER_URL}/product/${params.id}`,
       {
         method: 'DELETE',
         headers: {
