@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { X } from 'lucide-react'; // 닫기 버튼 아이콘
 import clsx from 'clsx'; // Tailwind 클래스 조건부 적용
@@ -11,18 +12,18 @@ interface FilterSidebarProps {
 const categories = ['아우터', '상의', '바지', '원피스/스커트', '패션소품'];
 const genders = ['남성', '여성', '키즈'];
 const colors = [
-  { name: '블랙', color: 'bg-black' },
-  { name: '블루', color: 'bg-blue-500' },
-  { name: '브라운', color: 'bg-yellow-700' },
-  { name: '그린', color: 'bg-green-500' },
-  { name: '그레이', color: 'bg-gray-500' },
-  { name: '멀티컬러', color: 'bg-black border-2 border-white' },
-  { name: '오렌지', color: 'bg-orange-500' },
-  { name: '핑크', color: 'bg-pink-500' },
-  { name: '퍼플', color: 'bg-purple-500' },
-  { name: '레드', color: 'bg-red-500' },
-  { name: '화이트', color: 'bg-white border' },
-  { name: '옐로우', color: 'bg-yellow-500' },
+  { name: '블랙', hex: '#000000', color: 'bg-black' },
+  { name: '블루', hex: '#1790C8', color: 'bg-blue-500' },
+  { name: '브라운', hex: '#825D41', color: 'bg-yellow-700' },
+  { name: '그린', hex: '#7BBA3C', color: 'bg-green-500' },
+  { name: '그레이', hex: '#808080', color: 'bg-gray-500' },
+  { name: '멀티컬러', hex: 'multi', color: 'bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500' },
+  { name: '오렌지', hex: '#F36B26', color: 'bg-orange-500' },
+  { name: '핑크', hex: '#F0728F', color: 'bg-pink-500' },
+  { name: '퍼플', hex: '#8D429F', color: 'bg-purple-500' },
+  { name: '레드', hex: '#E7352B', color: 'bg-red-500' },
+  { name: '화이트', hex: '#FFFFFF', color: 'bg-white border' },
+  { name: '옐로우', hex: '#FED533', color: 'bg-yellow-500' },
 ];
 const priceRanges = [
   '0 - 50,000 원',
@@ -31,17 +32,20 @@ const priceRanges = [
   '150,000 - 200,000 원',
   '200,000 원 이상',
 ];
-const sizes = ['XS', 'S', 'M', 'L', 'XL', '2XL', 'F'];
+const sizes = ['XS', 'S', 'M', 'L', 'XL', '2XL', 'FREE'];
 
 
 export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
+  const router = useRouter();
+
+  //상태 관리
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
   const [selectedColor, setSelectedColor] = useState<string[]>([]);
   const [selectedPrice, setSelectedPrice] = useState<string[]>([]);
   const [selectedSize, setSelectedSize] = useState<string[]>([]);
   const [selectedGender, setSelectedGender] = useState<string[]>([]);
 
-  // 각 옵션 클릭 함수
+  //필터 선택 로직
   const toggleSelection = (selectedList: string[], setList: (value: string[]) => void, item: string) => {
     if (selectedList.includes(item)) {
       setList(selectedList.filter((i) => i !== item)); // 이미 선택된 경우 제거
@@ -50,13 +54,57 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
     }
   };
 
+  //필터 적용 로직(쿼리 파라미터로 전환)
+  const handleApplyFilters = () => {
+    const queryParams = new URLSearchParams();
+
+    //카테고리(성별 + 옷) 필터 추가
+    const selectedCategories = [...selectedGender, ...selectedCategory];//성별이 앞에 오도록
+    if (selectedCategories.length > 0) {
+      queryParams.append('categories', selectedCategories.join(','));
+    }
+    //색상 필터 추가 
+    if (selectedColor.length > 0) {
+      const colorHexValues = selectedColor.map(name => {
+        const colorObj = colors.find(c => c.name === name);
+        return colorObj ? colorObj.hex : name; // Hex 코드 변환, 없으면 그대로
+      });
+      queryParams.append('colorCode', colorHexValues.join(','));
+    }
+    //가격 필터 추가 (최소, 최대)
+    if (selectedPrice.length > 0) {
+      // queryParams.append('price', selectedPrice.join(','));
+      selectedPrice.forEach((price) => {
+        const priceRange = price.replace(/[^0-9~]/g, ''); // 숫자와 '~'만 남김
+        const [min, max] = priceRange.split('~').map(Number);
+
+        if (!isNaN(min)) {
+          queryParams.append('priceGoe', min.toString()); // 최소값 추가
+        }
+        if (!isNaN(max)) {
+          queryParams.append('priceLt', max.toString()); // 최대값 추가
+        }
+      });
+    }
+    //사이즈 필터 
+    if (selectedSize.length > 0) {
+      queryParams.append('productSize', selectedSize.join(','));
+    }
+
+    // router.push(`/product?${queryParams.toString()}`);
+    //선택된 필터가 있을 경우만 url 변경
+    if (selectedCategories.length > 0 || selectedColor.length > 0 || selectedPrice.length > 0 || selectedSize.length > 0) {
+      router.push(`/product?page=0&size=48&${queryParams.toString()}`);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex">
       {/* 블러 배경 오버레이 */}
       <div
         className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-md"
-        onClick={() => setIsOpen(false)}
-      ></div>
+        onClick={() => setIsOpen(false)}>
+      </div>
 
       <div className="fixed top-0 left-0 w-[320px] h-full bg-white shadow-lg z-50 overflow-y-auto">
         {/* 헤더 */}
@@ -200,7 +248,12 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
           }}>
             초기화
           </button>
-          <button className="bg-black text-white px-4 py-2 rounded-md text-sm">
+          <button className="bg-black text-white px-4 py-2 rounded-md text-sm"
+            onClick={() => {
+              handleApplyFilters();
+              setIsOpen(false);
+            }}
+          >
             상품 보기
           </button>
         </div>

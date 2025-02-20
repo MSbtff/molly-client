@@ -23,127 +23,151 @@ const categories = ['카테고리', '성별', '색상', '가격', '사이즈', '
 
 export default function Products() {
   const router = useRouter();
-  const searchParams = useSearchParams(); //url 파라미터 가져오기
-  const keyword = searchParams.get("keyword") || "";//검색어 추출
-  const category = searchParams.get("categories") || "";
-  // const [product, setProduct] = useState<Product[]>([]); //타입 명시하지 않으면 ts가 never로 추론함
-  // const [productMen, setProductMen] = useState<Product[]>([]);
-  const [products, setProducts] = useState<Product[]>([]); //url 파라미터 처리를 하나의 상태로 통합
+  const searchParams = useSearchParams(); //쿼리 파라미터 가져오기(현재url의 쿼리 파라미터 가져오기)
 
-  const [isSortModalOpen, setIsSortModalOpen] = useState(false);//정렬 모달창
-  const [selectedSort, setSelectedSort] = useState("추천순");//정렬 상태 저장
-  const [isFilterOpen, setIsFilterOpen] = useState(false);//필터 모달창
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL; //api 서버 주소
+  const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL; //이미지 서버 주소
+  const searchApiUrl = `http://172.16.24.72:8080/search`; // 임시 검색 API 엔드포인트
+  const productApiUrl = `${baseUrl}/product`; // 상품 목록 API 엔드포인트
 
-  //무한스크롤
-  const [rows, setRows] = useState(8); //처음에는 8개의 행(row)만 렌더링
-  const [loading, setLoading] = useState(false); //로딩 방지
-  // const itemsPerRow = 6; //한 행에 6개의 상품
-  // const products = mockProducts.slice(0, rows * itemsPerRow); //`rows * 6` 만큼 상품을 가져오기
 
-  //검색어 api 요청
-  // useEffect(() => {
-  //   if (keyword.trim()) {
-  //     fetchProducts(keyword);
-  //   }
-  // }, [keyword]);
-  // const fetchProducts = async (keyword: string) => {
-  //   const apiUrl = `http://172.16.24.72:8080/search`;
-  //   const params = new URLSearchParams({
-  //     keyword,
-  //     pageable: JSON.stringify({ page: 0, size: 48, sort: ["price,desc"] }),
-  //   });
+  // const keyword = searchParams.get("keyword") || ""; //쿼리 파라미터 가져오기
+  // const category = searchParams.get("categories") || "";
 
-  //   try {
-  //     const response = await fetch(`${apiUrl}?${params.toString()}`);
-  //     if (!response.ok) throw new Error("검색 api 요청 실패");
+  const [products, setProducts] = useState<Product[]>([]); //검색어 또는 필터링 조건에 따라 api에서 가져온 상품 목록을 저장
+  const [selectedSort, setSelectedSort] = useState("추천순");//현재 선택된 정렬 기준
+  const [isSortModalOpen, setIsSortModalOpen] = useState(false);//정렬 모달창 열림 상태(반응형)
+  const [isFilterOpen, setIsFilterOpen] = useState(false);//필터 모달창 열림 상태
+  //필터를 객체로 관리
+  const [filters, setFilters] = useState({
+    keyword: '',
+    categories: '',
+    colorCode: '',
+    productSize: '',
+    brandName: '',
+    priceGoe: '',
+    priceLt: '',
+  });
 
-  //     const data: Product[] = await response.json();
-  //     console.log("검색 api 요청 성공:", data);
-  //     setProduct(data);
-  //   } catch (error) {
-  //     console.error("검색 api 요청 에러:", error);
-  //   }
-  // }
+  //url의 쿼리 파라미터가 변경될 때마다 filters 상태 업데이트
+  useEffect(() => {
+    const updatedFilters: Partial<typeof filters> = {}; // 새로운 필터링 객체
 
-  //api 호출 로직 통합 (검색어, 카테고리 클릭)
+    searchParams.forEach((value, key) => {
+      if (value) { //값이 있는 필터만 저장
+        updatedFilters[key as keyof typeof filters] = value;
+      }
+    });
+
+    setFilters(updatedFilters as typeof filters);
+  }, [searchParams]); // searchParams가 변경될 때 실행
+
+  useEffect(() => {
+    fetchProducts();
+  }, [filters]);
+
+
+  //api 요청 분기 처리
   const fetchProducts = async () => {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL; // .env에서 불러오기
-    const apiUrl = `${baseUrl}/product`;
-
     try {
       let response;
+      const params = new URLSearchParams();
 
-      if (keyword.trim()) {
-        const searchParams = new URLSearchParams({
-          keyword,
-          pageable: JSON.stringify({ page: 0, size: 48, sort: ["price,desc"] }),
-        });
-        response = await fetch(`http://172.16.24.72:8080/search?${searchParams}`);
-        if (!response || !response.ok) {
-          throw new Error(`상품 데이터 요청 실패: ${response?.status}`);
-        }
-        const data = await response.json();
-        setProducts(data);
-        console.log("API 요청 성공:", data);
-      }
+      // 검색어 api 엔드포인트
+      if (filters.keyword?.trim()) {
+        // const searchParams = new URLSearchParams({
+        //   keyword,
+        //   pageable: JSON.stringify({ page: 0, size: 48, sort: ["price,desc"] }),
+        // });
+        // response = await fetch(`${searchApiUrl}?${searchParams}`);
 
-      else if (category) {
-        const params = new URLSearchParams({
-          categories: category,
-          page: "0",
-          size: "48",
-        });
-        response = await fetch(`${apiUrl}?${params.toString()}`);
+        params.append("keyword", filters.keyword);
+        response = await fetch(`${searchApiUrl}?${params.toString()}`);
+
         if (!response.ok) {
-          throw new Error(`상품 데이터 요청 실패: ${response.status}`);
+          throw new Error(`api 요청 실패: ${response.status}`);
         }
+
         const data = await response.json();
-        const formattedData: Product[] = data.data.map((item: Product) => ({
+        setProducts(data.item || []);
+        console.log("API 요청 성공:", data);
+
+        return; // 상품 목록 api 요청 방지
+      } else {
+        // 상품 목록 API 요청 (keyword가 없는 경우)
+        Object.entries(filters).forEach(([key, value]) => {
+          if (value) params.append(key, value);
+        });
+
+        params.append("page", "0");
+        params.append("size", "48");
+        response = await fetch(`${productApiUrl}?${params.toString()}`);
+
+        if (!response.ok) throw new Error(`상품 데이터 요청 실패: ${response.status}`);
+
+        const data = await response.json();
+        const formattedData = data.data.map((item: Product) => ({
           id: item.id,
-          url: item.thumbnail?.path ?? "/noImage.svg",
+          url: item.thumbnail.path ? `${item.thumbnail.path}` : "/images/noImage.svg",
           brandName: item.brandName,
           productName: item.productName,
           price: item.price,
         }));
+
         setProducts(formattedData);
-        console.log("API 요청 성공:", data)
+        console.log("API 요청 성공:", data);
+
+
+        // //상품 목록 api 엔드포인트
+        // else {
+        //   //필터링 옵션 파라미터 추출
+        //   const categories = searchParams.get("categories");
+        //   const colorCode = searchParams.get("colorCode");
+        //   const productSize = searchParams.get("productSize");
+        //   const priceGoe = searchParams.get("priceGoe");
+        //   const priceLt = searchParams.get("priceLt");
+
+        //   //url에 하나라도 값이 있으면 api 요청
+        //   const params = new URLSearchParams({
+        //     ...(categories ? { categories } : {}),
+        //     ...(colorCode ? { colorCode } : {}),
+        //     ...(productSize ? { productSize } : {}),
+        //     ...(priceGoe ? { priceGoe } : {}),
+        //     ...(priceLt ? { priceLt } : {}),
+        //     page: "0",
+        //     size: "48",
+        //   });
+
+        //   response = await fetch(`${productApiUrl}?${params.toString()}`);
+
+        //   if (!response.ok) {
+        //     throw new Error(`상품 데이터 요청 실패: ${response.status}`);
+        //   }
+
+        //   const data = await response.json();
+
+        //   //데이터 구조 매핑, 이미지 서버 붙여서 URL 생성
+        //   const formattedData: Product[] = data.data.map((item: Product) => ({
+        //     id: item.id,
+        //     // url: item.thumbnail.path ? `${imageUrl}${item.thumbnail.path}` : "/images/noImage.svg",
+        //     url: item.thumbnail.path ? `${item.thumbnail.path}` : "/images/noImage.svg",
+        //     brandName: item.brandName,
+        //     productName: item.productName,
+        //     price: item.price,
+        //   }));
+        //   setProducts(formattedData);
+        //   console.log("API 요청 성공:", data);
+        // }
       }
+
     } catch (error) {
       console.error("API 요청 에러:", error);
     }
   }
-  useEffect(() => {
-    fetchProducts();
-  }, [keyword, category]);
 
-  //무한 스크롤 로드 함수
-  const loadMoreRows = () => {
-    if (loading) return;
-    setLoading(true);
 
-    setTimeout(() => {
-      setRows((prev) => prev + 8); //기존 행 수 +8 (한 번에 8행 추가)
-      setLoading(false);
-    }, 500); //가짜 로딩 시간
-  };
-  //스크롤 이벤트 감지 (60이상% 내려가면 데이터 로드)
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollHeight = document.documentElement.scrollHeight; // 전체 문서 높이
-      const scrollTop = document.documentElement.scrollTop; // 현재 스크롤 위치
-      const clientHeight = window.innerHeight; // 보이는 화면 높이
-      const scrollPosition = (scrollTop + clientHeight) / scrollHeight; // 현재 스크롤 비율
 
-      if (scrollPosition >= 0.8) {
-        loadMoreRows();
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll); // 정리(cleanup)
-  }, [rows, loading]);
-
-  //상품 클릭 시 url 변경
+  //특정 상품 클릭 시 url 변경
   const handleProductClick = (id: number) => {
     router.push(`/detail?productId=${id}`);
   };
@@ -161,36 +185,26 @@ export default function Products() {
           </button>
         ))}
       </div>
+
       {/* 품절 체크박스, 정렬 */}
       <div className="flex items-center justify-between mt-6">
 
         <div className='flex itmes-center gap-2'>
           <label className="flex items-center gap-2 text-sm text-gray-700">
-            <input type="checkbox" id="exclude-sold-out" className="w-4 h-4" />품절 제외
-          </label>
+            <input type="checkbox" id="exclude-sold-out" className="w-4 h-4" />품절 제외</label>
         </div>
-        {/* <div className='flex gap-4 text-sm text-gray-700'>
-          {["추천순", "신상품순", "판매순", "낮은가격순", "높은가격순", "리뷰순"].map((sort) => (
-            <button
-              key={sort}
-              className="hover:underline"
-              onClick={() => console.log(sort + " 정렬")}
-            > */}
-        {/* 큰 화면에서 정렬 버튼 전체 표시 */}
-        <div className="hidden md:flex gap-4">
-          {["추천순", "신상품순", "판매순", "낮은가격순", "높은가격순", "리뷰순"].map((sort) => (
-            <button
-              key={sort}
-              className="hover:underline"
-              onClick={() => console.log(sort + " 정렬")}
-            >
-              {sort}
 
+        {/* 정렬 : 큰 화면에서 정렬 버튼 전체 표시 */}
+        <div className="hidden md:flex gap-4">
+          {["조회순", "신상품순", "판매순", "낮은가격순", "높은가격순", "리뷰순"].map((sort) => (
+            <button key={sort}
+              className="text-gray-500 hover:underline hover:text-black"
+              onClick={() => console.log(sort + " 정렬")}
+            >{sort}
             </button>
           ))}
         </div>
-
-        {/* 작은 화면에서는 단일 버튼으로 변경 */}
+        {/* 정렬 : 작은 화면에서는 단일 버튼으로 변경 */}
         <button
           className="md:hidden hover:underline"
           onClick={() => setIsSortModalOpen(true)}
@@ -205,7 +219,9 @@ export default function Products() {
             <div key={item.id} className="flex flex-col items-center mt-10">
               <Image
                 //src={item.url || "/noImage.svg"} //API 응답 필드명 확인 (product.image → item.url)
-                src="/images/noImage.svg"
+                // src="/images/noImage.svg"
+
+                src={`${imageUrl}${item.url}`}
                 alt={item.productName}
                 width={250}
                 height={300}
@@ -213,7 +229,7 @@ export default function Products() {
                 onClick={() => handleProductClick(item.id)}
               />
               <button className="flex flex-col items-start w-full overflow-hidden"
-                      onClick={()=>handleProductClick(item.id)}
+                onClick={() => handleProductClick(item.id)}
               >
                 <p className="text-left mt-1 text-sm font-semibold">{item.brandName}</p>
                 <p className="text-left text-sm text-gray-500 truncate w-full">{item.productName}</p>

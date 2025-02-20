@@ -150,7 +150,7 @@ export default function Main() {
 
       {/*스타일 클립 */}
       <section className="text-center px-6 scale-90">
-        <h2 className="text-left text-xl font-semibold mb-4">스타일 클립</h2>
+        <h2 className="text-left text-xl font-semibold mb-4">금주 인기 스타일</h2>
 
         {/* <div className="grid grid-cols-6 md:grid-cols-4 sm:grid-cols-2 gap-2 overflow-hidden transition-all"> */}
         <div className="flex justify-center gap-2 overflow-hidden transition-all">
