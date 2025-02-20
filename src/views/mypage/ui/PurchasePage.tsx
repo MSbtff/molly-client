@@ -1,4 +1,4 @@
-import {BorderBox} from '../BorderBox';
+import {BorderBox} from './BorderBox';
 
 export const PurchasePage = () => {
   return (

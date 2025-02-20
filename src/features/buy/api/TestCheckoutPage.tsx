@@ -1,17 +1,19 @@
 'use client';
 
+import {useOrderStore} from '@/app/provider/OrderStore';
 import {loadTossPayments, ANONYMOUS} from '@tosspayments/tosspayments-sdk';
 import {TossPaymentsWidgets} from '@tosspayments/tosspayments-sdk';
 import {useEffect, useState} from 'react';
 
 //env 환경변수 처리 필요
-const clientKey = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
-const customerKey = '25R9-fHlG6ZMZ6yUrekvS';
+const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT as string;
+const customerKey = process.env.NEXT_PUBLIC_TOSS_CUSTOMER as string;
 
 export function TestCheckoutPage() {
+  const {orders, setOrders} = useOrderStore();
   const [amount, setAmount] = useState({
     currency: 'KRW',
-    value: 10_000,
+    value: 0,
   });
   const [ready, setReady] = useState(false);
   const [widgets, setWidgets] = useState<TossPaymentsWidgets | null>(null);
@@ -21,11 +23,11 @@ export function TestCheckoutPage() {
       // ------  결제위젯 초기화 ------
       const tossPayments = await loadTossPayments(clientKey);
       // 회원 결제
-      // const widgets = tossPayments.widgets({
-      //   customerKey,
-      // });
+      const widgets = tossPayments.widgets({
+        customerKey,
+      });
       // 비회원 결제
-      const widgets = tossPayments.widgets({customerKey: ANONYMOUS});
+      // const widgets = tossPayments.widgets({customerKey: ANONYMOUS});
 
       setWidgets(widgets);
     }
@@ -39,7 +41,17 @@ export function TestCheckoutPage() {
         return;
       }
       // ------ 주문의 결제 금액 설정 ------
-      await widgets.setAmount(amount);
+      const totalAmount = orders[0].totalAmount;
+      setAmount({
+        currency: 'KRW',
+        value: totalAmount,
+      });
+      await widgets.setAmount({
+        currency: 'KRW',
+        value: totalAmount,
+      });
+
+      console.log('주문의 결제 금액:', totalAmount);
 
       await Promise.all([
         // ------  결제 UI 렌더링 ------
@@ -58,7 +70,7 @@ export function TestCheckoutPage() {
     }
 
     renderPaymentWidgets();
-  }, [widgets]);
+  }, [widgets, orders]);
 
   useEffect(() => {
     if (widgets == null) {
@@ -109,8 +121,8 @@ export function TestCheckoutPage() {
                     // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
                     // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
                     await widgets.requestPayment({
-                      orderId: 'WJRz5eJmA9uLwfFZdO6nJ222',
-                      orderName: '토스 티셔츠 외 2건',
+                      orderId: orders[0].tossOrderId,
+                      orderName: orders[0].orderDetails[0].productName,
                       successUrl: window.location.origin + '/success',
                       failUrl: window.location.origin + '/fail',
                       customerEmail: 'customer123@gmail.com',
