@@ -10,7 +10,6 @@ interface OrderItem {
 
 export default async function cartOrder(orderItems: OrderItem[]) {
   const authToken = (await cookies()).get('Authorization')?.value;
-
   if (!authToken) {
     throw new Error('인증되지 않은 요청입니다.');
   }

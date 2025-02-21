@@ -1,4 +1,5 @@
 import {create} from 'zustand';
+import {createJSONStorage, persist} from 'zustand/middleware'; // persist 미들웨어 추가
 
 export interface OrderItem {
   orderId: number;
@@ -40,6 +41,16 @@ export interface OrderDetails {
   quantity: number;
 }
 
+// export interface OrderDelivery {
+
+//     addrDetail: string;
+//     numberAddress: string;
+//     receiverName: string;
+//     receiverPhone: string;
+//     roadAddress: string;
+//     status: string;
+// }
+
 export interface OrderImage {
   url: string;
 }
@@ -51,9 +62,28 @@ export interface OrderStore {
   setOrderImages: (orderImages: OrderImage[]) => void;
 }
 
-export const useOrderStore = create<OrderStore>((set) => ({
-  orders: [],
-  orderImages: [],
-  setOrders: (orders: OrderItem[]) => set({orders}),
-  setOrderImages: (orderImages: OrderImage[]) => set({orderImages}),
-}));
+export const useOrderStore = create(
+  persist<OrderStore>(
+    (set) => ({
+      orders: [],
+      orderImages: [],
+      setOrders: (orders) => set({orders}),
+      setOrderImages: (orderImages) => set({orderImages}),
+    }),
+    {
+      name: 'order-storage', // 로컬 스토리지에 저장될 키 이름
+      storage: createJSONStorage(() => localStorage),
+      // 디버깅을 위한 옵션 추가
+      onRehydrateStorage: (state) => {
+        console.log('스토리지 복원 상태:', state);
+        return (state, error) => {
+          if (error) {
+            console.error('스토리지 복원 실패:', error);
+          } else {
+            console.log('스토리지 복원 완료:', state);
+          }
+        };
+      },
+    }
+  )
+);

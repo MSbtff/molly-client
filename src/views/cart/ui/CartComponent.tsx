@@ -9,9 +9,10 @@ import {CartProductInfo} from './CartProductInfo';
 import {CartItem, CartItemDto, cartRead} from '@/features/cart/api/cartRead';
 import cartDelete from '@/features/cart/api/cartDelete';
 import cartOrder from '@/features/cart/api/cartOrder';
-import {OrderItem, useOrderStore} from '@/app/provider/OrderStore';
+
 import {useRouter} from 'next/navigation';
 import {useCartStore} from '@/app/provider/CartStore';
+import {OrderItem, useOrderStore} from '@/app/provider/OrderStore';
 
 export const CartComponent = () => {
   const router = useRouter();

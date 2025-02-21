@@ -18,15 +18,16 @@ import {useRouter} from 'next/navigation';
 export default function BuyContainer() {
   const router = useRouter();
   const {orders, setOrders} = useOrderStore();
-  const orderId = orders?.[0]?.orderId;
+  const orderNumber = orders?.length - 1;
+  const orderId = orders?.[orderNumber]?.orderId;
 
   // 주문이 없을 때 카트로 리다이렉트
-  // useEffect(() => {
-  //   if (!orders?.length) {
-  //     router.replace('/cart');
-  //     return;
-  //   }
-  // }, [orders, router]);
+  useEffect(() => {
+    if (!orders?.length) {
+      router.replace('/cart');
+      return;
+    }
+  }, [orders, router]);
 
   // // 뒤로가기 처리
   // useEffect(() => {
@@ -84,7 +85,7 @@ export default function BuyContainer() {
           </div>
           <div className="mt-10 h-full overflow-auto">
             {orders?.length > 0 &&
-              orders[0].orderDetails?.map((item) => (
+              orders[orderNumber].orderDetails?.map((item) => (
                 <CartProductInfo
                   key={item.itemId}
                   cartId={0} // 필요한 경우 적절한 값으로 변경

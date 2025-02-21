@@ -1,6 +1,28 @@
+'use server';
+
 import {cookies} from 'next/headers';
 
-export default async function TossRequest() {
+interface DeliveryInfo {
+  receiver_name: string;
+  receiver_phone: string;
+  road_address: string;
+  number_address: string;
+  addr_detail: string;
+}
+
+export default async function TossRequest(
+  userOrderId: number,
+  tossOrderId: string,
+  amount: string,
+  point: number,
+  paymentKey: string,
+  paymentType: string,
+  receiver_phone: string,
+  receiver_name: string,
+  addr_detail: string,
+  number_address: string,
+  road_address: string
+) {
   const authToken = (await cookies()).get('Authorization')?.value;
 
   if (!authToken) {
@@ -15,27 +37,36 @@ export default async function TossRequest() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        orderId: 10,
-        tossOrderId: 'ORD-20250213132349-6572',
-        paymentKey: 'ORD-20250218131035-3409',
-        amount: 112242,
-        paymentType: 'NORMAL',
-        point: 5000,
+        orderId: userOrderId,
+        tossOrderId,
+        paymentKey,
+        amount,
+        paymentType,
+        point,
         delivery: {
-          receiver_name: 'momo',
-          receiver_phone: '010-5134-1111',
-          road_address: '판교판교',
-          number_address: '12345',
-          addr_detail: '배송 조심히 해주세요',
+          receiver_name,
+          receiver_phone,
+          road_address,
+          number_address,
+          addr_detail,
         },
       }),
     });
 
     if (!res.ok) {
-      throw new Error('결제 실패');
+      const errorData = await res.json();
+      return {
+        success: false,
+        message: errorData.message || '결제 실패',
+      };
     }
 
-    return await res.json();
+    const data = await res.json();
+    return {
+      success: true,
+      data,
+      message: '결제가 성공적으로 완료되었습니다.',
+    };
   } catch (error) {
     console.error('결제 실패:', error);
     throw error;
