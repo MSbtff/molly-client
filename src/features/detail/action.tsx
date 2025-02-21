@@ -55,7 +55,6 @@ export async function addToCart(itemId: number, quantity: number) {
   const authToken = (await cookies()).get('Authorization');
 
   if (!authToken) {
-    // throw new Error('로그인이 필요합니다.');
     redirect('/login');
   }
 

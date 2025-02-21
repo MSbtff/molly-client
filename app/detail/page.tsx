@@ -210,6 +210,10 @@ export default function ProductDetail() {
       return;
     }
 
+    console.log("장바구니 요청 시작");
+    console.log("선택한 옵션 id", selectedOption.id);
+    console.log("수량", quantity);
+
     startTransition(async () => {
       try {
         const message = await addToCart(selectedOption.id, quantity);
@@ -287,9 +291,8 @@ export default function ProductDetail() {
   //선택한 옵션이 렌더링 
   const handleOptionSelect = (option: Product["items"][0]) => {
     console.log("옵션 아이디", option.id)
-      setSelectedOption(option);
-      setIsDropdownOpen(false);
-      
+    setSelectedOption(option);
+    setIsDropdownOpen(false);
   };
 
 
@@ -404,15 +407,11 @@ export default function ProductDetail() {
           {/* 구매 버튼 */}
           <div className="flex gap-4 mt-4">
             <button className="w-1/2 border border-black py-3 rounded-md text-lg font-semibold"
-                    onClick={handleBuyNow}
-            >
-              바로 구매
+              onClick={handleBuyNow}> 바로 구매
             </button>
             <button className="w-1/2 bg-black text-white py-3 rounded-md text-lg font-semibold"
-                    onClick={handleCartButton}
-                    disabled={isPending}
-            >
-              장바구니 담기
+              onClick={handleCartButton}
+              disabled={isPending}> 장바구니 담기
             </button>
           </div>
         </div>
@@ -421,13 +420,89 @@ export default function ProductDetail() {
       {/* 상세 섹션 */}
       <section className="max-w-screen-lg mx-auto mt-16 px-4 border-t">
         {/* 상품 이미지 및 그라데이션 */}
-        <div className={`${showDetails ? 'h-auto' : 'h-[300px] overflow-hidden'} relative`}>
+        {/* <div className={`${showDetails ? 'h-auto' : 'h-[300px] overflow-hidden'} relative`}>
           <div className="flex flex-col gap-6">
             {product?.productDescriptionImages.map((img, index) => (
               <Image
                 key={index}
                 src={`${imageUrl}${img.path}`}
                 // src="/images/noImage.svg"
+                alt={`Product Description Image ${index + 1}`}
+                width={800}
+                height={600}
+                className="w-full object-cover"
+              />
+            ))}
+          </div> */}
+
+        {/* 그라데이션 효과 추가 (showDetails가 false일 때만 보이도록) */}
+        {/* {!showDetails && (
+            <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white to-transparent"></div>
+          )}
+        </div> */}
+
+        {/* 상품 정보 더보기 버튼 */}
+        {/* {!showDetails && (
+          // <div className="text-center mt-4">
+          <div className="text-center mt-8 relative z-10">
+            <button
+              className="px-6 py-3 border border-gray-400 rounded-lg text-lg font-medium hover:bg-gray-100 transition"
+              onClick={() => setShowDetails(true)}
+            >
+              상품 정보 더보기
+            </button>
+          </div>
+        )} */}
+
+        {/* 상세 설명 */}
+        {/* {showDetails && (
+          <>
+            <div className="mt-12">
+              {product?.description && (
+                <div className="max-w-screen-lg mx-auto text-center mt-8 px-4">
+                  {product.description.split("\n").map((line, index) => (
+                    <p key={index} className="mb-4">
+                      {line}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </div> */}
+
+        {/* 접기 버튼 */}
+        {/* <div className="text-center mt-6">
+              <button
+                className="px-6 py-3 border border-gray-400 rounded-lg text-lg font-medium hover:bg-gray-100 transition"
+                onClick={() => setShowDetails(false)}
+              >
+                접기
+              </button>
+            </div>
+          </>
+        )} */}
+
+        {/* 상세 설명 (이미지보다 위에 위치) */}
+        {showDetails && (
+          <div className="mt-12">
+            {product?.description && (
+              <div className="max-w-screen-lg mx-auto text-center mt-8 px-4">
+                {product.description.split("\n").map((line, index) => (
+                  <p key={index} className="mb-4">
+                    {line}
+                  </p>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* 상품 이미지 및 그라데이션 */}
+        <div className={`${showDetails ? 'h-auto' : 'h-[300px] overflow-hidden'} relative`}>
+          <div className="flex flex-col gap-6">
+            {product?.productDescriptionImages.map((img, index) => (
+              <Image
+                key={index}
+                src={`${imageUrl}${img.path}`}
                 alt={`Product Description Image ${index + 1}`}
                 width={800}
                 height={600}
@@ -444,7 +519,6 @@ export default function ProductDetail() {
 
         {/* 상품 정보 더보기 버튼 */}
         {!showDetails && (
-          // <div className="text-center mt-4">
           <div className="text-center mt-8 relative z-10">
             <button
               className="px-6 py-3 border border-gray-400 rounded-lg text-lg font-medium hover:bg-gray-100 transition"
@@ -455,40 +529,22 @@ export default function ProductDetail() {
           </div>
         )}
 
-        {/* 상세 설명 */}
+        {/* 접기 버튼 */}
         {showDetails && (
-          <>
-            <div className="mt-12">
-              {/* 상세 설명 */}
-              {product?.description && (
-                <div className="max-w-screen-lg mx-auto text-center mt-8 px-4">
-                  {product.description.split("\n").map((line, index) => (
-                    <p key={index} className="mb-4">
-                      {line}
-                    </p>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* 접기 버튼 */}
-            <div className="text-center mt-6">
-              <button
-                className="px-6 py-3 border border-gray-400 rounded-lg text-lg font-medium hover:bg-gray-100 transition"
-                onClick={() => setShowDetails(false)}
-              >
-                접기
-              </button>
-            </div>
-          </>
+          <div className="text-center mt-6">
+            <button
+              className="px-6 py-3 border border-gray-400 rounded-lg text-lg font-medium hover:bg-gray-100 transition"
+              onClick={() => setShowDetails(false)}
+            >
+              접기
+            </button>
+          </div>
         )}
+
       </section>
 
-      {/* 구분선 */}
-      <hr className="my-8 mt-20 border-gray-300" />
-
       {/* 리뷰 섹션 */}
-      <section className="max-w-screen-xl mx-auto mt-16 px-4">
+      <section className="max-w-screen-xl mx-auto mt-16 px-4 border-t">
         {/* 리뷰 헤더 */}
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-lg font-semibold">리뷰 {reviews.length}</h2>

@@ -27,7 +27,7 @@ export default function Products() {
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL; //api 서버 주소
   const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL; //이미지 서버 주소
-  const searchApiUrl = `http://172.16.24.72:8080/search`; // 임시 검색 API 엔드포인트
+  const searchApiUrl = `${baseUrl}/search`; // 임시 검색 API 엔드포인트
   const productApiUrl = `${baseUrl}/product`; // 상품 목록 API 엔드포인트
 
 
@@ -75,11 +75,6 @@ export default function Products() {
 
       // 검색어 api 엔드포인트
       if (filters.keyword?.trim()) {
-        // const searchParams = new URLSearchParams({
-        //   keyword,
-        //   pageable: JSON.stringify({ page: 0, size: 48, sort: ["price,desc"] }),
-        // });
-        // response = await fetch(`${searchApiUrl}?${searchParams}`);
 
         params.append("keyword", filters.keyword);
         response = await fetch(`${searchApiUrl}?${params.toString()}`);
@@ -92,7 +87,16 @@ export default function Products() {
         setProducts(data.item || []);
         console.log("API 요청 성공:", data);
 
+        // 다음 페이지 요청을 위해 cursorId와 lastCreatedAt 저장
+        if (!data.isLastPage) {
+          setFilters(prev => ({
+              ...prev,
+              cursorId: data.nextCursorId,
+              lastCreatedAt: data.nextLastCreatedAt
+          }));
+      }
         return; // 상품 목록 api 요청 방지
+        
       } else {
         // 상품 목록 API 요청 (keyword가 없는 경우)
         Object.entries(filters).forEach(([key, value]) => {
@@ -116,48 +120,6 @@ export default function Products() {
 
         setProducts(formattedData);
         console.log("API 요청 성공:", data);
-
-
-        // //상품 목록 api 엔드포인트
-        // else {
-        //   //필터링 옵션 파라미터 추출
-        //   const categories = searchParams.get("categories");
-        //   const colorCode = searchParams.get("colorCode");
-        //   const productSize = searchParams.get("productSize");
-        //   const priceGoe = searchParams.get("priceGoe");
-        //   const priceLt = searchParams.get("priceLt");
-
-        //   //url에 하나라도 값이 있으면 api 요청
-        //   const params = new URLSearchParams({
-        //     ...(categories ? { categories } : {}),
-        //     ...(colorCode ? { colorCode } : {}),
-        //     ...(productSize ? { productSize } : {}),
-        //     ...(priceGoe ? { priceGoe } : {}),
-        //     ...(priceLt ? { priceLt } : {}),
-        //     page: "0",
-        //     size: "48",
-        //   });
-
-        //   response = await fetch(`${productApiUrl}?${params.toString()}`);
-
-        //   if (!response.ok) {
-        //     throw new Error(`상품 데이터 요청 실패: ${response.status}`);
-        //   }
-
-        //   const data = await response.json();
-
-        //   //데이터 구조 매핑, 이미지 서버 붙여서 URL 생성
-        //   const formattedData: Product[] = data.data.map((item: Product) => ({
-        //     id: item.id,
-        //     // url: item.thumbnail.path ? `${imageUrl}${item.thumbnail.path}` : "/images/noImage.svg",
-        //     url: item.thumbnail.path ? `${item.thumbnail.path}` : "/images/noImage.svg",
-        //     brandName: item.brandName,
-        //     productName: item.productName,
-        //     price: item.price,
-        //   }));
-        //   setProducts(formattedData);
-        //   console.log("API 요청 성공:", data);
-        // }
       }
 
     } catch (error) {
