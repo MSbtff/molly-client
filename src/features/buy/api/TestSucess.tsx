@@ -1,57 +1,84 @@
 'use client';
 
 import {useSearchParams} from 'next/navigation';
-import {useRouter} from 'next/router';
+import {useRouter} from 'next/navigation';
 import {useEffect} from 'react';
 import TossRequest from './tossRequest';
 import {useOrderStore} from '@/app/provider/OrderStore';
 
-export function TestSuccessPage() {
+export function TestSuccess() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const {orders, setOrders} = useOrderStore();
 
+  // orders가 없는 경우 처리
+  if (!orders || orders.length === 0) {
+    return <div>주문 정보를 찾을 수 없습니다.</div>;
+  }
+
+  const {orderId, userPoint: point} = orders[0];
+  const {
+    roadAddress,
+    numberAddress,
+    addrDetail,
+    recipient,
+    recipientCellPhone,
+  } = orders[0].defaultAddress;
+
   useEffect(() => {
-    // 쿼리 파라미터 값이 결제 요청할 때 보낸 데이터와 동일한지 반드시 확인하세요.
-    // 클라이언트에서 결제 금액을 조작하는 행위를 방지할 수 있습니다.
-    const requestData = {
-      orderId: searchParams.get('orderId'),
-      amount: searchParams.get('amount'),
-      paymentKey: searchParams.get('paymentKey'),
-    };
+    const paymentKey = searchParams.get('paymentKey') ?? '';
+    const amount = searchParams.get('amount') ?? '0';
+    const tossOrderId = searchParams.get('orderId') ?? '';
+    const paymentType = searchParams.get('paymentType') ?? '';
 
-    async function confirm() {
-      const response = await fetch('/confirm', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestData),
-      });
+    async function processPayment() {
+      try {
+        // TossRequest 직접 호출
+        const data = await TossRequest(
+          orderId,
+          tossOrderId,
+          amount,
+          point,
+          paymentKey,
+          paymentType,
+          recipientCellPhone,
+          recipient,
+          addrDetail,
+          numberAddress,
+          roadAddress
+        );
 
-      const json = await response.json();
-
-      if (!response.ok) {
-        // 결제 실패 비즈니스 로직을 구현하세요.
-        router.push(`/fail?message=${json.message}&code=${json.code}`);
-        return;
+        if (data.success) {
+          // 성공 시 처리
+          console.log(data);
+          setOrders([]);
+          localStorage.removeItem('order-storage');
+          router.push('/');
+        } else {
+          // 실패 시 처리
+          router.push(`/fail?message=${data.message}`);
+        }
+      } catch (error) {
+        console.error('Payment confirmation failed:', error);
+        router.push('/fail?message=결제 처리 중 오류가 발생했습니다');
       }
-
-      // 결제 성공 비즈니스 로직을 구현하세요.
-      // const data = await TossRequest(
-      //   orderId,
-      //   tossOrderId,
-      //   amount,
-      //   point,
-      //   paymentKey,
-      //   paymentType,
-      //   delivery
-      // );
-
-      // console.log(data);
     }
-    confirm();
-  }, []);
+
+    if (paymentKey && amount && tossOrderId) {
+      processPayment();
+    }
+  }, [
+    router,
+    searchParams,
+    orders,
+    orderId,
+    point,
+    recipientCellPhone,
+    recipient,
+    addrDetail,
+    numberAddress,
+    roadAddress,
+  ]);
 
   return (
     <div className="result wrapper">

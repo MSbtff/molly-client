@@ -1,22 +1,24 @@
 'use client';
 
-import {useOrderStore} from '@/app/provider/OrderStore';
 import {loadTossPayments, ANONYMOUS} from '@tosspayments/tosspayments-sdk';
 import {TossPaymentsWidgets} from '@tosspayments/tosspayments-sdk';
 import {useEffect, useState} from 'react';
+import {useOrderStore} from '@/app/provider/OrderStore';
 
 //env 환경변수 처리 필요
 const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT as string;
 const customerKey = process.env.NEXT_PUBLIC_TOSS_CUSTOMER as string;
 
 export function TestCheckoutPage() {
-  const {orders, setOrders} = useOrderStore();
+  const {orders} = useOrderStore();
   const [amount, setAmount] = useState({
     currency: 'KRW',
     value: 0,
   });
   const [ready, setReady] = useState(false);
   const [widgets, setWidgets] = useState<TossPaymentsWidgets | null>(null);
+
+  const orderNumber = orders.length - 1;
 
   useEffect(() => {
     async function fetchPaymentWidgets() {
@@ -41,7 +43,7 @@ export function TestCheckoutPage() {
         return;
       }
       // ------ 주문의 결제 금액 설정 ------
-      const totalAmount = orders[0].totalAmount;
+      const totalAmount = orders[orderNumber].totalAmount;
       setAmount({
         currency: 'KRW',
         value: totalAmount,
@@ -121,13 +123,11 @@ export function TestCheckoutPage() {
                     // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
                     // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
                     await widgets.requestPayment({
-                      orderId: orders[0].tossOrderId,
-                      orderName: orders[0].orderDetails[0].productName,
-                      successUrl: window.location.origin + '/success',
+                      orderId: orders[orderNumber].tossOrderId,
+                      orderName:
+                        orders[orderNumber].orderDetails[0].productName,
+                      successUrl: window.location.origin + '/buy/success',
                       failUrl: window.location.origin + '/fail',
-                      customerEmail: 'customer123@gmail.com',
-                      customerName: '김토스',
-                      customerMobilePhone: '01012341234',
                     });
                   } catch (error) {
                     // 에러 처리하기
