@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useTransition } from 'react';
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import Image from 'next/image';
 // import ReviewModal from '../../public/images/review.jpg';
 import { buyNow, addToCart } from '@/features/detail/action';
@@ -164,6 +164,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL;
 
 export default function ProductDetail() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const productId = searchParams.get("productId");
   const [product, setProduct] = useState<Product | null>(null);
@@ -197,6 +198,9 @@ export default function ProductDetail() {
       try {
         await buyNow(parsedProductId, selectedOption.id, quantity);
         console.log("order api 요청 성공");
+
+        // 구매 성공 후 /buy 페이지로 이동
+        router.push('/buy');
       } catch (error) {
         console.error("order api 요청 중 오류 발생:", error);
       }
@@ -217,6 +221,8 @@ export default function ProductDetail() {
     startTransition(async () => {
       try {
         const message = await addToCart(selectedOption.id, quantity);
+        console.log("api 응답:", message);//응답 값 확인
+        
         alert(message);
       } catch (error) {
         console.error("장바구니 api 오류 발생:", error);

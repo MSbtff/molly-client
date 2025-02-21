@@ -69,6 +69,7 @@ export async function addToCart(itemId: number, quantity: number) {
     // });
     const bodyData = JSON.stringify({ itemId, quantity });
     console.log("장바구니 API 요청 본문:", bodyData);
+    
     const response = await fetch(`${process.env.NEXT_SERVER_URL}/cart/add`, {
       method: "POST",
       headers: {
