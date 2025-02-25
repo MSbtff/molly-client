@@ -14,7 +14,7 @@ export default async function Mypage() {
 
   console.log('이미지:', orderRes.orders.orderDetails);
   console.log(userRes);
-  console.log(pointRes);
+
   return (
     <>
       <div className="flex p-8 ">
