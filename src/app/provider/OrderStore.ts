@@ -39,6 +39,8 @@ export interface OrderDetails {
   size: string;
   price: number;
   quantity: number;
+  image: string;
+  color: string;
 }
 
 // export interface OrderDelivery {
@@ -73,17 +75,6 @@ export const useOrderStore = create(
     {
       name: 'order-storage', // 로컬 스토리지에 저장될 키 이름
       storage: createJSONStorage(() => localStorage),
-      // 디버깅을 위한 옵션 추가
-      onRehydrateStorage: (state) => {
-        console.log('스토리지 복원 상태:', state);
-        return (state, error) => {
-          if (error) {
-            console.error('스토리지 복원 실패:', error);
-          } else {
-            console.log('스토리지 복원 완료:', state);
-          }
-        };
-      },
     }
   )
 );

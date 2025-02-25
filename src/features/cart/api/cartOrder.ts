@@ -3,9 +3,7 @@
 import {cookies} from 'next/headers';
 
 interface OrderItem {
-  productId: number;
-  itemId: number;
-  quantity: number;
+  cartId: number;
 }
 
 export default async function cartOrder(orderItems: OrderItem[]) {
@@ -22,9 +20,11 @@ export default async function cartOrder(orderItems: OrderItem[]) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        orderRequests: orderItems,
+        cartOrderRequests: orderItems,
       }),
     });
+
+    console.log('주문 요청:', orderItems);
 
     console.log(res.status);
 

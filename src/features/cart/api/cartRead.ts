@@ -56,7 +56,7 @@ export async function cartRead(): Promise<CartResponse | undefined> {
     }
 
     const data = await res.json();
-    // console.log(JSON.stringify(data, null, 2));
+    console.log(JSON.stringify(data, null, 2));
     console.log('cartRead 응답:', data); // 로그 추가
     return data;
   } catch (error) {

@@ -1,26 +1,34 @@
+import orderRetriever from '@/features/mypage/api/orderRetriever';
 import {PointMyPage} from '../../src/views/mypage/ui/PointMyPage';
 import {ProductList} from '../../src/views/mypage/ui/ProductList';
 import {ProfileMyPage} from '../../src/views/mypage/ui/ProfileMyPage';
 import {PurchasePage} from '../../src/views/mypage/ui/PurchasePage';
-import {SideMyPage} from '../../src/views/mypage/ui/SideMyPage';
 
-export default function Mypage() {
+import userInfo from '@/features/mypage/api/userInfo';
+import userInfoPoint from '@/features/mypage/api/userInfoPoint';
+
+export default async function Mypage() {
+  const orderRes = await orderRetriever();
+  const userRes = await userInfo();
+  const pointRes = await userInfoPoint();
+
+  console.log('이미지:', orderRes.orders.orderDetails);
+  console.log(userRes);
+  console.log(pointRes);
   return (
     <>
-      <div className="flex p-8">
-        <div className="w-[180px] h-full flex flex-col gap-4">
-          <SideMyPage />
-        </div>
+      <div className="flex p-8 ">
+        {/* <div className="w-[180px] h-full flex flex-col gap-4"></div> */}
         <div className="flex flex-col gap-4">
           <div className="w-[1000px] h-[110px]">
-            <ProfileMyPage />
+            <ProfileMyPage pointRes={pointRes} />
           </div>
           <div className="w-[1000px] h-[110px] border rounded-[10px]">
-            <PointMyPage />
+            <PointMyPage pointRes={pointRes} />
           </div>
-          <PurchasePage />
+          <PurchasePage orders={orderRes.orders} />
           <div className="w-full border-b"></div>
-          <ProductList />
+          <ProductList orders={orderRes.orders} />
         </div>
       </div>
     </>

@@ -30,7 +30,7 @@ export async function updateProduct(
 
   try {
     const response = await fetch(
-      `http://3.35.175.203:8080/product/${productId}`,
+      `${process.env.NEXT_SERVER_URL}/product/${productId}`,
       {
         method: 'PUT',
         credentials: 'include',
@@ -58,7 +58,7 @@ export async function getProduct(productId: number) {
 
   try {
     const response = await fetch(
-      `http://3.35.175.203:8080/product/${productId}`,
+      `${process.env.NEXT_SERVER_URL}/product/${productId}`,
       {
         method: 'GET',
         headers: {

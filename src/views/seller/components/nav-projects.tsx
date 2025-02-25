@@ -1,28 +1,13 @@
 'use client';
 
-import {
-  Folder,
-  Forward,
-  MoreHorizontal,
-  Trash2,
-  type LucideIcon,
-} from 'lucide-react';
+import {MoreHorizontal, type LucideIcon} from 'lucide-react';
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
 import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
 } from '../ui/sidebar';
 
 export function NavProjects({
@@ -34,8 +19,6 @@ export function NavProjects({
     icon: LucideIcon;
   }[];
 }) {
-  const {isMobile} = useSidebar();
-
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>판매 관리</SidebarGroupLabel>

@@ -4,41 +4,15 @@ import {useSearchParams} from 'next/navigation';
 import {useRouter} from 'next/navigation';
 import {useEffect, useState} from 'react';
 import TossRequest from '@/features/buy/api/tossRequest';
-import {useOrderStore} from '@/app/provider/OrderStore';
+import {useEncryptStore} from '@/app/provider/EncryptStore';
 
 export default function PaymentProcessor() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const {orders, setOrders} = useOrderStore();
-  const [isHydrated, setIsHydrated] = useState(false);
+  const {orders} = useEncryptStore();
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
-    setIsHydrated(true);
-  }, []);
-
-  useEffect(() => {
-    if (isHydrated) {
-      const storedOrders = localStorage.getItem('order-storage');
-      if (storedOrders) {
-        const parsedOrders = JSON.parse(storedOrders);
-        console.log('현재 로컬스토리지 데이터:', parsedOrders); // 디버깅용
-
-        // 스토어 상태 복원
-        if (
-          parsedOrders.state &&
-          parsedOrders.state.orders &&
-          parsedOrders.state.orders.length > 0
-        ) {
-          setOrders(parsedOrders.state.orders); // Zustand 스토어 상태 복원
-        }
-      }
-    }
-  }, [isHydrated, setOrders]);
-
-  useEffect(() => {
-    if (!isHydrated) {
-      return;
-    }
     const paymentKey = searchParams.get('paymentKey') ?? '';
     const amount = searchParams.get('amount') ?? '0';
     const tossOrderId = searchParams.get('orderId') ?? '';
@@ -66,8 +40,8 @@ export default function PaymentProcessor() {
         const data = await TossRequest(
           orderId,
           tossOrderId,
-          amount,
-          point,
+          Number(amount),
+          String(point),
           paymentKey,
           paymentType,
           recipientCellPhone,
@@ -77,15 +51,15 @@ export default function PaymentProcessor() {
           roadAddress
         );
 
-        console.log(data.message);
+        console.log(data);
 
         if (data.success) {
-          setOrders([]);
+          // setOrders([]);
           localStorage.removeItem('order-storage');
           router.push('/buy/success');
         } else {
           router.push(`/fail?message=${data.message}`);
-          setOrders([]);
+          // setOrders([]);
           localStorage.removeItem('order-storage');
         }
       } catch (error) {
@@ -99,16 +73,8 @@ export default function PaymentProcessor() {
     }
   }, [router, searchParams, orders]);
 
-  // 로딩 상태 표시
-  if (!orders || orders.length === 0) {
-    return (
-      <div className="result wrapper">
-        <div className="box_section">
-          <h2>주문 정보를 불러오는 중...</h2>
-          <p>잠시만 기다려주세요.</p>
-        </div>
-      </div>
-    );
+  if (!isProcessing) {
+    return null;
   }
 
   return (

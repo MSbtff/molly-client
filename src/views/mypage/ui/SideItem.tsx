@@ -7,7 +7,7 @@ type SideItemProps = {
 export const SideItem = (props: SideItemProps) => {
   const shopItem = [
     {name: '주문 배송내역', path: '/mypage/orders'},
-    {name: '판매 내역', path: '/mypage/sales'},
+    {name: '판매자 페이지', path: '/seller'},
     {name: '관심', path: '/mypage/wishlist'},
   ];
 

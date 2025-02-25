@@ -1,6 +1,6 @@
 type BorderBoxProps = {
   title: string;
-  count: string;
+  count: number;
 };
 
 export const BorderBox = (props: BorderBoxProps) => {
