@@ -32,7 +32,7 @@ export default function SellerContainer({productRes}: SellerContainerProps) {
 
   const viewComponents = {
     '상품 삭제': <ProductDelete />,
-    '상품 수정': <ProductModify />,
+    '상품 수정': <ProductModify productRes={productRes} />,
     '상품 조회': <ProductRetriever productRes={productRes} />,
     '상품 등록': <ProductRegister />,
     기본: <ProductDashboard />,

@@ -1,6 +1,6 @@
 'use client';
 
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 
 import {
   Table,
@@ -12,6 +12,7 @@ import {
   TableRow,
 } from './table';
 import {getProduct, updateProduct} from '../api/updateProduct';
+import {SellerContainerProps} from './ProductRetriever';
 
 type Product = {
   id: number;
@@ -29,7 +30,7 @@ type Product = {
   }[];
 };
 
-export const ProductModify = () => {
+export const ProductModify = ({productRes}: SellerContainerProps) => {
   const [selectedProduct, setSelectedProduct] = useState<number | null>(null);
   const [product, setProduct] = useState<Product>({
     id: 0,

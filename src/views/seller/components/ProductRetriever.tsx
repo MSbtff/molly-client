@@ -14,7 +14,7 @@ import {
 
 import Image from 'next/image';
 
-interface ProductData {
+export interface ProductData {
   id: number;
   categories: string[];
   brandName: string;
@@ -27,7 +27,7 @@ interface ProductData {
   };
 }
 
-interface SellerContainerProps {
+export interface SellerContainerProps {
   productRes: {
     pageable: {
       size: number;
