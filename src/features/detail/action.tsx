@@ -2,7 +2,32 @@
 
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
+interface ReviewApiResponse {
+  reviewInfo: {
+    reviewId: number;
+    content: string;
+    nickname: string;
+    profileImage?: string;
+    isLike: boolean;
+    createdAt: string;
+  };
+  images: string[];
+}
+interface Review {
+  reviewId: number;
+  comment: string;
+  user: {
+    name: string;
+    profileImage: string;
+  };
+  isLike: boolean;
+  date: string;
+  images: string[];
+}
 
+const baseUrl = process.env.NEXT_SERVER_URL;
+
+//바로 구매
 export async function buyNow(productId: number, itemId: number, quantity: number) {
   const authToken = (await cookies()).get('Authorization');
 
@@ -12,7 +37,7 @@ export async function buyNow(productId: number, itemId: number, quantity: number
   }
 
   try {
-    const response = await fetch(`${process.env.NEXT_SERVER_URL}/orders`, {
+    const response = await fetch(`${baseUrl}/orders`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -50,6 +75,7 @@ export async function buyNow(productId: number, itemId: number, quantity: number
 
 }
 
+//장바구니 담기
 export async function addToCart(itemId: number, quantity: number) {
   console.log("서버 액션 addToCart 함수 진입");
   const authToken = (await cookies()).get('Authorization');
@@ -69,8 +95,8 @@ export async function addToCart(itemId: number, quantity: number) {
     // });
     const bodyData = JSON.stringify({ itemId, quantity });
     console.log("장바구니 API 요청 본문:", bodyData);
-    
-    const response = await fetch(`${process.env.NEXT_SERVER_URL}/cart/add`, {
+
+    const response = await fetch(`${baseUrl}/cart/add`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -91,5 +117,75 @@ export async function addToCart(itemId: number, quantity: number) {
     }
   } catch (error) {
     throw new Error("api 요청 중 오류 발생", error as Error);
+  }
+}
+
+//리뷰 리스트
+export async function fetchReviews(productId: number, page: number = 0, size: number = 15): Promise<{ reviews: Review[], pageable: any } | undefined> {
+  console.log("프로덕트 id:", productId);
+  const authToken = (await cookies()).get('Authorization'); // 쿠키에서 토큰 가져오기
+  console.log("Authorization 토큰:", authToken);
+
+  const endpoint = authToken ? `${baseUrl}/review/${productId}` : `${baseUrl}/review/${productId}/new`;
+  const url = `${endpoint}?page=${page}&size=${size}`;
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: authToken ? { Authorization: authToken.value } : {},
+    });
+
+    console.log("✅ API 응답 상태 코드:", response.status); // API 응답 상태 확인
+
+    if (response.status === 204) {
+      return { reviews: [], pageable: { size: size, hasNext: false, isFirst: true, isLast: true } }; // 정상적으로 빈 배열 반환
+    }
+
+    const responseData = await response.json();
+    console.log("리뷰 api응답 데이터:", responseData);//출력이 안된다면 api 요청 실패햇거나 response.json 호출 전에 에러가 발생했기때문에
+
+    if (!response.ok) {
+      console.log("API 요청 실패. 응답 데이터:", responseData);
+      // const errorData = await response.json();
+      console.log(response.status);
+      // throw new Error(errorData.message || "리뷰 조회 실패");
+    }
+
+    // 이미지 로드 실패해도 페이지 정상적으로 렌더링되도록 예외 처리
+    // const formattedReviews = responseData.reviews.map((review: ReviewApiResponse) => ({
+    //   reviewId: review.reviewInfo.reviewId,
+    //   comment: review.reviewInfo.content,
+    //   user: {
+    //     name: review.reviewInfo.nickname,
+    //     profileImage: review.reviewInfo.profileImage || "/images/default-profile.svg", // 기본 프로필 이미지 설정
+    //   },
+    //   images: review.images && review.images.length > 0 ? review.images : ["/images/noImage.svg"], // 이미지 없으면 기본 이미지
+    //   date: review.reviewInfo.createdAt,
+    //   isLike: review.reviewInfo.isLike,
+    // }));
+
+    // 데이터 매핑
+    const formattedReviews: Review[] = responseData.data.map((review: ReviewApiResponse) => ({
+      reviewId: review.reviewInfo.reviewId,
+      comment: review.reviewInfo.content,
+      user: {
+        name: review.reviewInfo.nickname,
+        profileImage: review.reviewInfo.profileImage || "/images/default-profile.svg", // 기본 프로필 이미지 설정
+      },
+      images: review.images && review.images.length > 0 ? review.images : ["/images/noImage.svg"], // 이미지 없으면 기본 이미지
+      date: review.reviewInfo.createdAt,
+      isLike: review.reviewInfo.isLike,
+    }));
+
+    console.log("리뷰 매핑 데이터:", formattedReviews);
+
+    // return await response.json();
+    // return { reviews: formattedReviews };
+
+    // `pageable` 정보 포함하여 반환
+    return { reviews: formattedReviews, pageable: responseData.pageable };
+
+  } catch (error) {
+    console.error("리뷰 조회 중 오류 발생:", error);
   }
 }

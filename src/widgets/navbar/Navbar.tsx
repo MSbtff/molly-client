@@ -44,7 +44,11 @@ export default function Navbar() {
                 <div className="flex items-center gap-1">
                     {/* 검색 */}
                     <div className="flex items-center w-[150px] bg-[#F5F5F5] rounded-full px-3 py-1 border-none hover:bg-gray-200 mr-1"
-                        onClick={() => setIsSearchOpen(true)}>
+                        // onClick={() => setIsSearchOpen(true)}
+                        onClick={() => {
+                            setIsSearchOpen(true);
+                            // setIsExiting(false); // ✅ 모달을 다시 열 수 있도록 초기화
+                        }}>
                         <Search size={20} className="text-black" />
                         <span className="ml-2 text-[#707072]">검색</span>
                     </div>

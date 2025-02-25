@@ -11,24 +11,34 @@ interface SortModalProps {
   const SortModal: React.FC<SortModalProps> = ({ isOpen, onClose, onSortSelect, selectedSort }) => {
   if (!isOpen) return null;
 
+  // 정렬 옵션 매핑 (한글 → API 값)
+  const sortOptions: Record<string, string> = {
+    "조회순": "VIEW_COUNT",
+    "신상품순": "CREATED_AT",
+    "판매순": "PURCHASE_COUNT",
+    "낮은가격순": "PRICE_ASC",
+    "높은가격순": "PRICE_DESC"
+  };
+
   return (
-    <div className="fixed inset-0 flex items-end bg-black bg-opacity-50 z-50">
+    <div onClick={onClose} className="fixed inset-0 flex items-end bg-black bg-opacity-50 backdrop-blur-md z-50">
       <div className="w-full bg-white rounded-t-lg p-4">
         <ul className="mt-2">
-          {["추천순", "신상품순", "판매순", "낮은가격순", "높은가격순", "리뷰순"].map((sort) => (
+          {Object.keys(sortOptions).map((label) => (
             <li
-              key={sort}
-              className={`p-2 hover:bg-gray-200 cursor-pointer ${
-                sort === selectedSort ? "font-bold text-blue-500" : ""
+              key={label}
+              className={`p-2 hover:bg-gray-200 cursor-pointer text-gray-400 ${
+                label === selectedSort ? "font-bold text-black" : ""
               }`}
               onClick={() => {
-                onSortSelect(sort);
+                onSortSelect(label);
                 onClose();
               }}
             >
-              {sort}
+              {label}
             </li>
           ))}
+
         </ul>
         <button onClick={onClose} className="w-full mt-4 py-2 bg-gray-300 rounded">
           닫기

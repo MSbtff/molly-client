@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { X } from 'lucide-react'; // 닫기 버튼 아이콘
 import clsx from 'clsx'; // Tailwind 클래스 조건부 적용
-
 interface FilterSidebarProps {
   setIsOpen: (value: boolean) => void;
 }
@@ -39,11 +38,11 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
   const router = useRouter();
 
   //상태 관리
-  const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string[]>([]);
-  const [selectedPrice, setSelectedPrice] = useState<string[]>([]);
+  const [selectedPrice, setSelectedPrice] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string[]>([]);
-  const [selectedGender, setSelectedGender] = useState<string[]>([]);
+  const [selectedGender, setSelectedGender] = useState<string | null>(null);
 
   //필터 선택 로직
   const toggleSelection = (selectedList: string[], setList: (value: string[]) => void, item: string) => {
@@ -53,13 +52,28 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
       setList([...selectedList, item]); // 새로 선택된 경우 추가
     }
   };
+  // 성별 버튼 클릭 핸들러 (하나만 선택 가능)
+  const handleGenderSelect = (gender: string) => {
+    setSelectedGender(selectedGender === gender ? null : gender); // 동일한 걸 클릭하면 취소
+  };
+  // 가격 선택 핸들러 (단일 선택 가능)
+  const handlePriceSelect = (price: string) => {
+    setSelectedPrice(selectedPrice === price ? null : price); // 선택한 값이 같으면 취소, 아니면 변경
+  };
+  // 카테고리 버튼 클릭 핸들러 (단일 선택)
+  const handleCategorySelect = (category: string) => {
+    setSelectedCategory(selectedCategory === category ? null : category); // 같은 걸 클릭하면 해제
+  };
 
   //필터 적용 로직(쿼리 파라미터로 전환)
   const handleApplyFilters = () => {
     const queryParams = new URLSearchParams();
 
     //카테고리(성별 + 옷) 필터 추가
-    const selectedCategories = [...selectedGender, ...selectedCategory];//성별이 앞에 오도록
+    const selectedCategories = [
+                                  ...(selectedGender ? [selectedGender] : []), 
+                                  ...(selectedCategory ? [selectedCategory] : [])
+                               ];//성별이 앞에 오도록
     if (selectedCategories.length > 0) {
       queryParams.append('categories', selectedCategories.join(','));
     }
@@ -72,20 +86,27 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
       queryParams.append('colorCode', colorHexValues.join(','));
     }
     //가격 필터 추가 (최소, 최대)
-    if (selectedPrice.length > 0) {
-      // queryParams.append('price', selectedPrice.join(','));
-      selectedPrice.forEach((price) => {
-        const priceRange = price.replace(/[^0-9~]/g, ''); // 숫자와 '~'만 남김
-        const [min, max] = priceRange.split('~').map(Number);
+    // if (selectedPrice.length > 0) {
+    //   // queryParams.append('price', selectedPrice.join(','));
+    //   selectedPrice.forEach((price) => {
+    //     const priceRange = price.replace(/[^0-9~]/g, ''); // 숫자와 '~'만 남김
+    //     const [min, max] = priceRange.split('~').map(Number);
 
-        if (!isNaN(min)) {
-          queryParams.append('priceGoe', min.toString()); // 최소값 추가
-        }
-        if (!isNaN(max)) {
-          queryParams.append('priceLt', max.toString()); // 최대값 추가
-        }
-      });
+    //     if (!isNaN(min)) {
+    //       queryParams.append('priceGoe', min.toString()); // 최소값 추가
+    //     }
+    //     if (!isNaN(max)) {
+    //       queryParams.append('priceLt', max.toString()); // 최대값 추가
+    //     }
+    //   });
+    // }
+    if (selectedPrice) {
+      const priceRange = selectedPrice.replace(/[^0-9~]/g, '');
+      const [min, max] = priceRange.split('~').map(Number);
+      if (!isNaN(min)) queryParams.append('priceLt', min.toString());
+      if (!isNaN(max)) queryParams.append('priceGoe', max.toString());
     }
+
     //사이즈 필터 
     if (selectedSize.length > 0) {
       queryParams.append('productSize', selectedSize.join(','));
@@ -93,7 +114,7 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
 
     // router.push(`/product?${queryParams.toString()}`);
     //선택된 필터가 있을 경우만 url 변경
-    if (selectedCategories.length > 0 || selectedColor.length > 0 || selectedPrice.length > 0 || selectedSize.length > 0) {
+    if (selectedCategories.length > 0 || selectedColor.length > 0 || selectedPrice || selectedSize.length > 0) {
       router.push(`/product?page=0&size=48&${queryParams.toString()}`);
     }
   };
@@ -122,9 +143,9 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
               key={gender}
               className={clsx(
                 "text-sm px-3 py-2 rounded-md transition",
-                selectedGender?.includes(gender) ? "bg-gray-200 text-black font-semibold" : "text-gray-600"
+                selectedGender === gender ? "bg-gray-200 text-black font-semibold" : "text-gray-600"
               )}
-              onClick={() => toggleSelection(selectedGender, setSelectedGender, gender)}
+              onClick={() => handleGenderSelect(gender)}
             >
               {gender}
             </button>
@@ -138,9 +159,9 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
               key={category}
               className={clsx(
                 "block text-left w-full py-2",
-                selectedCategory?.includes(category) ? "bg-gray-200 rounded-lg font-bold text-black" : "text-gray-700"
+                selectedCategory === category ? "bg-gray-200 rounded-lg font-bold text-black" : "text-gray-700"
               )}
-              onClick={() => toggleSelection(selectedCategory, setSelectedCategory, category)}
+              onClick={() => handleCategorySelect(category)}
             >
               {category}
             </button>
@@ -173,9 +194,9 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
               key={price}
               className={clsx(
                 "border px-3 py-2 rounded-md text-sm",
-                selectedPrice?.includes(price) ? "bg-black text-white" : "text-gray-700"
+                selectedPrice === price ? "bg-black text-white" : "text-gray-700"
               )}
-              onClick={() => toggleSelection(selectedPrice, setSelectedPrice, price)}
+              onClick={() => handlePriceSelect(price)}
             >
               {price}
             </button>
@@ -207,24 +228,29 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
         </div>
 
         {/*선택한 옵션*/}
-        {(selectedGender.length > 0 || selectedCategory.length > 0 || selectedColor.length > 0 || selectedPrice.length > 0 || selectedSize.length > 0) && (
+        {(selectedGender || selectedCategory || selectedColor.length > 0 || selectedPrice || selectedSize.length > 0) && (
           <div className="px-4 py-4 border-b">
             <h3 className="text-sm font-semibold mb-3">선택한 필터</h3>
 
             <div className="flex flex-wrap gap-2">
-              {[...selectedGender, ...selectedCategory, ...selectedColor, ...selectedPrice, ...selectedSize].map((item) => (
+              {[...(selectedGender ? [selectedGender] : []),
+              ...(selectedCategory ? [selectedCategory] : []), 
+              ...selectedColor,
+              ...(selectedPrice ? [selectedPrice] : []),
+              ...selectedSize].map((item) => (
                 <button
                   key={item}
                   className="flex items-center gap-2 px-3 py-1 text-sm bg-gray-200 rounded-full"
                   onClick={() => {
-                    if (selectedGender.includes(item)) {
-                      setSelectedGender(selectedGender.filter((i) => i !== item));
-                    } else if (selectedCategory.includes(item)) {
-                      setSelectedCategory(selectedCategory.filter((i) => i !== item));
+                    if (selectedGender === item) {
+                      setSelectedGender(null); // 성별 선택 해제
+                    } else if (selectedCategory === item) {
+                      setSelectedCategory(null);
                     } else if (selectedColor.includes(item)) {
                       setSelectedColor(selectedColor.filter((i) => i !== item));
-                    } else if (selectedPrice.includes(item)) {
-                      setSelectedPrice(selectedPrice.filter((i) => i !== item));
+                    } else if (selectedPrice === item) {
+                      // setSelectedPrice(selectedPrice.filter((i) => i !== item));
+                      setSelectedGender(null); // 성별 선택 해제
                     } else if (selectedSize.includes(item)) {
                       setSelectedSize(selectedSize.filter((i) => i !== item));
                     }
@@ -240,11 +266,11 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
         {/* 버튼 */}
         <div className="flex items-center justify-between p-4">
           <button className="border border-gray-500 px-4 py-2 rounded-md text-sm" onClick={() => {
-            setSelectedCategory([]);
+            setSelectedCategory(null);
             setSelectedColor([]);
-            setSelectedPrice([]);
+            setSelectedPrice(null);
             setSelectedSize([]);
-            setSelectedGender([]);
+            setSelectedGender(null);
           }}>
             초기화
           </button>
