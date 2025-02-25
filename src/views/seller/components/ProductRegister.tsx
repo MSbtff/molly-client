@@ -2,6 +2,8 @@
 
 import {useRef, useState} from 'react';
 import {z} from 'zod';
+import registerProduct from '../api/registerProduct';
+import Image from 'next/image';
 
 const productType = z.object({
   categories: z.tuple([
@@ -124,22 +126,11 @@ export const ProductRegister = () => {
         });
       }
 
-      // 내부 API Route로 요청 변경
-      const res = await fetch('/api/product', {
-        method: 'POST',
-        credentials: 'include',
-        body: formData,
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || '상품 등록 실패');
-      }
-
-      const data = await res.json();
-      console.log('상품 등록 성공:', data);
+      // fetch로 formData 전송
+      const res = await registerProduct(formData);
+      console.log(res);
     } catch (error) {
-      // ... 기존 에러 처리 코드
+      console.error(error);
     }
   };
 
@@ -284,9 +275,11 @@ export const ProductRegister = () => {
                 />
                 {product.thumbnail && (
                   <div className="mt-2">
-                    <img
+                    <Image
                       src={product.thumbnail}
                       alt="썸네일 미리보기"
+                      width={50}
+                      height={50}
                       className="w-32 h-32 object-cover rounded-md"
                     />
                   </div>
@@ -309,10 +302,12 @@ export const ProductRegister = () => {
                 <div className="mt-2 grid grid-cols-4 gap-4">
                   {product.productImages.map((url, index) => (
                     <div key={index} className="relative">
-                      <img
+                      <Image
                         src={url}
                         alt={`상품 이미지 ${index + 1}`}
-                        className="w-full h-32 object-cover rounded-md"
+                        width={50}
+                        height={50}
+                        className="w-32 h-32 object-cover rounded-md"
                       />
                       <button
                         type="button"
@@ -346,10 +341,12 @@ export const ProductRegister = () => {
                 <div className="mt-2 grid grid-cols-4 gap-4">
                   {product.productDescriptionImages.map((url, index) => (
                     <div key={index} className="relative">
-                      <img
+                      <Image
                         src={url}
                         alt={`상세 설명 이미지 ${index + 1}`}
-                        className="w-full h-32 object-cover rounded-md"
+                        width={50}
+                        height={50}
+                        className="w-32 h-32 object-cover rounded-md"
                       />
                       <button
                         type="button"

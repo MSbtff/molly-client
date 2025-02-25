@@ -4,16 +4,17 @@ import Link from 'next/link';
 import {Button} from '../../../shared/ui/Button';
 import Logo from '../../../../public/moollyLogo.svg';
 import {useRef, useState} from 'react';
-import {useRouter} from 'next/navigation';
 
 interface Input {
   username: string;
   password: string;
 }
+interface LoginPageProps {
+  handleLogin: (username: string, password: string) => Promise<void>;
+}
 
 //server action으로 변경 및 환경변수 오류 찾아야함
-export default function LoginPage({handleLogin}: {handleLogin: Function}) {
-  const router = useRouter();
+export default function LoginPage({handleLogin}: LoginPageProps) {
   const ref = useRef<HTMLInputElement | null>(null);
 
   const [input, setInput] = useState<Input>({
@@ -76,10 +77,12 @@ export default function LoginPage({handleLogin}: {handleLogin: Function}) {
           로그인
         </Button>
       </form>
-      <div className="mt-10 w-[435px] h-9  flex justify-between text-sm">
-        <Link href={'/register'}>회원가입</Link>
-        <div>이메일 찾기</div>
-        <div>비밀번호 찾기</div>
+      <div className="mt-10 w-[435px] h-9  flex justify-between text-sm ">
+        <Link href={'/register'} className="hover:text-gray-500 ">
+          회원가입
+        </Link>
+        <div className="hover:text-gray-500">이메일 찾기</div>
+        <div className="hover:text-gray-500">비밀번호 찾기</div>
       </div>
     </div>
   );

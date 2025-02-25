@@ -18,25 +18,28 @@ import {ProductDashboard} from '../components/ProductDashboard';
 import {ProductRetriever} from '../components/ProductRetriever';
 import {ProductModify} from '../components/ProductModify';
 import {ProductDelete} from '../components/ProductDelete';
+import {Pageable, ProductData} from '../../../../app/seller/page';
 
-export default function SellerContainer() {
-  const {currentView, setCurrentView} = useSellerStore();
+export interface SellerContainerProps {
+  productRes: {
+    pageable: Pageable;
+    data: ProductData[];
+  };
+}
+
+export default function SellerContainer({productRes}: SellerContainerProps) {
+  const {currentView} = useSellerStore();
 
   const viewComponents = {
     '상품 삭제': <ProductDelete />,
     '상품 수정': <ProductModify />,
-    '판매 조회': <ProductRetriever />,
+    '상품 조회': <ProductRetriever productRes={productRes} />,
     '상품 등록': <ProductRegister />,
     기본: <ProductDashboard />,
   };
 
   const renderContent = () => {
-    console.log('currentView:', currentView);
-    console.log('사용 가능한 컴포넌트:', Object.keys(viewComponents));
-    const Component =
-      viewComponents[currentView as keyof typeof viewComponents];
-    console.log('선택된 컴포넌트:', Component ? 'exists' : 'null');
-
+    viewComponents[currentView as keyof typeof viewComponents];
     return viewComponents[currentView] || viewComponents.기본;
   };
   return (

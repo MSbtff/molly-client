@@ -1,7 +1,16 @@
 import Image from 'next/image';
 import logo from '../../../../public/logo.webp';
 
-export const ProfileMyPage = () => {
+export interface PointRes {
+  point: number;
+  name: string;
+  email: string;
+}
+export interface ProfileProps {
+  pointRes: PointRes;
+}
+
+export const ProfileMyPage = ({pointRes}: ProfileProps) => {
   return (
     <div className=" flex p-8 border rounded-[10px]">
       <div>
@@ -15,8 +24,8 @@ export const ProfileMyPage = () => {
       </div>
       <div className="w-full flex justify-between">
         <div className="flex flex-col">
-          <strong>구름</strong>
-          <p>Molly@gmail.com</p>
+          <strong>{pointRes.name}</strong>
+          <p>{pointRes.email}</p>
         </div>
         <div className="flex items-center">{/* <div>프로필 관리</div> */}</div>
       </div>

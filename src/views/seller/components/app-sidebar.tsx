@@ -6,14 +6,8 @@ import {Truck, UserPen, Store, CreditCard, Building2} from 'lucide-react';
 import {NavMain} from './nav-main';
 import {NavProjects} from './nav-projects';
 import {NavUser} from './nav-user';
-import {TeamSwitcher} from './team-switcher';
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarRail,
-} from '../ui/sidebar';
+
+import {Sidebar, SidebarContent, SidebarFooter} from '../ui/sidebar';
 
 // This is sample data.
 const data = {

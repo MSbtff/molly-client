@@ -1,18 +1,19 @@
 'use client';
 
 import {Button} from '../../../shared/ui/Button';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {Suspense, useEffect, useMemo, useState} from 'react';
 import {OptionModal} from './OptionModal';
 import {CartNotice} from './CartNotice';
 import {CartOrderButton} from './CartOrderButton';
 import {CartProductInfo} from './CartProductInfo';
-import {CartItem, CartItemDto, cartRead} from '@/features/cart/api/cartRead';
+import {CartItem, cartRead} from '@/features/cart/api/cartRead';
 import cartDelete from '@/features/cart/api/cartDelete';
 import cartOrder from '@/features/cart/api/cartOrder';
 
 import {useRouter} from 'next/navigation';
 import {useCartStore} from '@/app/provider/CartStore';
-import {OrderItem, useOrderStore} from '@/app/provider/OrderStore';
+import {OrderItem} from '@/app/provider/OrderStore';
+import {useEncryptStore} from '@/app/provider/EncryptStore';
 
 export const CartComponent = () => {
   const router = useRouter();
@@ -25,8 +26,9 @@ export const CartComponent = () => {
     null
   );
 
-  const {orders, setOrders} = useOrderStore();
-  const {cartState, setCartState} = useCartStore();
+  // const {orders, setOrders} = useOrderStore();
+  const {orders, setOrders} = useEncryptStore();
+  const {setCartState} = useCartStore();
 
   const selectedItemsInfo = useMemo(() => {
     const selectedItemsList = cartItems.filter((item) =>
@@ -145,9 +147,7 @@ export const CartComponent = () => {
       );
 
       const orderItems = selectedList.map((item) => ({
-        productId: item.cartInfoDto.productId,
-        itemId: item.cartInfoDto.itemId,
-        quantity: item.cartInfoDto.quantity,
+        cartId: item.cartInfoDto.cartId,
       }));
 
       console.log('주문 요청:', orderItems); // 주문 요청 데이터 확인
@@ -186,6 +186,9 @@ export const CartComponent = () => {
 
   return (
     <>
+      {error && (
+        <div className="w-full p-4 text-red-500 text-center">{error}</div>
+      )}
       {isOpen && selectedCartItem && (
         <OptionModal
           onClose={() => setIsOpen(false)}
@@ -260,6 +263,7 @@ export const CartComponent = () => {
               </div>
             </div>
           ))}
+
           <div className="mb-4">
             <CartNotice />
           </div>
