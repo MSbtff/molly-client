@@ -105,6 +105,8 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
         const message = await addToCart(selectedOption.id, quantity);
         console.log("api 응답:", message);//응답 값 확인
 
+        // 구매 성공 후 /buy 페이지로 이동
+        router.push('/cart');
         // alert(message);
       } catch (error) {
         console.error("장바구니 api 오류 발생:", error);
