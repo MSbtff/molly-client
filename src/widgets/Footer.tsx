@@ -10,7 +10,7 @@ export default function Footer() {
                     <ul className="space-y-1">
                         <li>멤버가입</li>
                         <li>매장찾기</li>
-                        <li>나이키 저널</li>
+                        <li>몰리 저널</li>
                     </ul>
                 </div>
 
@@ -36,7 +36,7 @@ export default function Footer() {
                 <div>
                     <h3 className="font-semibold mb-2">회사소개</h3>
                     <ul className="space-y-1">
-                        <li>About Nike</li>
+                        <li>About Molly</li>
                         <li>소식</li>
                         <li>채용</li>
                         <li>투자자</li>
@@ -50,7 +50,7 @@ export default function Footer() {
             {/* 하단 정보 */}
             <div className="max-w-screen-lg mx-auto text-center md:text-left text-sm text-gray-500">
                 <p>
-                    (유)나이키코리아 대표 Kimberlee Lynn Chang Mendes, 킴벌리 린 창 멘데스 |
+                    (유)몰리코리아 대표 CuteSeeun Choi Young & Rich, 큐트세은 최 영 앤리치 |
                     서울 강남구 테헤란로 152 강남파이낸스센터 30층 | 통신판매업신고번호 2011-서울강남-03461
                     | 등록번호 220-88-09068
                 </p>
@@ -58,7 +58,7 @@ export default function Footer() {
                     사업자 정보 확인 | 고객센터 전화 문의 <span className="font-medium">080-022-0182</span> |
                     FAX 02-6744-5880 | 이메일{" "}
                     <a href="mailto:service@nike.co.kr" className="text-blue-500 underline">
-                        service@nike.co.kr
+                        service@molly.co.kr
                     </a>{" "}
                     | 호스팅서비스사업자 (유)나이키코리아
                 </p>

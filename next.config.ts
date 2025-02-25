@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
   },
 
   images: {
-    domains: ["3.35.175.203", "172.16.24.53"], // API에서 제공하는 이미지 도메인(IP) (외부 이미지 도메인 허용)
+    domains: ["3.35.175.203", "172.16.24.53", "persimmontree.ddns.net"], // API에서 제공하는 이미지 도메인(IP) (외부 이미지 도메인 허용)
     remotePatterns: [
       {
         protocol: "http",
@@ -23,6 +23,12 @@ const nextConfig: NextConfig = {
         protocol: "http",
         hostname: "172.16.24.53", // 추가된 이미지 서버
         pathname: "/**",
+      },
+      {
+        protocol: "http",
+        hostname: "persimmontree.ddns.net",
+        port: "8000",
+        pathname: "/images/**",
       },
     ],
   },
