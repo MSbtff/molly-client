@@ -27,6 +27,11 @@ export default function ProfileModal({
     }
   };
 
+  const handleLoginCheck = async () => {
+    try {
+    } catch (error) {}
+  };
+
   return (
     <>
       {/* 모달창 외부 */}
