@@ -1,11 +1,24 @@
+'use client';
+
 import Image from 'next/image';
 import {X} from 'lucide-react';
-import {ChevronDown} from 'lucide-react';
 import {Button} from '../../../shared/ui/Button';
 import {CartItem} from '@/features/cart/api/cartRead';
 import {useState, useEffect} from 'react';
 import {cartUpdate} from '@/features/cart/api/cartUpdate';
+import {OptionDropbox} from './OptionDropbox';
 
+interface SizeDetail {
+  id: number;
+  size: string;
+  quantity: number;
+}
+
+// 색상 상세 정보에 대한 인터페이스
+interface ColorDetail {
+  color: string;
+  sizeDetails: SizeDetail[];
+}
 interface OptionModalProps {
   onClose: () => void;
   cartItem: CartItem;
@@ -17,52 +30,87 @@ export const OptionModal = ({
   cartItem,
   onUpdate,
 }: OptionModalProps) => {
-  const [quantity, setQuantity] = useState(cartItem.cartInfoDto.quantity);
-
   const {
     cartId,
-    color,
+    color: initialColor,
     url,
     productName,
     brandName,
-    size: cartSize,
+    size: initialSize,
+    quantity: initialQuantity,
   } = cartItem.cartInfoDto;
 
-  // 현재 선택된 colorDetail 찾기
-  const selectedColorDetail = cartItem.colorDetails.find(
-    (detail) => detail.color === color
-  );
+  const [color, setColor] = useState(initialColor);
+  const [size, setSize] = useState(initialSize);
+  const [quantity, setQuantity] = useState(initialQuantity);
+  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
+  const [maxQuantity, setMaxQuantity] = useState<number>(0);
 
-  // 현재 선택된 sizeDetail 찾기
-  const selectedSizeDetail = selectedColorDetail?.sizeDetails.find(
-    (detail) => detail.size === cartSize
-  );
+  // 초기 선택된 아이템 ID와 최대 수량 설정
+  useEffect(() => {
+    const selectedColorDetail = cartItem.colorDetails.find(
+      (detail) => detail.color === initialColor
+    );
 
+    if (selectedColorDetail) {
+      const selectedSizeDetail = selectedColorDetail.sizeDetails.find(
+        (detail) => detail.size === initialSize
+      );
+
+      if (selectedSizeDetail) {
+        setSelectedItemId(selectedSizeDetail.id);
+        setMaxQuantity(selectedSizeDetail.quantity);
+      }
+    }
+  }, [cartItem, initialColor, initialSize]);
+
+  // 수량 변경 처리
   const handleQuantityChange = (newQuantity: number) => {
-    if (
-      newQuantity > 0 &&
-      selectedSizeDetail &&
-      newQuantity <= selectedSizeDetail.quantity
-    ) {
+    if (newQuantity > 0 && newQuantity <= maxQuantity) {
       setQuantity(newQuantity);
     }
   };
 
+  // OptionDropbox에서 옵션 변경 시 호출될 함수
+  const handleOptionChange = (
+    newColor: string,
+    newSize: string,
+    itemId: number,
+    newMaxQuantity: number
+  ) => {
+    setColor(newColor);
+    setSize(newSize);
+    setSelectedItemId(itemId);
+    setMaxQuantity(newMaxQuantity);
+
+    // 옵션이 변경되면 수량 조정
+    if (newMaxQuantity < quantity) {
+      setQuantity(newMaxQuantity);
+    } else if (quantity === 0) {
+      setQuantity(1);
+    }
+  };
+
+  // 확인 버튼 클릭 시 호출될 함수
   const handleConfirm = async () => {
-    if (selectedSizeDetail) {
+    if (selectedItemId !== null) {
       try {
-        await cartUpdate(cartId, selectedSizeDetail.id, quantity);
-        await onUpdate(); // 추가된 부분
+        await cartUpdate(cartId, selectedItemId, quantity);
+        await onUpdate();
         onClose();
       } catch (error) {
-        console.error('수량 업데이트 실패:', error);
+        console.error('옵션 업데이트 실패:', error);
       }
     }
   };
 
+  // 버튼 비활성화 조건
+  const isButtonDisabled =
+    selectedItemId === null || quantity <= 0 || maxQuantity <= 0;
+
   return (
     <>
-      <div className="fixed inset-0 flex justify-center items-center w-screen h-screen bg-black bg-opacity-40 z-1000">
+      <div className="fixed inset-0 flex justify-center items-center w-screen h-screen bg-black bg-opacity-40 z-50">
         <div className="w-[490px] h-[730px] border flex flex-col bg-white rounded-[10px] p-4 shadow-md">
           <div className="flex justify-between">
             <div className="font-bold text-2xl">옵션 변경</div>
@@ -83,46 +131,64 @@ export const OptionModal = ({
               <p className="text-gray2">{brandName}</p>
             </div>
           </div>
-          <div className="h-full flex flex-col justify-between gap-8">
+          <div className="h-full flex flex-col justify-between">
             <div className="mt-8">
-              <div className="w-full font-bold flex gap-4 justify-between">
-                <div className="flex gap-8">
-                  <div>색상</div>
-                  <div>사이즈</div>
-                </div>
+              <div className="w-full font-bold mb-4">옵션 선택</div>
 
-                <div className="">수량</div>
+              {/* 별도의 OptionDropbox 컴포넌트 사용 */}
+              <div className="mb-6">
+                <OptionDropbox
+                  cartId={cartId}
+                  onOptionChange={handleOptionChange}
+                  selectedColor={color}
+                  selectedSize={size}
+                />
               </div>
-              <div className="w-full flex justify-between items-center border-b-2">
-                <div className="w-40 flex gap-8">
-                  <div>{color}</div>
-                  <div>{cartSize}</div>
+
+              <div className="w-full border-t pt-4">
+                <div className="font-bold mb-2">선택된 옵션</div>
+                <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                  <div>
+                    <span className="font-medium">{color}</span> /{' '}
+                    <span>{size}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleQuantityChange(quantity - 1)}
+                      className="w-8 h-8 border rounded flex items-center justify-center bg-white"
+                      disabled={quantity <= 1}
+                    >
+                      -
+                    </button>
+                    <span className="w-8 text-center">{quantity}</span>
+                    <button
+                      onClick={() => handleQuantityChange(quantity + 1)}
+                      className="w-8 h-8 border rounded flex items-center justify-center bg-white"
+                      disabled={quantity >= maxQuantity}
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => handleQuantityChange(quantity - 1)}
-                    className="px-2 border rounded"
-                  >
-                    -
-                  </button>
-                  <span>{quantity}</span>
-                  <button
-                    onClick={() => handleQuantityChange(quantity + 1)}
-                    className="px-2 border rounded"
-                  >
-                    +
-                  </button>
-                </div>
+                {maxQuantity > 0 ? (
+                  <div className="text-xs text-right mt-1 text-gray-500">
+                    최대 주문 가능 수량: {maxQuantity}개
+                  </div>
+                ) : (
+                  <div className="text-xs text-right mt-1 text-red-500">
+                    재고가 없습니다.
+                  </div>
+                )}
               </div>
             </div>
-            <div className="mt-24">
+            <div className="mb-4">
               <Button
                 width="460px"
                 height="52px"
-                bg="black"
+                bg={isButtonDisabled ? 'gray' : 'black'}
                 color="white"
                 radius="10px"
-                onClick={handleConfirm}
+                onClick={isButtonDisabled ? () => {} : handleConfirm}
               >
                 확인
               </Button>

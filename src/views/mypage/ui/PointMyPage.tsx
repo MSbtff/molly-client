@@ -1,4 +1,6 @@
-export const PointMyPage = () => {
+import {ProfileProps} from './ProfileMyPage';
+
+export const PointMyPage = ({pointRes}: ProfileProps) => {
   return (
     <div className="w-full h-full flex ">
       <div
@@ -11,7 +13,7 @@ export const PointMyPage = () => {
         <div>회원정보</div>
         <div className="flex justify-between">
           <div className="text-2xl">포인트</div>
-          <div className="text-2xl">1000</div>
+          <div className="text-2xl">{pointRes.point}</div>
         </div>
       </div>
       <div className=" flex flex-col justify-between p-4">

@@ -21,8 +21,7 @@ export function middleware(request: NextRequest) {
 
   // 보호된 경로일 때만 인증 체크
   const authToken = request.cookies.get('Authorization');
-  // console.log('Current path:', request.nextUrl.pathname);
-  // console.log('Auth token:', authToken); // 이 값이 undefined가 아니어야 함
+
   if (!authToken) {
     return NextResponse.redirect(new URL('/login', request.url));
   }

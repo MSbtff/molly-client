@@ -1,10 +1,20 @@
+import orderComplete from '@/features/buy/api/orderComplete';
 import PaymentProcessor from '@/features/buy/ui/PaymentProcessor';
+import {BuyComplete} from '@/views/buy/ui/BuyComplete';
+import Footer from '@/widgets/Footer';
+import Navbar from '@/widgets/navbar/Navbar';
 
-export default function BuySuccess() {
+export default async function BuySuccess() {
+  const orderRes = await orderComplete();
+  console.log(orderRes);
   return (
     <>
-      <div>결제완료 페이지입니다.</div>
-      <PaymentProcessor />;
+      <Navbar />
+      <div className="w-screen h-full flex justify-center items-center">
+        <BuyComplete />
+        <PaymentProcessor />
+      </div>
+      <Footer />
     </>
   );
 }

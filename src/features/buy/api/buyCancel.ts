@@ -2,6 +2,7 @@
 
 import {cookies} from 'next/headers';
 
+// 주문취소
 export default async function buyCancel(orderId: number) {
   const authToken = (await cookies()).get('Authorization')?.value;
 
