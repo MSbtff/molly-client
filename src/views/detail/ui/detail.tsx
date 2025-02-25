@@ -7,6 +7,9 @@ import { Heart } from 'lucide-react';
 // import ReviewModal from '../../public/images/review.jpg';
 import { buyNow, addToCart } from '@/features/detail/action';
 import ReviewModal from '@/views/detail/ui/ReviewModal';
+import { useEncryptStore } from "@/app/provider/EncryptStore";
+import { OrderItem } from '@/app/provider/OrderStore';
+
 interface Product {
   id: number;
   categories: string[];
@@ -63,6 +66,9 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
 
   // 초기값을 initialReview로 설정(서버에서 받은 데이터)
   const [reviews, setReviews] = useState<Review[]>(initialReviews || []);
+  //바로 구매 api 성공 응답을 주스탠드 스토어에 저장
+  const { setOrders } = useEncryptStore();
+
 
   //바로 구매
   const handleBuyNow = () => {
@@ -78,8 +84,22 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
 
     startTransition(async () => {
       try {
-        await buyNow(parsedProductId, selectedOption.id, quantity);
-        console.log("order api 요청 성공");
+        const orderData = await buyNow(parsedProductId, selectedOption.id, quantity);
+        console.log("바로 구매 api 요청 성공");
+        console.log("바로 구매 api 응답 데이터", orderData);
+
+        const formattedOrder: OrderItem= {
+          ...orderData,
+          pointUsage: orderData.pointUsage || null,
+          pointSave: orderData.pointSave || null,
+          payment: orderData.payment || [],
+          delivery: orderData.delivery || [],
+
+        }
+
+        // 여기서 orderData 사용 가능
+        // 예: 상태에 저장
+        setOrders([orderData, formattedOrder]);
 
         // 구매 성공 후 /buy 페이지로 이동
         router.push('/buy');
