@@ -1,7 +1,6 @@
 'use client';
 
-import {useState, useEffect} from 'react';
-
+import {useState} from 'react';
 import {
   Table,
   TableBody,
@@ -12,6 +11,7 @@ import {
   TableRow,
 } from './table';
 import {getProduct, updateProduct} from '../api/updateProduct';
+import {SellerContainerProps} from './ProductRetriever';
 
 type Product = {
   id: number;
@@ -29,31 +29,17 @@ type Product = {
   }[];
 };
 
-export const ProductModify = () => {
+export const ProductModify = ({productRes}: SellerContainerProps) => {
   const [selectedProduct, setSelectedProduct] = useState<number | null>(null);
-  const [product, setProduct] = useState<Product>({
-    id: 0,
-    categories: [],
-    brandName: '',
-    productName: '',
-    price: 0,
-    description: '',
-    items: [
-      {
-        id: 0,
-        color: '',
-        colorCode: '',
-        size: '',
-        quantity: 0,
-      },
-    ],
-  });
+  const [product, setProduct] = useState<Product | null>(null);
+  const [originalProduct, setOriginalProduct] = useState<Product | null>(null);
 
   // 상품 선택 시 데이터 로드
   const handleProductSelect = async (productId: number) => {
     try {
       const data = await getProduct(productId);
       setProduct(data);
+      setOriginalProduct(data); // 원래 데이터 저장
       setSelectedProduct(productId);
     } catch (error) {
       console.error(error);
@@ -63,7 +49,7 @@ export const ProductModify = () => {
   // 선택한 상품 정보 수정
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedProduct) return;
+    if (!selectedProduct || !product) return;
 
     try {
       await updateProduct(selectedProduct, {
@@ -74,12 +60,21 @@ export const ProductModify = () => {
         description: product.description,
         items: product.items,
       });
+      alert('상품이 성공적으로 수정되었습니다.');
     } catch (error) {
       console.error(error);
     }
   };
 
+  // 수정 취소
+  const handleCancel = () => {
+    if (originalProduct) {
+      setProduct(originalProduct);
+    }
+  };
+
   const handleAddItem = () => {
+    if (!product) return;
     setProduct({
       ...product,
       items: [
@@ -100,6 +95,7 @@ export const ProductModify = () => {
     field: keyof Product['items'][0],
     value: string | number
   ) => {
+    if (!product) return;
     const newItems = [...product.items];
     newItems[index] = {
       ...newItems[index],
@@ -122,63 +118,106 @@ export const ProductModify = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {/* 상품 목록을 매핑하여 표시 */}
-          <TableRow
-            key={product.id}
-            className={selectedProduct === product.id ? 'bg-muted' : ''}
-          >
-            <TableCell>{product.id}</TableCell>
-            <TableCell>{product.productName}</TableCell>
-            <TableCell>{product.brandName}</TableCell>
-            <TableCell>{product.price}</TableCell>
-            <TableCell>
-              <button
-                onClick={() => handleProductSelect(product.id)}
-                className="text-primary hover:underline"
-              >
-                수정
-              </button>
-            </TableCell>
-          </TableRow>
+          {productRes.data.map((product) => (
+            <TableRow
+              key={product.id}
+              className={selectedProduct === product.id ? 'bg-muted' : ''}
+            >
+              <TableCell>{product.id}</TableCell>
+              <TableCell>{product.productName}</TableCell>
+              <TableCell>{product.brandName}</TableCell>
+              <TableCell>{product.price}</TableCell>
+              <TableCell>
+                <button
+                  onClick={() => handleProductSelect(product.id)}
+                  className="hover:underline text-blue-500"
+                >
+                  수정하기
+                </button>
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
 
-      {selectedProduct && (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            value={product.productName}
-            onChange={(e) =>
-              setProduct({...product, productName: e.target.value})
-            }
-            placeholder="상품명"
-          />
-          <input
-            type="text"
-            value={product.brandName}
-            onChange={(e) =>
-              setProduct({...product, brandName: e.target.value})
-            }
-            placeholder="브랜드명"
-          />
-          <input
-            type="number"
-            value={product.price}
-            onChange={(e) =>
-              setProduct({...product, price: Number(e.target.value)})
-            }
-            placeholder="가격"
-          />
-          <textarea
-            value={product.description}
-            onChange={(e) =>
-              setProduct({...product, description: e.target.value})
-            }
-            placeholder="상품 설명"
-          />
-          {/* items 입력 폼 추가 */}
-          <button type="submit">수정하기</button>
-        </form>
+      {selectedProduct && product && (
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-semibold mb-4">상품 수정</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  상품명
+                </label>
+                <input
+                  type="text"
+                  value={product.productName}
+                  onChange={(e) =>
+                    setProduct({...product, productName: e.target.value})
+                  }
+                  placeholder="상품명"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  브랜드명
+                </label>
+                <input
+                  type="text"
+                  value={product.brandName}
+                  onChange={(e) =>
+                    setProduct({...product, brandName: e.target.value})
+                  }
+                  placeholder="브랜드명"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  가격
+                </label>
+                <input
+                  type="number"
+                  value={product.price}
+                  onChange={(e) =>
+                    setProduct({...product, price: Number(e.target.value)})
+                  }
+                  placeholder="가격"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                />
+              </div>
+              <div className="col-span-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  상품 설명
+                </label>
+                <textarea
+                  value={product.description}
+                  onChange={(e) =>
+                    setProduct({...product, description: e.target.value})
+                  }
+                  placeholder="상품 설명"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                />
+              </div>
+            </div>
+            <div className="mt-4 flex justify-end space-x-4">
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                취소
+              </button>
+              <button
+                type="submit"
+                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                수정하기
+              </button>
+            </div>
+          </form>
+        </div>
       )}
     </div>
   );

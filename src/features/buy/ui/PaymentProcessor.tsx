@@ -10,7 +10,7 @@ export default function PaymentProcessor() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const {orders} = useEncryptStore();
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [isProcessing] = useState(false);
 
   useEffect(() => {
     const paymentKey = searchParams.get('paymentKey') ?? '';

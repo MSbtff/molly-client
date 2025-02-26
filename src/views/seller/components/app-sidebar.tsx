@@ -32,7 +32,7 @@ const data = {
       items: [
         {
           title: '상품 등록',
-          url: '#',
+          url: '',
         },
         {
           title: '상품 삭제',
@@ -52,7 +52,7 @@ const data = {
   projects: [
     {
       name: '프로필 관리',
-      url: '#',
+      url: '/mypage',
       icon: UserPen,
     },
     {
@@ -71,9 +71,6 @@ const data = {
 export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      {/* <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
-      </SidebarHeader> */}
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavProjects projects={data.projects} />
@@ -81,7 +78,6 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         <NavUser user={data.user} />
       </SidebarFooter>
-      {/* <SidebarRail /> */}
     </Sidebar>
   );
 }

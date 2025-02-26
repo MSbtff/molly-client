@@ -31,9 +31,9 @@ export const PurchasePage = ({orders}: PurchasePageProps) => {
         <div className="flex">
           <BorderBox title="전체" count={orders.length} />
           <BorderBox
-            title="결제대기"
+            title="배송대기"
             count={
-              orders.filter((order) => order.orderStatus === 'PENDING').length
+              orders.filter((order) => order.deliveryStatus === 'READY').length
             }
           />
           <BorderBox

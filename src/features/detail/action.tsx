@@ -2,6 +2,7 @@
 
 import {redirect} from 'next/navigation';
 import {cookies} from 'next/headers';
+import {useEncryptStore} from '@/app/provider/EncryptStore';
 interface ReviewApiResponse {
   reviewInfo: {
     reviewId: number;
@@ -47,16 +48,16 @@ export async function buyNow(
       directOrderRequest: {
         itemId,
         quantity,
-      }
+      },
     });
 
-    console.log("바로 구매 주문 요청 본문:", bodyData);
+    console.log('바로 구매 주문 요청 본문:', bodyData);
 
     // API 요청
     const response = await fetch(`${baseUrl}/orders`, {
       method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `${authToken.value}`,
       },
       body: bodyData,
@@ -66,13 +67,15 @@ export async function buyNow(
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error(`바로 구매 실패 Status: ${response.status}, Message: ${errorData.message}`);
-      throw new Error(errorData.message || "구매 요청 실패");
+      console.error(
+        `바로 구매 실패 Status: ${response.status}, Message: ${errorData.message}`
+      );
+      throw new Error(errorData.message || '구매 요청 실패');
     }
 
     // 성공 응답 데이터
     const data = await response.json();
-    console.log("바로 구매 api 성공", data);
+    console.log('바로 구매 api 성공', data);
 
     return data; // 주문 결과 반환
   } catch (error) {
