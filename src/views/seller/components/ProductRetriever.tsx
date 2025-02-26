@@ -44,6 +44,7 @@ export const ProductRetriever = ({productRes}: SellerContainerProps) => {
   const [products, setProducts] = useState<ProductData[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
+  console.log(productRes);
 
   useEffect(() => {
     // 초기 데이터 설정
@@ -105,8 +106,9 @@ export const ProductRetriever = ({productRes}: SellerContainerProps) => {
               <TableHead className="w-[100px]">상품 ID</TableHead>
               <TableHead>상품명</TableHead>
               <TableHead>브랜드</TableHead>
+              <TableHead>카테고리</TableHead>
+              <TableHead>설명</TableHead>
               <TableHead>가격</TableHead>
-              <TableHead>액션</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -136,15 +138,9 @@ export const ProductRetriever = ({productRes}: SellerContainerProps) => {
                     {product.productName}
                   </TableCell>
                   <TableCell>{product.brandName}</TableCell>
+                  <TableCell>{product.categories[1]}</TableCell>
+                  <TableCell>{product.description}</TableCell>
                   <TableCell>{product.price.toLocaleString()}원</TableCell>
-                  <TableCell>
-                    <button
-                      onClick={() => handleEdit(product.id)}
-                      className="text-blue-600 hover:underline"
-                    >
-                      수정
-                    </button>
-                  </TableCell>
                 </TableRow>
               ))
             )}
