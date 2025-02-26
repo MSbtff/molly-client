@@ -70,30 +70,11 @@ export default function FeaturedBrandSection() {
   }, [selectedBrand]);
 
   return (
-    <section className="px-6 mt-16">
+    <section className="px-20 mt-16">
       <h3 className="text-xl font-semibold mb-4">주목할 브랜드</h3>
 
       {/* 메인 배너 */}
       <div className="grid grid-cols-2 gap-2">
-        {/* 왼쪽 큰 배너 */}
-        {/* <div className="relative w-full h-fit"> 부모를 자식에게 맞춤
-            <Image
-              src={Slider2}
-              alt="J.ESTINA 브랜드"
-              width={611}
-              height={350}
-              className="object-cover w-full h-auto rounded"
-            />
-            <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center p-6">
-              <div className="text-white">
-                <h4 className="text-2xl font-bold">J.ESTINA</h4>
-                <p>로맨틱한 무드를 느낄 시간</p>
-                <button className="mt-2 px-4 py-2 border border-white text-white rounded-lg text-sm">
-                  바로가기
-                </button>
-              </div>
-            </div>
-          </div> */}
         {brands.length > 0 && (
           <div className="relative w-full h-fit">
             <Image
@@ -108,7 +89,7 @@ export default function FeaturedBrandSection() {
               <div className="text-white">
                 <h4 className="text-2xl font-bold">{brands[0].brandName}</h4>
                 <p>{`${brands[0].brandName} 느낄 시간`}</p>
-                <button className="mt-2 px-4 py-2 border border-white text-white rounded-lg text-sm">
+                <button className="mt-2 px-4 py-2 border border-white text-white text-sm">
                   바로가기
                 </button>
               </div>
@@ -120,24 +101,6 @@ export default function FeaturedBrandSection() {
 
         {/* 오른쪽 상품 리스트 (2개) */}
         <div className="grid grid-cols-3">
-          {/* {[...Array(3)].map((_, index) => (
-            <div key={index} className="flex flex-col items-center text-center mt-auto">
-              
-              <Image
-                src={Default}
-                alt={`추천 브랜드 ${index + 1}`}
-                width={170}
-                height={200}
-                className="object-cover mt-4"
-              />
-              <button className="flex flex-col items-start items-center w-full overflow-hidden mt-2">
-                <span className="text-left text-sm text-gray-700">[선택된PICK] 브랜드명</span>
-                <span className="text-xs text-gray-500">상품명 {index + 1}</span>
-                <span className="text-black-500 font-semibold text-sm">180,880원</span>
-
-              </button>
-            </div>
-          ))} */}
           {brandProducts.map((product) => (
             <div key={product.id} className="flex flex-col items-center text-center mt-auto">
               {imageUrl &&
@@ -169,18 +132,6 @@ export default function FeaturedBrandSection() {
 
       {/* 브랜드 상품 리스트 (5개) */}
       <div className="grid grid-cols-4 gap-2 mt-6">
-        {/* {[...Array(4)].map((_, index) => (
-          <div key={index} className="flex flex-col items-center">
-            <Image
-              src={Default}
-              alt={`브랜드 상품 ${index + 1}`}
-              width={300}
-              height={350}
-            />
-            <p className="text-left mt-2 font-semibold text-sm">파사드 패턴</p>
-          </div>
-        ))} */}
-
         {brands.slice(1).map((brand, index) => (
           <div key={index} className="flex flex-col items-center">
             <Image
@@ -200,12 +151,9 @@ export default function FeaturedBrandSection() {
         ))}
       </div>
 
-
-
-
       {/* "다른 상품 더보기" 버튼 */}
       <div className="flex justify-center mt-8">
-        <button className="px-6 py-3 border border-gray-400 rounded-lg text-base font-medium hover:bg-gray-100 transition">
+        <button className="px-6 py-3 border border-gray-400 text-base font-medium hover:bg-gray-100 transition">
           다른 상품 더보기
         </button>
       </div>

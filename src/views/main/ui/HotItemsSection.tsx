@@ -45,51 +45,11 @@ export default function HotItemsSection() {
   }, []);
 
   return (
-    <section className="px-6">
+    <section className="px-20">
       <h3 className="text-xl font-semibold mb-4">지금 핫한 신상템</h3>
 
       {/* 메인 배너 map으로 돌릴거임*/}
       <div className="grid grid-cols-2 gap-2">
-
-
-        {/* <div className="relative w-full h-auto">
-          <Image
-            src={Slider2}
-            alt="JINDO 코트"
-            width={611}
-            height={350}
-            className="object-cover w-full h-auto rounded"
-          />
-          <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center p-6">
-            <div className="text-white">
-              <h4 className="text-2xl font-bold">JINDO</h4>
-              <p>코트-브라운, 스타일링 팁</p>
-              <button className="mt-2 px-4 py-2 border border-white text-white rounded-lg text-sm">
-                바로가기
-              </button>
-            </div>
-          </div>
-        </div>
-        <div className="relative w-full h-auto">
-          <Image
-            src={Slider2}
-            alt="ANNE KLEIN 코트"
-            // fill <- 부모 크기에 맞춰 자동 조정. 부모 높이가 없다면 메인배너1 크기에 맞춰짐
-            width={611}
-            height={350}
-            className="object-cover w-full h-auto rounded"
-          />
-          <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center p-6">
-            <div className="text-white">
-              <h4 className="text-2xl font-bold">ANNE KLEIN</h4>
-              <p>기다리지 마세요, 코트 컬렉션</p>
-              <button className="mt-2 px-4 py-2 border border-white text-white rounded-lg text-sm">
-                바로가기
-              </button>
-            </div>
-          </div>
-        </div> */}
-
         {products.slice(0, 2).map((product) => (
           <div key={product.id} className="relative w-full h-auto">
             {imageUrl &&
@@ -110,7 +70,7 @@ export default function HotItemsSection() {
               <div className="text-white">
                 <h4 className="text-2xl font-bold">{product.brandName}</h4>
                 <p>{product.productName}</p>
-                <button className="mt-2 px-4 py-2 border border-white text-white rounded-lg text-sm">
+                <button className="mt-2 px-4 py-2 border border-white text-white text-sm">
                   바로가기
                 </button>
               </div>
@@ -124,21 +84,6 @@ export default function HotItemsSection() {
       </div>
       {/* 신상템 상품 리스트 */}
       <div className="grid grid-cols-6 lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 gap-2 mt-4">
-        {/* {[...Array(6)].map((_, index) => (
-          <div key={index} className="flex flex-col w-full overflow-hidden">
-            <Image
-              src={Default}
-              alt={`드메리얼`}
-              width={200}
-              height={250}
-            />
-            <button className="flex flex-col items-start w-full overflow-hidden">
-              <span className="text-sm mt-1 font-semibold">루에브르</span>
-              <span className="text-left text-sm text-gray-500 truncate w-full">BOA FLEECE PADDING JACKET_2COLOR</span>
-              <span className="text-left text-black-500 font-semibold">150,000원</span>
-            </button>
-          </div>
-        ))} */}
         {products.slice(2).map((product) => (
           <div key={product.id} className="flex flex-col w-full overflow-hidden">
             <Image
@@ -166,7 +111,7 @@ export default function HotItemsSection() {
       </div>
       {/* "다른 상품 더보기" 버튼 */}
       <div className="flex justify-center mt-8">
-        <button className="px-6 py-3 border border-gray-400 rounded-lg text-base font-medium hover:bg-gray-100 transition">
+        <button className="px-6 py-3 border border-gray-400 text-base font-medium hover:bg-gray-100 transition">
           다른 상품 더보기
         </button>
       </div>

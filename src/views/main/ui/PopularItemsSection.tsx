@@ -73,21 +73,6 @@ export default function PopularItemsSection() {
 
       {/* 상품 리스트 */}
       <div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 gap-2">
-        {/* {[...Array(10)].map((_, index) => (
-          <div key={index} className="flex flex-col w-full overflow-hidden">
-            <Image
-              src={Default}
-              alt={`상품 ${index + 1}`}
-              width={200}
-              height={250}
-            />
-            <button className="flex flex-col items-start w-full overflow-hidden">
-              <span className="text-left mt-1 text-sm font-semibold">더라우스트</span>
-              <span className="text-left text-sm text-gray-500 truncate w-full">[단독]HILDA BOOTS_5color</span>
-              <span className="text-left text-black-500 font-semibold">150,000</span>
-            </button>
-          </div>
-        ))} */}
         {products.map((product) => (
           <div key={product.id} className="flex flex-col w-full overflow-hidden">
             {imageUrl &&
@@ -108,7 +93,7 @@ export default function PopularItemsSection() {
       </div>
       {/* "다른 추천 상품 보기" 버튼 */}
       <div className="flex justify-center mt-8">
-        <button className="flex items-center gap-2 px-6 py-3 border border-gray-400 rounded-lg text-base font-medium hover:bg-gray-100 transition">
+        <button className="flex items-center gap-2 px-6 py-3 border border-gray-400 text-base font-medium hover:bg-gray-100 transition">
           <RotateCcw size={20} /> 다른 추천 상품 보기
         </button>
       </div>

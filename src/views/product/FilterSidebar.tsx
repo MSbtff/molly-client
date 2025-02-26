@@ -223,9 +223,9 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
         </div>
 
         {/* 브랜드 */}
-        <div className="px-4 py-4 border-b">
+        {/* <div className="px-4 py-4 border-b">
           <h3 className="text-sm font-semibold mb-3">브랜드</h3>
-        </div>
+        </div> */}
 
         {/*선택한 옵션*/}
         {(selectedGender || selectedCategory || selectedColor.length > 0 || selectedPrice || selectedSize.length > 0) && (

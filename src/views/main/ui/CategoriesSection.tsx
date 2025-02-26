@@ -15,11 +15,11 @@ const categories = [
 
 export default function CategoriesSection () {
     return (
-        <section className="px-20 mt-10">
-                <div className="grid grid-cols-5 gap-6">
+        <section className="px-10 mt-10">
+                <div className="grid grid-cols-5 gap-y-0">
                   {categories.map((category) => (
-                    <div key={category.id} className="flex flex-col items-center rounded-xl p-4">
-                      <Image src={category.imgSrc} alt={category.title} width={160} height={120} className="rounded-lg" />
+                    <div key={category.id} className="flex flex-col items-center rounded-xl p-1">
+                      <Image src={category.imgSrc} alt={category.title} width={80} height={60} className="rounded-lg" />
                       <p className="text-sm font-semibold mt-2">{category.title}</p>
                     </div>
                   ))}

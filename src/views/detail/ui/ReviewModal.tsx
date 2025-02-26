@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Image from "next/image";
+import {ChevronLeft, ChevronRight}  from 'lucide-react';
 interface ReviewModalProps {
   review: {
     images: string[];
@@ -41,22 +42,12 @@ export default function ReviewModal({ review, onClose }: ReviewModalProps) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       {/* 모달 박스 */}
-      <div className="bg-white rounded-2xl shadow-lg max-w-sm w-full p-4 relative z-50">
+      <div className="bg-white shadow-lg max-w-sm w-full p-4 relative z-50">
         {/* 닫기 버튼 */}
         <button className="absolute top-4 right-4 text-gray-500 text-xl z-50" onClick={onClose}>
           ✕
         </button>
-
-        {/* 리뷰 이미지 */}
-        {/* <div className="rounded-lg overflow-hidden">
-          <Image
-            src={review.image}
-            alt="리뷰 이미지"
-            width={500}
-            height={500}
-            className="w-full h-auto object-cover"
-          />
-        </div> */}
+        
         {/* 리뷰 이미지 캐러셀 */}
         <div className="relative">
           {/* 이전 버튼 (이미지가 하나 이상일 때만 표시) */}
@@ -65,11 +56,11 @@ export default function ReviewModal({ review, onClose }: ReviewModalProps) {
               className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white rounded-full p-2 opacity-70 hover:opacity-100 transition"
               onClick={prevImage}
             >
-              ◀
+              <ChevronLeft/>
             </button>
           )}
 
-          <div className="rounded-lg overflow-hidden">
+          <div className=" overflow-hidden">
             <Image
               src={`${imageUrl}${review.images[currentIndex]}`} // 현재 인덱스의 이미지 표시
               alt="리뷰 이미지"
@@ -85,7 +76,7 @@ export default function ReviewModal({ review, onClose }: ReviewModalProps) {
               className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white rounded-full p-2 opacity-70 hover:opacity-100 transition"
               onClick={nextImage}
             >
-              ▶
+              <ChevronRight/>
             </button>
           )}
         </div>

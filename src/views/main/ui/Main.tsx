@@ -9,7 +9,7 @@ import HotItemsSection from './HotItemsSection';
 import FeaturedBrandSection from './FeaturedBrandSection';
 import RecommendedItemsSection from './RecommendedItemsSection';
 
-export default function Main() {
+export default function   Main() {
 
 
   return (
