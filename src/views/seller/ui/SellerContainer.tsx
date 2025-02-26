@@ -11,10 +11,9 @@ import {
 } from './breadcrumb';
 import {Separator} from './separator';
 import {SidebarInset, SidebarProvider, SidebarTrigger} from './sidebar';
-
 import {useSellerStore} from '../../../app/provider/Sellerstore';
 import {ProductRegister} from '../components/ProductRegister';
-import {ProductDashboard} from '../components/ProductDashboard';
+// import {ProductDashboard} from '../components/ProductDashboard';
 import {ProductRetriever} from '../components/ProductRetriever';
 import {ProductModify} from '../components/ProductModify';
 import {ProductDelete} from '../components/ProductDelete';
