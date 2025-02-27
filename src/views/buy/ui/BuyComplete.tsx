@@ -6,7 +6,7 @@ import {Button} from '@/shared/ui/Button';
 import {useEncryptStore} from '@/app/provider/EncryptStore';
 
 export const BuyComplete = () => {
-  const {orders, setOrders} = useEncryptStore();
+  const {orders} = useEncryptStore();
   const {orderId, totalAmount, orderedAt} = orders[orders.length - 1];
   const item = orders[orders.length - 1].orderDetails.length;
   // 실제 구현 시 이 데이터는 API에서 받아오거나 파라미터로 전달받아야 함

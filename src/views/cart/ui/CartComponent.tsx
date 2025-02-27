@@ -1,7 +1,7 @@
 'use client';
 
 import {Button} from '../../../shared/ui/Button';
-import React, {Suspense, useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {OptionModal} from './OptionModal';
 import {CartNotice} from './CartNotice';
 import {CartOrderButton} from './CartOrderButton';
@@ -199,18 +199,19 @@ export const CartComponent = () => {
       <div className={`w-screen flex flex-col justify-center`}>
         <div className="w-full h-full bg-[#EFF2F1] flex flex-col items-center">
           <div className="text-2xl mt-2">쇼핑 정보</div>
-          <div className="w-[680px]">
+          <div className=" xs:w-[480px] sm:w-[600px] md:w-[680px]">
             <div className="w-full flex items-center justify-between">
               <div className="flex gap-2">
                 <input
                   type="checkbox"
                   checked={selectedItems.size === cartItems.length}
                   onChange={handleSelectAll}
+                  className="cursor-pointer"
                 />
                 <div>전체 선택</div>
               </div>
               <div
-                className="w-20 h-8 border bg-white  rounded-[10px] flex justify-center items-center cursor-pointer"
+                className="w-20 h-8 border bg-white  rounded-[10px] flex justify-center items-center cursor-pointer hover:text-gray-500"
                 onClick={handleDeleteSelected}
               >
                 선택 삭제
@@ -221,16 +222,17 @@ export const CartComponent = () => {
           {cartItems.map((item) => (
             <div
               key={item.cartInfoDto.cartId}
-              className="mt-4 w-[680px] h-[370px] bg-white flex flex-col gap-4 p-8 rounded-[10px]"
+              className="mt-4 xs:w-[480px] sm:w-[600px] md:w-[680px] h-[400px]  bg-white flex flex-col gap-4 p-8 rounded-[10px]"
             >
               <div className="flex justify-between">
                 <input
                   type="checkbox"
                   checked={selectedItems.has(item.cartInfoDto.cartId)}
                   onChange={() => handleItemSelect(item.cartInfoDto.cartId)}
+                  className="cursor-pointer"
                 />
                 <div
-                  className="w-12 h-8 border rounded-[10px] flex justify-center items-center cursor-pointer"
+                  className="w-12 h-8 border rounded-[10px] flex justify-center items-center cursor-pointer hover:text-gray-500"
                   onClick={() => handleDeleteItem(item.cartInfoDto.cartId)}
                 >
                   삭제
@@ -243,6 +245,7 @@ export const CartComponent = () => {
                   height="36px"
                   radius="10px"
                   border="2px solid #000"
+                  className="hover:text-slate-400"
                   onClick={(e: React.MouseEvent) => {
                     e.preventDefault();
                     setIsOpen(true);
@@ -255,8 +258,10 @@ export const CartComponent = () => {
                   width="330px"
                   height="36px"
                   radius="10px"
-                  bg="black"
-                  color="white"
+                  className="hover:text-gray-500 text-white bg-black"
+                  totalAmount={selectedItemsInfo.totalAmount}
+                  totalItems={selectedItemsInfo.totalItems}
+                  handleOrder={handleOrder}
                 >
                   주문 하기
                 </Button>

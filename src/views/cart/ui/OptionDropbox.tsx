@@ -9,12 +9,6 @@ interface SizeDetail {
   quantity: number;
 }
 
-// 색상 상세 정보에 대한 인터페이스
-interface ColorDetail {
-  color: string;
-  sizeDetails: SizeDetail[];
-}
-
 interface OptionDropboxProps {
   cartId: number;
   onOptionChange?: (

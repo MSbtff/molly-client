@@ -12,7 +12,7 @@ export async function deleteProduct(productId: number) {
 
   try {
     const response = await fetch(
-      `http://3.35.175.203:8080/product/${productId}`,
+      `${process.env.NEXT_SERVER_URL}/product/${productId}`,
       {
         method: 'DELETE',
         headers: {

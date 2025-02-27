@@ -1,5 +1,4 @@
 'use client';
-
 import {AppSidebar} from '../components/app-sidebar';
 import {
   Breadcrumb,
@@ -42,6 +41,7 @@ export default function SellerContainer({productRes}: SellerContainerProps) {
     viewComponents[currentView as keyof typeof viewComponents];
     return viewComponents[currentView] || viewComponents.기본;
   };
+
   return (
     <SidebarProvider>
       <AppSidebar />

@@ -14,12 +14,11 @@ import {useEncryptStore} from '@/app/provider/EncryptStore';
 import {TossPaymentsWidgets} from '@tosspayments/tosspayments-sdk';
 import {PointUse} from '@/features/buy/ui/PointUse';
 
-//Element 타입은 시맨틱 태그로 사용하기 위해 만든 타입
-
+// 결제페이지
 export default function BuyContainer() {
   const router = useRouter();
   const {orders, getDecryptedOrders, setOrders} = useEncryptStore();
-  const decryptedOrders = getDecryptedOrders(); // 복호화된 주문 정보 가져오기
+  const decryptedOrders = getDecryptedOrders();
   const orderNumber = decryptedOrders?.length - 1;
   const orderId = orders?.[orderNumber]?.orderId;
 
@@ -46,7 +45,7 @@ export default function BuyContainer() {
   // 주문이 없을 때 카트로 리다이렉트
   useEffect(() => {
     if (!orders?.length) {
-      router.replace('/cart');
+      router.replace('/');
       return;
     }
   }, [orders, router]);
@@ -65,7 +64,7 @@ export default function BuyContainer() {
         try {
           await buyCancel(orderId);
           setOrders([]);
-          window.location.href = '/cart';
+          router.push('/cart');
         } catch (error) {
           console.error('결제 취소 실패:', error);
         }
@@ -107,7 +106,7 @@ export default function BuyContainer() {
       {isClient ? (
         <div className="w-full h-full flex flex-col items-center bg-[#EFF2F1]">
           <BuyAddress userInfo={decryptedOrders[orderNumber]} />
-          <div className="mt-4 w-[700px] h-[400px] flex flex-col bg-white rounded-[10px] border p-4">
+          <div className="mt-4 xs:w-[480px] sm:w-[700px]  h-[400px] flex flex-col bg-white rounded-[10px] border p-4">
             <div className="flex justify-between">
               <h2 className="font-semibold">주문 상품 및 쿠폰</h2>
               <div>총 {totalItems}건</div>
@@ -125,8 +124,8 @@ export default function BuyContainer() {
                     price={item.price}
                     quantity={item.quantity}
                     size={item.size}
-                    color={item.color} // orderDetails에 color 정보가 없다면 기본값 설정
-                    url={item.image} // orderDetails에 url 정보가 없다면 기본값 설정
+                    color={item.color}
+                    url={item.image}
                   />
                 ))}
             </div>
@@ -136,29 +135,17 @@ export default function BuyContainer() {
               <ChevronRight size={20} />
             </div>
           </div>
-          {/* <div className="mt-4 w-[700px] h-[145px] flex flex-col justify-between bg-white rounded-[10px] border p-4">
-          <div>포인트</div>
-          <div className="w-[585px] h-9 border rounded-[10px] flex items-center">
-            <div>0</div>
-          </div>
-          <div className="flex">
-            <div>보유 포인트</div>
-            <div className="ml-8 flex  items-center">
-              <CircleHelp size={20} color="#acacac" />
-            </div>
-            <div> 0p</div>
-          </div>
-        </div> */}
+
           <PointUse
             userPoint={currentOrder?.userPoint || 0}
             totalAmount={totalPrice}
             onPointChange={handlePointChange}
             ready={ready}
           />
-          <div className="mt-4 w-[700px] h-full flex flex-col  bg-white rounded-[10px] border p-2">
+          <div className="mt-4 xs:w-[480px] sm:w-[700px] h-full flex flex-col  bg-white rounded-[10px] border p-2">
             <TestCheckoutPage onWidgetsReady={handleWidgetsReady} />
           </div>
-          <div className="mt-4 w-[700px] h-[160px] flex flex-col bg-white rounded-t-[10px] border p-4">
+          <div className="mt-4 xs:w-[480px] sm:w-[700px] h-[160px] flex flex-col bg-white rounded-t-[10px] border p-4">
             <div className="font-bold">최종 주문 정보</div>
             <div className="w-full flex justify-between">
               <div>구매가</div>
@@ -179,14 +166,14 @@ export default function BuyContainer() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col bg-gray2 w-[700px] h-[60px] rounded-b-[10px] px-4">
+          <div className="flex flex-col bg-gray2 xs:w-[480px] sm:w-[700px] h-[60px] rounded-b-[10px] px-4">
             <div className="font-bold text-lg">총 결제금액</div>
             <div className="text-right font-bold">
               {(totalPrice - (currentOrder?.pointUsage || 0)).toLocaleString()}
               원
             </div>
           </div>
-          <div className="w-full bottom-0">
+          <div className="xs:w-[480px] sm:w-full bottom-0">
             <BuyOrderButton
               widgets={widgets}
               ready={ready}

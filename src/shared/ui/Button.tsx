@@ -12,6 +12,10 @@ type ButtonProps = {
   border?: string;
   type?: 'button' | 'submit' | 'reset';
   className?: string;
+  totalAmount?: number;
+  totalItems?: number;
+  handleOrder?: () => void;
+  hover?: string;
 };
 
 export const Button = (props: ButtonProps) => {
@@ -26,7 +30,14 @@ export const Button = (props: ButtonProps) => {
     border,
     type,
     className,
+    totalAmount,
+
+    handleOrder,
+    hover,
   } = props;
+  // const formattedAmount = totalAmount;
+  // const won = formattedAmount?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
   return (
     <button
       style={{
@@ -37,11 +48,17 @@ export const Button = (props: ButtonProps) => {
         borderRadius: radius,
         border: border,
       }}
-      className={cn('button' + (className ? ` ${className}` : ''))}
-      onClick={onClick}
+      className={cn('button', hover || '', className || '')}
+      onClick={totalAmount ? handleOrder : onClick}
       type={type}
     >
-      <span className={cn(color)}>{children}</span>
+      {totalAmount ? (
+        <div className={cn(color)} onClick={handleOrder}>
+          {children}
+        </div>
+      ) : (
+        <span className={cn(color)}>{children}</span>
+      )}
     </button>
   );
 };

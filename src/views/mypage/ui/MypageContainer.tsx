@@ -46,8 +46,7 @@ export const MypageContainer = ({userRes}: {userRes: UserInfo}) => {
   const handleSubmit = async () => {
     // TODO: API 호출하여 모든 필드 한번에 업데이트
     try {
-      const res = await userInfoChange(newValues);
-
+      await userInfoChange(newValues);
       setIsEditing(false);
     } catch (error) {
       console.error(error);
