@@ -97,14 +97,15 @@ export const ProductRegister = () => {
     e.preventDefault();
 
     try {
+      const validateData = productType.parse(product);
       const formData = new FormData();
       const productData = {
-        categories: product.categories,
-        brandName: product.brandName,
-        productName: product.productName,
-        price: product.price,
-        description: product.description,
-        items: product.items,
+        categories: validateData.categories,
+        brandName: validateData.brandName,
+        productName: validateData.productName,
+        price: validateData.price,
+        description: validateData.description,
+        items: validateData.items,
       };
 
       formData.append('product', JSON.stringify(productData));
@@ -195,6 +196,7 @@ export const ProductRegister = () => {
                 type="text"
                 className="w-full p-2 border rounded-md"
                 placeholder="상품명을 입력하세요"
+                ref={ref}
                 onChange={(e) =>
                   handleProductChange('productName', e.target.value)
                 }
@@ -206,6 +208,7 @@ export const ProductRegister = () => {
                 type="text"
                 className="w-full p-2 border rounded-md"
                 placeholder="브랜드명을 입력하세요"
+                ref={ref}
                 onChange={(e) =>
                   handleProductChange('brandName', e.target.value)
                 }
@@ -217,6 +220,7 @@ export const ProductRegister = () => {
                 type="number"
                 className="w-full p-2 border rounded-md"
                 placeholder="가격을 입력하세요"
+                ref={ref}
                 onChange={(e) =>
                   handleProductChange('price', Number(e.target.value))
                 }
@@ -372,6 +376,7 @@ export const ProductRegister = () => {
                 className="w-full p-2 border rounded-md"
                 placeholder="제품의 상세 설명을 입력하세요"
                 value={product.description}
+                ref={ref}
                 onChange={(e) =>
                   handleProductChange('description', e.target.value)
                 }
@@ -416,6 +421,7 @@ export const ProductRegister = () => {
                       className="w-full p-2 border rounded-md"
                       placeholder="색상을 입력하세요"
                       value={item.color}
+                      ref={ref}
                       onChange={(e) =>
                         handleItemChange(index, 'color', e.target.value)
                       }
@@ -460,6 +466,7 @@ export const ProductRegister = () => {
                       className="w-full p-2 border rounded-md"
                       placeholder="수량을 입력하세요"
                       value={item.quantity}
+                      ref={ref}
                       onChange={(e) =>
                         handleItemChange(
                           index,
