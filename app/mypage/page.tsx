@@ -4,16 +4,11 @@ import {ProductList} from '../../src/views/mypage/ui/ProductList';
 import {ProfileMyPage} from '../../src/views/mypage/ui/ProfileMyPage';
 import {PurchasePage} from '../../src/views/mypage/ui/PurchasePage';
 
-import userInfo from '@/features/mypage/api/userInfo';
 import userInfoPoint from '@/features/mypage/api/userInfoPoint';
 
 export default async function Mypage() {
   const orderRes = await orderRetriever();
-  const userRes = await userInfo();
   const pointRes = await userInfoPoint();
-
-  console.log('이미지:', orderRes.orders.orderDetails);
-  console.log(userRes);
 
   return (
     <>

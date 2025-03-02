@@ -12,7 +12,6 @@ import {Separator} from './separator';
 import {SidebarInset, SidebarProvider, SidebarTrigger} from './sidebar';
 import {useSellerStore} from '../../../app/provider/Sellerstore';
 import {ProductRegister} from '../components/ProductRegister';
-// import {ProductDashboard} from '../components/ProductDashboard';
 import {ProductRetriever} from '../components/ProductRetriever';
 import {ProductModify} from '../components/ProductModify';
 import {ProductDelete} from '../components/ProductDelete';
@@ -34,13 +33,11 @@ export default function SellerContainer({productRes}: SellerContainerProps) {
     '상품 조회': <ProductRetriever productRes={productRes} />,
     '상품 등록': <ProductRegister />,
     기본: <ProductRetriever productRes={productRes} />,
-    // 기본: <ProductDashboard />,
   };
 
-  const renderContent = () => {
-    viewComponents[currentView as keyof typeof viewComponents];
-    return viewComponents[currentView] || viewComponents.기본;
-  };
+  const renderContent = () =>
+    viewComponents[currentView as keyof typeof viewComponents] ||
+    viewComponents.기본;
 
   return (
     <SidebarProvider>

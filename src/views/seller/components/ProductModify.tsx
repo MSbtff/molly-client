@@ -73,36 +73,36 @@ export const ProductModify = ({productRes}: SellerContainerProps) => {
     }
   };
 
-  const handleAddItem = () => {
-    if (!product) return;
-    setProduct({
-      ...product,
-      items: [
-        ...product.items,
-        {
-          id: product.items.length,
-          color: '',
-          colorCode: '',
-          size: '',
-          quantity: 0,
-        },
-      ],
-    });
-  };
+  // const handleAddItem = () => {
+  //   if (!product) return;
+  //   setProduct({
+  //     ...product,
+  //     items: [
+  //       ...product.items,
+  //       {
+  //         id: product.items.length,
+  //         color: '',
+  //         colorCode: '',
+  //         size: '',
+  //         quantity: 0,
+  //       },
+  //     ],
+  //   });
+  // };
 
-  const handleItemChange = (
-    index: number,
-    field: keyof Product['items'][0],
-    value: string | number
-  ) => {
-    if (!product) return;
-    const newItems = [...product.items];
-    newItems[index] = {
-      ...newItems[index],
-      [field]: value,
-    };
-    setProduct({...product, items: newItems});
-  };
+  // const handleItemChange = (
+  //   index: number,
+  //   field: keyof Product['items'][0],
+  //   value: string | number
+  // ) => {
+  //   if (!product) return;
+  //   const newItems = [...product.items];
+  //   newItems[index] = {
+  //     ...newItems[index],
+  //     [field]: value,
+  //   };
+  //   setProduct({...product, items: newItems});
+  // };
 
   return (
     <div className="space-y-4">

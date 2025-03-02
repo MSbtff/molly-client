@@ -8,17 +8,6 @@ import {useState, useEffect} from 'react';
 import {cartUpdate} from '@/features/cart/api/cartUpdate';
 import {OptionDropbox} from './OptionDropbox';
 
-interface SizeDetail {
-  id: number;
-  size: string;
-  quantity: number;
-}
-
-// 색상 상세 정보에 대한 인터페이스
-interface ColorDetail {
-  color: string;
-  sizeDetails: SizeDetail[];
-}
 interface OptionModalProps {
   onClose: () => void;
   cartItem: CartItem;
