@@ -54,7 +54,7 @@ export default function BuyContainer() {
   useEffect(() => {
     window.history.pushState({fromBuy: true}, '', window.location.href);
 
-    const handlePopState = async (e: PopStateEvent) => {
+    const handlePopState = async () => {
       // history.state를 체크하여 뒤로가기인 경우에만 처리
       const confirmed = window.confirm('결제를 취소하겠습니까?');
 
@@ -81,7 +81,7 @@ export default function BuyContainer() {
     return () => {
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [orderId, setOrders]);
+  }, [orderId, setOrders, router]);
 
   // 총 주문 건수 계산
   const totalItems = decryptedOrders?.[orderNumber]?.orderDetails?.length || 0;

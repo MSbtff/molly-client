@@ -1,7 +1,7 @@
 'use client';
 
 import {useState, useEffect} from 'react';
-import {useRouter} from 'next/navigation';
+
 import {
   Table,
   TableBody,
@@ -40,7 +40,6 @@ export interface SellerContainerProps {
 }
 
 export const ProductRetriever = ({productRes}: SellerContainerProps) => {
-  const router = useRouter();
   const [products, setProducts] = useState<ProductData[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
@@ -74,9 +73,6 @@ export const ProductRetriever = ({productRes}: SellerContainerProps) => {
   }, [searchTerm]);
 
   // 상품 수정 페이지로 이동
-  const handleEdit = (productId: number) => {
-    router.push(`/seller/product/edit/${productId}`);
-  };
 
   return (
     <div className="space-y-4">
