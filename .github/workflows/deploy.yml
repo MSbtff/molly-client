@@ -1,0 +1,26 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install SSH key
+        run: |
+          echo "${{ secrets.EC2_PEM_KEY }}" | tr -d '\r' > molly.pem
+          chmod 400 molly.pem
+
+      - name: Verify SSH key creation
+        run: ls -l molly.pem
+
+      - name: Deploy to EC2
+        run: |
+          ssh -vvv -i molly.pem -o StrictHostKeyChecking=no ubuntu@ec2-3-37-88-77.ap-northeast-2.compute.amazonaws.com 'cd molly-client && git pull origin main && yarn install && yarn build && pm2 restart all'
