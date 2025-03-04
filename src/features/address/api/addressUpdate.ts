@@ -1,17 +1,13 @@
 'use server';
 
-import {cookies} from 'next/headers';
 import {AddressData} from './addrssAdd';
+import {getValidAuthToken} from '@/shared/util/lib/authTokenValue';
 
 export default async function addressUpdate(
   addressId: number,
   form: AddressData
 ) {
-  const authToken = (await cookies()).get('Authorization')?.value;
-
-  if (!authToken) {
-    throw new Error('인증되지 않은 요청입니다.');
-  }
+  const authToken = getValidAuthToken();
 
   try {
     const res = await fetch(

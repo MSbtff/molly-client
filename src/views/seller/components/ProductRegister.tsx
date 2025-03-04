@@ -10,17 +10,17 @@ const productType = z.object({
     z.enum(['남성', '여성', '키즈']),
     z.enum(['아우터', '상의', '하의', '액세사리']),
   ]),
-  brandName: z.string(),
-  productName: z.string(),
-  price: z.number(),
-  description: z.string(),
+  brandName: z.string().min(1, '브랜드명을 입력해주세요'),
+  productName: z.string().min(1, '상품명을 입력해주세요'),
+  price: z.number().min(1, '가격을 입력해주세요'),
+  description: z.string().min(1, '상품 설명을 입력해주세요'),
   thumbnail: z.string(),
   productImages: z.array(z.string()),
   productDescriptionImages: z.array(z.string()),
   items: z.array(
     z.object({
       id: z.nullable(z.number()),
-      color: z.string(),
+      color: z.string().min(1, '색상을 입력해주세요'),
       colorCode: z.string(),
       size: z.string(),
       quantity: z.number(),
@@ -97,7 +97,16 @@ export const ProductRegister = () => {
     e.preventDefault();
 
     try {
-      const validateData = productType.parse(product);
+
+      const validationResult = productType.safeParse(product);
+      if (!validationResult.success) {
+        console.error(
+          '입력 데이터가 유효하지 않습니다:',
+          validationResult.error.errors
+        );
+        return;
+      }
+
       const formData = new FormData();
       const productData = {
         categories: validateData.categories,

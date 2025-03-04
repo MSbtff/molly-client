@@ -72,7 +72,6 @@ export const ProductRetriever = ({productRes}: SellerContainerProps) => {
     return () => clearTimeout(debounceTimer);
   }, [searchTerm]);
 
-  // 상품 수정 페이지로 이동
 
   return (
     <div className="space-y-4">

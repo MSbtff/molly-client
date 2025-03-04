@@ -19,14 +19,10 @@ export const CartComponent = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  // const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
   const [selectedCartItem, setSelectedCartItem] = useState<CartItem | null>(
     null
   );
-
-  // const {orders, setOrders} = useOrderStore();
   const {orders, setOrders} = useEncryptStore();
   const {setCartState} = useCartStore();
 
@@ -55,11 +51,7 @@ export const CartComponent = () => {
           setCartState(data);
         }
       } catch (error) {
-        setError(
-          error instanceof Error
-            ? error.message
-            : '알 수 없는 오류가 발생했습니다.'
-        );
+        console.error('카트 데이터 조회 중 오류', error);
       }
     }
     fetchCartItems();
@@ -81,11 +73,7 @@ export const CartComponent = () => {
         setCartItems(data);
       }
     } catch (error) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : '알 수 없는 오류가 발생했습니다.'
-      );
+      console.error('카트 데이터 조회 중 오류', error);
     }
   };
 
@@ -117,9 +105,7 @@ export const CartComponent = () => {
       newSelected.delete(cartId);
       setSelectedItems(newSelected);
     } catch (error) {
-      setError(
-        error instanceof Error ? error.message : '삭제 중 오류가 발생했습니다.'
-      );
+      console.error('상품 삭제 중 오류:', error);
     }
   };
 
@@ -130,15 +116,13 @@ export const CartComponent = () => {
       await refreshCartItems();
       setSelectedItems(new Set());
     } catch (error) {
-      setError(
-        error instanceof Error ? error.message : '삭제 중 오류가 발생했습니다.'
-      );
+      console.error('선택 삭제 중 오류:', error);
     }
   };
 
   const handleOrder = async () => {
     if (selectedItems.size === 0) {
-      setError('주문할 상품을 선택해주세요.');
+      alert('주문할 상품을 선택해주세요.');
       return;
     }
     try {
@@ -176,9 +160,7 @@ export const CartComponent = () => {
       router.push('/buy');
     } catch (error) {
       console.error('주문 처리 중 에러:', error);
-      setError(
-        error instanceof Error ? error.message : '주문 중 오류가 발생했습니다.'
-      );
+      alert('주문 처리 중 오류가 발생했습니다.');
     }
   };
 
@@ -186,9 +168,6 @@ export const CartComponent = () => {
 
   return (
     <>
-      {error && (
-        <div className="w-full p-4 text-red-500 text-center">{error}</div>
-      )}
       {isOpen && selectedCartItem && (
         <OptionModal
           onClose={() => setIsOpen(false)}

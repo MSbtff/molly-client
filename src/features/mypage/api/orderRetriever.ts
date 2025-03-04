@@ -17,7 +17,6 @@ export default async function orderRetriever() {
     });
 
     console.log('응답 상태:', res.status);
-    console.log('응답 상태 텍스트:', res.statusText);
 
     if (!res.ok) {
       const errorData = await res.json();
@@ -32,40 +31,6 @@ export default async function orderRetriever() {
 
     // 응답 데이터 구조 로깅
     console.log('API 응답 데이터 구조:', JSON.stringify(data, null, 2));
-
-    // 첫 번째 주문이 있는 경우, 구조 자세히 확인
-    if (data.orders && data.orders.length > 0) {
-      console.log('첫 번째 주문:', JSON.stringify(data.orders[0], null, 2));
-
-      // 첫 번째 주문의 상세 정보가 있는지 확인
-      if (
-        data.orders[0].orderDetails &&
-        data.orders[0].orderDetails.length > 0
-      ) {
-        console.log(
-          '첫 번째 상세 주문:',
-          JSON.stringify(data.orders[0].orderDetails[0], null, 2)
-        );
-      } else {
-        console.log('주문 상세 정보가 없거나 빈 배열입니다.');
-      }
-    } else {
-      console.log('주문 데이터가 없거나 빈 배열입니다.');
-    }
-
-    // image 필드가 있는지 확인
-    if (
-      data.orders &&
-      data.orders.length > 0 &&
-      data.orders[0].orderDetails &&
-      data.orders[0].orderDetails.length > 0
-    ) {
-      console.log(
-        '이미지 필드 존재 여부:',
-        'image' in data.orders[0].orderDetails[0]
-      );
-      console.log('이미지 필드 값:', data.orders[0].orderDetails[0].image);
-    }
 
     // 일단 빈 데이터로 초기화하여 오류 방지
     if (!data.orders) {
