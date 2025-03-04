@@ -1,13 +1,9 @@
 'use server';
 
-import {cookies} from 'next/headers';
+import {getValidAuthToken} from '@/shared/util/lib/authTokenValue';
 
 export default async function addressRetriever() {
-  const authToken = (await cookies()).get('Authorization')?.value;
-
-  if (!authToken) {
-    throw new Error('인증되지 않은 요청입니다.');
-  }
+  const authToken = getValidAuthToken();
 
   try {
     const res = await fetch(`${process.env.NEXT_SERVER_URL}/addresses`, {
