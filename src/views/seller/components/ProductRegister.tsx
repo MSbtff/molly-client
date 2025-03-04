@@ -97,6 +97,7 @@ export const ProductRegister = () => {
     e.preventDefault();
 
     try {
+
       const validationResult = productType.safeParse(product);
       if (!validationResult.success) {
         console.error(
@@ -105,14 +106,15 @@ export const ProductRegister = () => {
         );
         return;
       }
+
       const formData = new FormData();
       const productData = {
-        categories: product.categories,
-        brandName: product.brandName,
-        productName: product.productName,
-        price: product.price,
-        description: product.description,
-        items: product.items,
+        categories: validateData.categories,
+        brandName: validateData.brandName,
+        productName: validateData.productName,
+        price: validateData.price,
+        description: validateData.description,
+        items: validateData.items,
       };
 
       formData.append('product', JSON.stringify(productData));
@@ -428,6 +430,7 @@ export const ProductRegister = () => {
                       className="w-full p-2 border rounded-md"
                       placeholder="색상을 입력하세요"
                       value={item.color}
+                      ref={ref}
                       onChange={(e) =>
                         handleItemChange(index, 'color', e.target.value)
                       }

@@ -190,7 +190,7 @@ export default function Products() {
     try {
       const params = new URLSearchParams();
       params.append("page", (nextPage ?? page).toString());
-      params.append("size", "80");
+      params.append("size", "48");
 
       Object.entries(filters).forEach(([key, value]) => {
         if (value) params.append(key, value);

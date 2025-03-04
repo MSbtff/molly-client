@@ -72,6 +72,7 @@ export const ProductRetriever = ({productRes}: SellerContainerProps) => {
     return () => clearTimeout(debounceTimer);
   }, [searchTerm]);
 
+
   return (
     <div className="space-y-4">
       {/* 검색 입력창 */}
