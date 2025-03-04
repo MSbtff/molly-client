@@ -97,7 +97,6 @@ export const ProductRegister = () => {
     e.preventDefault();
 
     try {
-
       const validationResult = productType.safeParse(product);
       if (!validationResult.success) {
         console.error(
@@ -109,12 +108,12 @@ export const ProductRegister = () => {
 
       const formData = new FormData();
       const productData = {
-        categories: validateData.categories,
-        brandName: validateData.brandName,
-        productName: validateData.productName,
-        price: validateData.price,
-        description: validateData.description,
-        items: validateData.items,
+        categories: product.categories,
+        brandName: product.brandName,
+        productName: product.productName,
+        price: product.price,
+        description: product.description,
+        items: product.items,
       };
 
       formData.append('product', JSON.stringify(productData));
