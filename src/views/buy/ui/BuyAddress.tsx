@@ -35,7 +35,7 @@ export interface BuyAddressProps {
 export const BuyAddress = ({userInfo}: BuyAddressProps) => {
   return (
     <>
-      <div className="mt-4 w-[700px] h-[205px] flex flex-col bg-white rounded-[10px] border p-4">
+      <div className="mt-4 xs:w-[480px] sm:w-[700px] h-[205px] flex flex-col bg-white rounded-[10px] border p-4">
         <div className="flex justify-between">
           <h2 className="font-semibold">배송 주소</h2>
           <Link href="/mypage/address" className="hover:text-gray-500">

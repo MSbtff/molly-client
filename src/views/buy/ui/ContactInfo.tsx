@@ -24,9 +24,16 @@ const ContactInfo = ({userInfo}: ContactInfoProps) => {
   const {roadAddress, addrDetail, recipient, recipientCellPhone} =
     userInfo.defaultAddress;
 
+  const recipientPhoneNumber =
+    recipientCellPhone.slice(0, 3) +
+    '-' +
+    recipientCellPhone.slice(3, 7) +
+    '-' +
+    recipientCellPhone.slice(7, 11);
+
   const contactData = [
     {label: '받는분', value: recipient},
-    {label: '연락처', value: recipientCellPhone},
+    {label: '연락처', value: recipientPhoneNumber},
     {label: '배송지', value: `${roadAddress} ${addrDetail || ''}`},
   ];
 

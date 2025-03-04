@@ -29,22 +29,6 @@ export const ProductDelete = () => {
     }
   };
 
-  // const deleteProduct = async (productId: number) => {
-  //   try {
-  //     const res = await fetch(`/api/product/${productId}`, {
-  //       method: 'DELETE',
-  //       credentials: 'include',
-  //     });
-
-  //     if (!res.ok) {
-  //       throw new Error('상품 삭제에 실패했습니다.');
-  //     }
-  //     console.log('상품이 성공적으로 삭제되었습니다.');
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
   return (
     <div>
       <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
@@ -71,7 +55,7 @@ export const ProductDelete = () => {
               <TableCell
                 className="flex justify-center cursor-pointer"
                 onClick={() => {
-                  deleteProduct(50);
+                  handleDelete(33);
                 }}
               >
                 <Trash2 />

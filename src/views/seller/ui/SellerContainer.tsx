@@ -1,5 +1,4 @@
 'use client';
-
 import {AppSidebar} from '../components/app-sidebar';
 import {
   Breadcrumb,
@@ -38,10 +37,10 @@ export default function SellerContainer({productRes}: SellerContainerProps) {
     // 기본: <ProductDashboard />,
   };
 
-  const renderContent = () => {
-    viewComponents[currentView as keyof typeof viewComponents];
-    return viewComponents[currentView] || viewComponents.기본;
-  };
+  const renderContent = () =>
+    viewComponents[currentView as keyof typeof viewComponents] ||
+    viewComponents.기본;
+
   return (
     <SidebarProvider>
       <AppSidebar />

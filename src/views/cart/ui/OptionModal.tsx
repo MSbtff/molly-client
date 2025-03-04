@@ -8,17 +8,6 @@ import {useState, useEffect} from 'react';
 import {cartUpdate} from '@/features/cart/api/cartUpdate';
 import {OptionDropbox} from './OptionDropbox';
 
-interface SizeDetail {
-  id: number;
-  size: string;
-  quantity: number;
-}
-
-// 색상 상세 정보에 대한 인터페이스
-interface ColorDetail {
-  color: string;
-  sizeDetails: SizeDetail[];
-}
 interface OptionModalProps {
   onClose: () => void;
   cartItem: CartItem;
@@ -114,7 +103,10 @@ export const OptionModal = ({
         <div className="w-[490px] h-[730px] border flex flex-col bg-white rounded-[10px] p-4 shadow-md">
           <div className="flex justify-between">
             <div className="font-bold text-2xl">옵션 변경</div>
-            <div onClick={onClose} className="cursor-pointer">
+            <div
+              onClick={onClose}
+              className="cursor-pointer hover:text-gray-500"
+            >
               <X />
             </div>
           </div>
@@ -155,7 +147,7 @@ export const OptionModal = ({
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleQuantityChange(quantity - 1)}
-                      className="w-8 h-8 border rounded flex items-center justify-center bg-white"
+                      className="w-8 h-8 border rounded flex items-center justify-center bg-white cursor-pointer"
                       disabled={quantity <= 1}
                     >
                       -
@@ -186,9 +178,9 @@ export const OptionModal = ({
                 width="460px"
                 height="52px"
                 bg={isButtonDisabled ? 'gray' : 'black'}
-                color="white"
                 radius="10px"
                 onClick={isButtonDisabled ? () => {} : handleConfirm}
+                className="hover:text-gray-500 text-white"
               >
                 확인
               </Button>

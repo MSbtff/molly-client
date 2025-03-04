@@ -72,7 +72,7 @@ export default function AddressContainer({
 
   const handleSetDefault = async (id: number) => {
     try {
-      const res = await addressDefault(id);
+      await addressDefault(id);
 
       setAddresses((prev) =>
         prev.map((address) => ({

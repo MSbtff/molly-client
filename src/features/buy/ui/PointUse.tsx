@@ -48,7 +48,7 @@ export function PointUse({
   };
 
   return (
-    <div className="mt-4 w-[700px] h-[145px] flex flex-col justify-between bg-white rounded-[10px] border p-4">
+    <div className="mt-4 xs:w-[480px] sm:w-[700px] h-[145px] flex flex-col justify-between bg-white rounded-[10px] border p-4">
       <div>포인트</div>
       <div className="flex items-center gap-2">
         <input
