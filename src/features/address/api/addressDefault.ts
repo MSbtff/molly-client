@@ -1,13 +1,9 @@
 'use server';
 
-import {cookies} from 'next/headers';
+import {getValidAuthToken} from '@/shared/util/lib/authTokenValue';
 
 export default async function addressDefault(id: number) {
-  const authToken = (await cookies()).get('Authorization')?.value;
-
-  if (!authToken) {
-    throw new Error('토큰을 찾지 못했습니다.');
-  }
+  const authToken = getValidAuthToken();
 
   try {
     const res = fetch(
