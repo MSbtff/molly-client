@@ -31,12 +31,9 @@ export const Button = (props: ButtonProps) => {
     type,
     className,
     totalAmount,
-
     handleOrder,
     hover,
   } = props;
-  // const formattedAmount = totalAmount;
-  // const won = formattedAmount?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
   return (
     <button
