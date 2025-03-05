@@ -31,11 +31,9 @@ export default function Products() {
   const searchApiUrl = `${baseUrl}/search`; // 임시 검색 API 엔드포인트
   const productApiUrl = `${baseUrl}/product`; // 상품 목록 API 엔드포인트
 
-  // const [products, setProducts] = useState<Product[]>([]); //검색어 또는 필터링 조건에 따라 api에서 가져온 상품 목록을 저장
   const [selectedSort, setSelectedSort] = useState("조회순");//현재 선택된 정렬 기준
   const [isSortModalOpen, setIsSortModalOpen] = useState(false);//정렬 모달창 열림 상태(반응형)
   const [isFilterOpen, setIsFilterOpen] = useState(false);//필터 모달창 열림 상태
-  // const [imageError, setImageError] = useState(false);
 
   //일반 상품 목록 api
   const [productList, setProductList] = useState<Product[]>([]);//상품 목록
@@ -83,33 +81,20 @@ export default function Products() {
   };
 
   //url의 쿼리 파라미터가 변경될 때마다 filters 상태 업데이트
-  useEffect(() => {
-    const updatedFilters: Partial<typeof filters> = {}; // 새로운 필터링 객체
+  // useEffect(() => {
+  //   const updatedFilters: Partial<typeof filters> = {}; // 새로운 필터링 객체
 
-    searchParams.forEach((value, key) => {
-      if (value) { //값이 있는 필터만 저장
-        updatedFilters[key as keyof typeof filters] = value;
-      }
-    });
+  //   searchParams.forEach((value, key) => {
+  //     if (value) { //값이 있는 필터만 저장
+  //       updatedFilters[key as keyof typeof filters] = value;
+  //     }
+  //   });
 
-    setFilters(updatedFilters as typeof filters);
-    resetPagination();
-  }, [searchParams.toString()]); // searchParams가 변경될 때
+  //   setFilters(updatedFilters as typeof filters);
+  //   resetPagination();
+  // }, [searchParams]); // searchParams가 변경될 때
 
-  //filters 변경 시 api 요청
-  useEffect(() => {
-    // fetchProducts();
-    // resetPagination(); // 기존 데이터 초기화 (검색 또는 필터 변경 시 필요)
 
-    if (filters.keyword?.trim()) {
-      fetchSearchResults();
-    } else {
-      fetchProductList(page);
-      // if (page === 0 && productList.length === 0) {  // 중복 호출 방지
-      //   fetchProductList(0);
-      // }
-    }
-  }, [filters]);
 
   //품절 제외 체크박스 클릭 핸들러
   const handleExcludeSoldOutChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -151,63 +136,147 @@ export default function Products() {
     router.push(`/detail/${id}`);
   };
 
-  const fetchSearchResults = async () => {
-    if (isLastPage) return;
+  // const fetchSearchResults = async () => {
+  //   if (isLastPage) return;
 
+  //   try {
+  //     const params = new URLSearchParams();
+  //     if (cursorId) params.append("cursorId", cursorId.toString());
+  //     if (lastCreatedAt) params.append("lastCreatedAt", lastCreatedAt);
+  //     params.append("keyword", filters.keyword);
+
+  //     const response = await fetch(`${searchApiUrl}?${params.toString()}`);
+  //     if (!response.ok) throw new Error(`검색 API 요청 실패: ${response.status}`);
+
+  //     const data = await response.json();
+  //     console.log("검색 API 요청 성공:", data);
+
+
+  //     setSearchList((prev) => {
+  //       // ...prev,
+  //       // ...data.item.filter((newItem: Product) => !prev.some((item) => item.id === newItem.id)),
+  //       if (page === 0) return data.item; // 첫 페이지면 기존 데이터 리셋
+  //       return [...prev, ...data.item]; // 다음 페이지 데이터 추가
+  //     });
+
+  //     //다음 페이지 요청을 위한 데이터 업데이트
+  //     setCursorId(data.nextCursorId);
+  //     setLastCreatedAt(data.nextLastCreatedAt);
+  //     setIsLastPage(data.isLastPage);
+  //   } catch (error) {
+  //     console.error("검색 api 요청 에러:", error);
+  //   }
+  // };
+  // //상품 api 요청
+  // const fetchProductList = async (nextPage: number) => {
+  //   if (isLast) return;
+
+  //   try {
+  //     const params = new URLSearchParams();
+  //     params.append("page", (nextPage ?? page).toString());
+  //     params.append("size", "48");
+
+  //     Object.entries(filters).forEach(([key, value]) => {
+  //       if (value) params.append(key, value);
+  //     });
+
+  //     const response = await fetch(`${productApiUrl}?${params.toString()}`);
+  //     if (!response.ok) throw new Error(`상품 목록 API 요청 실패: ${response.status}`);
+
+  //     if (response.status === 204) {
+  //       console.log(" 상품 목록이 없습니다.");
+  //       return;  // 빈 데이터이므로 API 요청 종료
+  //     }
+
+  //     const data = await response.json();
+  //     // console.log("데이터 로그:", data);
+  //     console.log(`상품 목록 API 요청 성공(page: ${nextPage ?? page}):`, data);
+
+  //     const formattedData = data.data.map((item: Product) => ({
+  //       id: item.id,
+  //       url: item.thumbnail?.path,
+  //       brandName: item.brandName,
+  //       productName: item.productName,
+  //       price: item.price,
+  //     }));
+
+  //     setProductList((prev) => [
+  //       ...prev,
+  //       ...formattedData.filter((newItem: Product) => !prev.some((item) => item.id === newItem.id)),
+  //     ]);
+
+  //     console.log("formattedData.url", formattedData[0].url);
+  //     setPage((prev) => prev + 1);
+  //     setIsLast(data.pageable.isLast);
+  //   } catch (error) {
+  //     console.error("상품 목록 API 요청 에러:", error);
+  //   }
+  // };
+
+  //intersection observer 설정
+  
+  useEffect(() => {
+    const paramsString = searchParams.toString(); // 의존성 배열을 단순화
+  
+    const updatedFilters: Partial<typeof filters> = {};
+    searchParams.forEach((value, key) => {
+      if (value) {
+        updatedFilters[key as keyof typeof filters] = value;
+      }
+    });
+  
+    setFilters(updatedFilters as typeof filters);
+    resetPagination();
+  }, [searchParams.toString()]); //searchParams 대신 paramsString 사용
+
+  const fetchSearchResults = useCallback(async () => {
+    if (isLastPage) return;
+  
     try {
       const params = new URLSearchParams();
       if (cursorId) params.append("cursorId", cursorId.toString());
       if (lastCreatedAt) params.append("lastCreatedAt", lastCreatedAt);
       params.append("keyword", filters.keyword);
-
+  
       const response = await fetch(`${searchApiUrl}?${params.toString()}`);
       if (!response.ok) throw new Error(`검색 API 요청 실패: ${response.status}`);
-
+  
       const data = await response.json();
       console.log("검색 API 요청 성공:", data);
-
-
-      setSearchList((prev) => {
-        // ...prev,
-        // ...data.item.filter((newItem: Product) => !prev.some((item) => item.id === newItem.id)),
-        if (page === 0) return data.item; // 첫 페이지면 기존 데이터 리셋
-        return [...prev, ...data.item]; // 다음 페이지 데이터 추가
-      });
-
-      //다음 페이지 요청을 위한 데이터 업데이트
+  
+      setSearchList((prev) => (page === 0 ? data.item : [...prev, ...data.item]));
+  
       setCursorId(data.nextCursorId);
       setLastCreatedAt(data.nextLastCreatedAt);
       setIsLastPage(data.isLastPage);
     } catch (error) {
-      console.error("검색 api 요청 에러:", error);
+      console.error("검색 API 요청 에러:", error);
     }
-  };
-
-  //상품 api 요청
-  const fetchProductList = async (nextPage: number) => {
+  }, [filters.keyword, isLastPage, page, searchApiUrl, cursorId, lastCreatedAt]); // ✅ 불필요한 의존성(cursorId, lastCreatedAt) 제거
+  
+  const fetchProductList = useCallback(async (nextPage: number) => {
     if (isLast) return;
-
+  
     try {
       const params = new URLSearchParams();
       params.append("page", (nextPage ?? page).toString());
       params.append("size", "48");
-
+  
       Object.entries(filters).forEach(([key, value]) => {
         if (value) params.append(key, value);
       });
-
+  
       const response = await fetch(`${productApiUrl}?${params.toString()}`);
       if (!response.ok) throw new Error(`상품 목록 API 요청 실패: ${response.status}`);
-
+  
       if (response.status === 204) {
-        console.log(" 상품 목록이 없습니다.");
-        return;  // 빈 데이터이므로 API 요청 종료
+        console.log("상품 목록이 없습니다.");
+        return;
       }
-
+  
       const data = await response.json();
-      // console.log("데이터 로그:", data);
       console.log(`상품 목록 API 요청 성공(page: ${nextPage ?? page}):`, data);
-
+  
       const formattedData = data.data.map((item: Product) => ({
         id: item.id,
         url: item.thumbnail?.path,
@@ -215,21 +284,31 @@ export default function Products() {
         productName: item.productName,
         price: item.price,
       }));
-
+  
       setProductList((prev) => [
         ...prev,
         ...formattedData.filter((newItem: Product) => !prev.some((item) => item.id === newItem.id)),
       ]);
-
-      console.log("formattedData.url", formattedData[0].url);
+  
       setPage((prev) => prev + 1);
       setIsLast(data.pageable.isLast);
     } catch (error) {
       console.error("상품 목록 API 요청 에러:", error);
     }
-  };
+  }, [filters, isLast, page, productApiUrl]);
 
-  //intersection observer 설정
+  //filters 변경 시 api 요청
+  useEffect(() => {
+
+    if (filters.keyword?.trim()) {
+      fetchSearchResults();
+    } else {
+      fetchProductList(page);
+    }
+  }, [filters.keyword, fetchSearchResults, fetchProductList, page]);
+  
+  
+  
   const observerCallback = useCallback((entries: IntersectionObserverEntry[]) => {
     const [entry] = entries;
     if (entry.isIntersecting) {
@@ -254,7 +333,7 @@ export default function Products() {
         return nextPage;
       });
     }
-  }, [cursorId, lastCreatedAt, isLastPage, isLast]);
+  }, [isLastPage, isLast, filters.keyword, setPage, fetchProductList, fetchSearchResults]);
 
   useEffect(() => {
     if (!triggerRef.current) return;
