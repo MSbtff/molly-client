@@ -39,25 +39,21 @@ export default function BannerSection() {
                 slidesPerView={1} // 화면 크기에 맞춰 자동 조절
                 loop={true} // 무한 반복
                 autoplay={{ delay: 3000, disableOnInteraction: false }} // 3초마다 자동 스와이프
-                // pagination={{ clickable: true }} // 하단 인디케이터 추가
+                pagination={{ clickable: true }} // 하단 인디케이터 추가
                 className="w-full h-full"
             >
                 {banners.map((banner, index) => (
                     <SwiperSlide key={index} className="relative w-screen h-full">
-
                         <Image src={banner.image}
                             alt={`banner-${index}`}
                             layout="fill"
                             // objectFit="contain" 
-
-
                             // width={350}
                             // height={1000}
                             // className="object-cover w-full h-full"
                             objectFit="cover"
 
                         />
-                        {/* 텍스트 추가 */}
                         <div className="absolute inset-0 flex flex-col items-start justify-center text-white text-left px-24">
                             <h2 className="text-7xl">{banner.title}</h2>
                             <p className="text-lg mt-2">{banner.subtitle}</p>
@@ -65,8 +61,6 @@ export default function BannerSection() {
 
                     </SwiperSlide>
                 ))}
-
-                
             </Swiper>
         </section>
     );
