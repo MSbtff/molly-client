@@ -26,8 +26,14 @@ const createJestConfig = nextJest({
   dir: './',
 });
 
+
 const config: Config = {
   clearMocks: true,
+<<<<<<< HEAD
+  collectCoverage: true,
+  coverageDirectory: 'coverage',
+  coverageProvider: 'v8',
+=======
 
   collectCoverage: true,
 
@@ -35,12 +41,27 @@ const config: Config = {
 
   coverageProvider: 'v8',
 
+>>>>>>> 8a24f3a5f730f0037ef30cff7fd0b04a3ca0e3e5
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+    // next/headers 모킹
+    '^next/headers$': '<rootDir>/__mocks__/nextHeaders.js',
+  },
 
   testEnvironment: 'jsdom',
+<<<<<<< HEAD
+=======
 
+>>>>>>> 8a24f3a5f730f0037ef30cff7fd0b04a3ca0e3e5
   // The glob patterns Jest uses to detect test files
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[tj]s?(x)'],
 };
 
+<<<<<<< HEAD
 export default createJestConfig(config);
+
+
+=======
+export default createJestConfig(config);
+>>>>>>> 8a24f3a5f730f0037ef30cff7fd0b04a3ca0e3e5

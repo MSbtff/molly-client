@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import {Button} from '../../../shared/ui/Button';
 import Logo from '../../../../public/moollyLogo.svg';
-import {useRef, useState} from 'react';
+import { useRef, useState} from 'react';
 
 interface Input {
   username: string;
@@ -12,6 +12,7 @@ interface Input {
 interface LoginPageProps {
   handleLogin: (username: string, password: string) => Promise<void>;
 }
+
 
 //server action으로 변경 및 환경변수 오류 찾아야함
 export default function LoginPage({handleLogin}: LoginPageProps) {
@@ -26,6 +27,7 @@ export default function LoginPage({handleLogin}: LoginPageProps) {
     e.preventDefault();
     handleLogin(input.username, input.password);
   };
+
 
   return (
     <div className="min-w-full h-full flex flex-col items-center justify-center">
