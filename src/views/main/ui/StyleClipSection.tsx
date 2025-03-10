@@ -29,7 +29,7 @@ const styleClip: { id: number; src: StaticImageData; nickname: string; rounded?:
 export default function StyleClipSection() {
 
     return (
-        <section className="relative bg-black bg-opacity-90 text-white py-12 px-6 flex flex-col items-center">
+        <section className="relative bg-black bg-opacity-90 text-white py-12 px-6 flex flex-col items-center" role="region">
             <div className="w-full flex justify-between items-center mt-5">
                 <h2 className="text-left text-xl font-semibold ml-12">스타일클립</h2>
                 <button className="text-gray-400 text-sm hover:text-white mr-10">더보기</button>
@@ -37,7 +37,6 @@ export default function StyleClipSection() {
 
             {/* 스타일 클립 리스트 */}
 
-            {/* <div className="relative flex justify-center gap-6 mt-6 mb-10 group"> */}
             <div className="relative w-full px-11 mt-6 mb-10 swiper-container-group">
                 <Swiper
                     modules={[Navigation]} // swiper에서 Navigation 모듈 사용
@@ -72,7 +71,6 @@ export default function StyleClipSection() {
                             </SwiperSlide>
                         );
                     })}
-
                 </Swiper>
 
                 <button className="swiper-button-prev"></button>

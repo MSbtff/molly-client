@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import {useRouter} from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 const categories = [
   { id: 1, title: "구호플러스", imgSrc: "/main/kuho.webp" },
@@ -12,30 +12,27 @@ const categories = [
   { id: 8, title: "분크", imgSrc: "/main/vun.webp" },
   { id: 9, title: "아미", imgSrc: "/main/ami.png" },
   { id: 10, title: "가니", imgSrc: "/main/GANNI.png" },
-  // { id: 11, title: "르메르", imgSrc: "main/LE.png" },
 ];
 
-export default function CategoriesSection() {
+export default function BrandSection() {
   const router = useRouter();
-  const handleBrandClick = (brandName: string)=>{
-      router.push(`/product?brandName=${brandName}`);
+  const handleBrandClick = (brandName: string) => {
+    router.push(`/product?brandName=${brandName}`);
   };
 
-
   return (
-    <section className="px-20 mt-10">
+    <section className="px-20 mt-10" role="region">
       <div className="grid grid-cols-5 gap-2">
         {categories.map((category) => (
-          <div key={category.id} className="flex flex-col items-center mb-7"
-          >
+          <div key={category.id} className="flex flex-col items-center mb-7">
             <button className="w-full h-24 flex flex-col items-center justify-center bg-gray-100 rounded-lg shadow-sm p-3 mb-1"
-                    onClick={()=>handleBrandClick(category.title)}
-            >
+              onClick={() => handleBrandClick(category.title)} >
               <Image src={category.imgSrc} alt={category.title} width={80} height={60} />
             </button>
             <p className="text-sm font-semibold mt-2"
-               onClick={()=>handleBrandClick(category.title)}
-            >{category.title}</p>
+              onClick={() => handleBrandClick(category.title)}>
+              {category.title}
+            </p>
           </div>
         ))}
       </div>

@@ -39,6 +39,7 @@ export default function HotItemsSection() {
   // 이미지 로딩 실패 시 기본 이미지로 대체
   const handleImageError = (id: number) => {
     setImageError((prev) => ({ ...prev, [id]: true }));
+    console.log("이미지 에러 상태 업데이트:", imageError);
   };
   useEffect(() => {
     fetchProducts();

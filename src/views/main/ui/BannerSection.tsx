@@ -32,7 +32,7 @@ const banners = [
 
 export default function BannerSection() {
     return (
-        <section className="relative w-screen h-[600px]">
+        <section className="relative w-screen h-[600px]" role="region" aria-label="배너 섹션" data-testid="banner-section">
             <Swiper
                 modules={[Pagination, Autoplay]}
                 spaceBetween={0} // 슬라이드 간격
@@ -47,13 +47,7 @@ export default function BannerSection() {
                         <Image src={banner.image}
                             alt={`banner-${index}`}
                             layout="fill"
-                            // objectFit="contain" 
-                            // width={350}
-                            // height={1000}
-                            // className="object-cover w-full h-full"
-                            objectFit="cover"
-
-                        />
+                            objectFit="cover"/>
                         <div className="absolute inset-0 flex flex-col items-start justify-center text-white text-left px-24">
                             <h2 className="text-7xl">{banner.title}</h2>
                             <p className="text-lg mt-2">{banner.subtitle}</p>
