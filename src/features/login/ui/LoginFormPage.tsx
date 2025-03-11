@@ -2,32 +2,22 @@
 
 import {useRouter} from 'next/navigation';
 import LoginPage from './LoginPage';
+import { loginAndSetToken } from '@/shared/util/lib/setCookie';
 
 export const LoginFormPage = () => {
   const router = useRouter();
 
   const handleLogin = async (email: string, password: string) => {
     try {
-      const res = await fetch('api/sign-in', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
+      const res = await loginAndSetToken(email, password);
 
-      if (res.ok) {
-        const data = await res.json();
-        console.log('로그인 성공', data);
+      if (res.data) {
+        console.log('로그인 성공', res.data);
         router.push('/');
-
         router.refresh();
       } else {
         console.log('로그인 실패');
+        alert('로그인 실패하였습니다.');
       }
     } catch (error) {
       console.error(error);

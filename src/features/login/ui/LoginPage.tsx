@@ -4,6 +4,7 @@ import Link from 'next/link';
 import {Button} from '../../../shared/ui/Button';
 import Logo from '../../../../public/moollyLogo.svg';
 import { useRef, useState} from 'react';
+import { set } from 'zod';
 
 interface Input {
   username: string;
@@ -26,6 +27,7 @@ export default function LoginPage({handleLogin}: LoginPageProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     handleLogin(input.username, input.password);
+    setInput({username: '', password: ''});
   };
 
 
@@ -47,6 +49,7 @@ export default function LoginPage({handleLogin}: LoginPageProps) {
             placeholder="Molly@gmail.com"
             className="w-[435px] border-b-2 text-md "
             value={input.username}
+            required={true}
             ref={ref}
             onChange={(e) =>
               setInput((state) => ({...state, username: e.target.value}))
@@ -61,6 +64,7 @@ export default function LoginPage({handleLogin}: LoginPageProps) {
             placeholder="비밀번호를 입력해주세요"
             className="w-[435px] border-b-2 text-md"
             value={input.password}
+            required={true}
             ref={ref}
             onChange={(e) =>
               setInput((state) => ({...state, password: e.target.value}))
@@ -74,17 +78,18 @@ export default function LoginPage({handleLogin}: LoginPageProps) {
           height="52px"
           radius="10px"
           border="1px solid #ccc"
-          bg="#ACACAC"
+          
+          className='hover:bg-black bg-gray2'
         >
           로그인
         </Button>
       </form>
       <div className="mt-10 w-[435px] h-9  flex justify-between text-sm ">
-        <Link href={'/register'} className="hover:text-gray-500 ">
+        <Link href={'/register'} className="hover:text-gray-500">
           회원가입
         </Link>
-        <div className="hover:text-gray-500">이메일 찾기</div>
-        <div className="hover:text-gray-500">비밀번호 찾기</div>
+        <Link href={''} className="hover:text-gray-500 translate-x-3">이메일 찾기</Link>
+        <Link href={''} className="hover:text-gray-500">비밀번호 찾기</Link>
       </div>
     </div>
   );
