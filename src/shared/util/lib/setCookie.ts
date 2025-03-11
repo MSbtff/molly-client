@@ -9,7 +9,8 @@ export async function setServerSideToken(token: string) {
       httpOnly: true, 
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      path: '/'
+      path: '/',
+      maxAge: 60 * 30 ,
     });
     return true;
   }

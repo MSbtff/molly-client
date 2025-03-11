@@ -96,6 +96,10 @@ export default function Products() {
 
 
 
+  const y = window.scrollY
+  console.log(y) 
+
+
   //품절 제외 체크박스 클릭 핸들러
   const handleExcludeSoldOutChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked;
