@@ -1,6 +1,9 @@
 'use server';
 
-import {cookies} from 'next/headers';
+import { getValidAuthToken } from "@/shared/util/lib/authTokenValue";
+
+
+
 
 // 주문 정보를 서버로 전송하여 결제를 완료합니다.
 export default async function TossRequest(
@@ -14,13 +17,12 @@ export default async function TossRequest(
   receiver_name: string, // 암호화된 수령인
   addr_detail: string, // 암호화된 상세주소
   number_address: string, // 암호화된 지번주소
-  road_address: string // 암호화된 도로명주소
+  road_address: string, // 암호화된 도로명주소
+  
 ) {
-  const authToken = (await cookies()).get('Authorization')?.value;
+ 
 
-  if (!authToken) {
-    throw new Error('인증되지 않은 요청입니다.');
-  }
+
 
   // 요청 데이터 로깅
   console.log('Request Data:', {
@@ -40,10 +42,19 @@ export default async function TossRequest(
   });
 
   try {
+    const authToken = await getValidAuthToken();
+    console.log('인증 토큰 상태:', authToken ? '있음' : '없음');
+    
+    if (!authToken) {
+      return {
+        success: false,
+        message: '인증 토큰이 없습니다. 다시 로그인해주세요.',
+      };
+    }
     const res = await fetch(`${process.env.NEXT_SERVER_URL}/payment/confirm`, {
       method: 'POST',
       headers: {
-        Authorization: authToken, // 'Bearer' 제거
+        Authorization: `${authToken}`, 
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

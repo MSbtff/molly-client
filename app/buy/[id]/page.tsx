@@ -4,14 +4,13 @@ import Footer from '@/widgets/Footer';
 import Navbar from '@/widgets/navbar/Navbar';
 
 export default async function BuySuccess() {
-  // const orderRes = await orderComplete();
-  // console.log(orderRes);
+  
   return (
     <>
       <Navbar />
       <div className="w-screen h-full flex justify-center items-center">
         <BuyComplete />
-        <PaymentProcessor />
+        <PaymentProcessor  />
       </div>
       <Footer />
     </>

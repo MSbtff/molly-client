@@ -6,11 +6,15 @@ import {useEffect, useState} from 'react';
 import TossRequest from '@/features/buy/api/tossRequest';
 import {useEncryptStore} from '@/app/provider/EncryptStore';
 
+
+
 export default function PaymentProcessor() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const {orders} = useEncryptStore();
   const [isProcessing] = useState(false);
+  
+  
 
   useEffect(() => {
     const paymentKey = searchParams.get('paymentKey') ?? '';
@@ -48,7 +52,8 @@ export default function PaymentProcessor() {
           recipient,
           addrDetail,
           numberAddress,
-          roadAddress
+          roadAddress,
+        
         );
 
         console.log(data);

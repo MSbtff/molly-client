@@ -14,6 +14,7 @@ import {useEncryptStore} from '@/app/provider/EncryptStore';
 import {TossPaymentsWidgets} from '@tosspayments/tosspayments-sdk';
 import {PointUse} from '@/features/buy/ui/PointUse';
 
+
 // 결제페이지
 export default function BuyContainer() {
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function BuyContainer() {
   const decryptedOrders = getDecryptedOrders();
   const orderNumber = decryptedOrders?.length - 1;
   const orderId = orders?.[orderNumber]?.orderId;
+  
 
   const [widgets, setWidgets] = useState<TossPaymentsWidgets | null>(null);
   const [ready, setReady] = useState<boolean>(false);

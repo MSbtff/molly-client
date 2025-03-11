@@ -48,11 +48,6 @@ export const BuyComplete = () => {
               <span className="font-medium">{orderInfo.items}개 상품</span>
             </div>
 
-            {/* <div className="flex justify-between py-3 border-b border-gray-100">
-              <span className="text-gray-600">결제 수단</span>
-              <span className="font-medium">{orderInfo.paymentMethod}</span>
-            </div> */}
-
             <div className="flex justify-between py-3 border-b border-gray-100">
               <span className="text-gray-600">결제 시간</span>
               <span className="font-medium">{orderInfo.paymentTime}</span>

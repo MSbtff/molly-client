@@ -1,7 +1,12 @@
+import { decryptToken } from '@/shared/util/lib/encrypteToken';
 import {cookies} from 'next/headers';
 
 export default async function orderRetriever() {
-  const authToken = (await cookies()).get('Authorization')?.value;
+  const enToken = (await cookies()).get('Authorization')?.value as string;
+  const authToken = await decryptToken(enToken);
+
+  console.log('인증 토큰:', authToken);
+  
 
   if (!authToken) {
     throw new Error('인증되지 않은 요청입니다.');
@@ -15,7 +20,7 @@ export default async function orderRetriever() {
         'Content-Type': 'application/json',
       },
     });
-
+    
     console.log('응답 상태:', res.status);
 
     if (!res.ok) {

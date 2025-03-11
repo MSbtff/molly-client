@@ -1,11 +1,14 @@
+
 'use server'
 
 import { cookies } from "next/headers";
+import { decryptToken, encryptToken } from "./encrypteToken";
 
 // 서버 컴포넌트에서 인증 토큰 설정
 export async function setServerSideToken(token: string) {
   if (token) {
-    (await cookies()).set('Authorization', token, { 
+    const encryptedToken = encryptToken(token);
+    (await cookies()).set('Authorization', encryptedToken, { 
       httpOnly: true, 
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
@@ -15,6 +18,19 @@ export async function setServerSideToken(token: string) {
     return true;
   }
   return false;
+}
+
+export async function getServerSideToken() {
+  const encryptedToken = await (await cookies()).get('Authorization')?.value;
+  if (!encryptedToken) return null;
+  
+  try {
+    // 암호화된 토큰 복호화
+    return decryptToken(encryptedToken);
+  } catch (error) {
+    console.error('토큰 복호화 실패:', error);
+    return null;
+  }
 }
 
 
