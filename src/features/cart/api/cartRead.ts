@@ -39,15 +39,6 @@ export type CartResponse = CartItem[];
 
 export async function cartRead(): Promise<CartResponse | undefined> {
   try {
-    // const res = await fetch(`${process.env.NEXT_SERVER_URL}/cart`, {
-    //   method: 'GET',
-    //   headers: {
-    //     Authorization: `${authToken}`,
-    //   },
-    // });
-    // if (!res.ok) {
-    //   throw new Error(`장바구니 조회 실패: ${res.status}`);
-    // }
     const data = await get<CartResponse>('/cart');
 
     console.log(JSON.stringify(data, null, 2));
