@@ -1,8 +1,6 @@
-
-
 import CryptoJS from 'crypto-js';
 
-// 암호화 키 (환경 변수에서 가져오는 것이 좋습니다)
+
 const SECRET_KEY = process.env.NEXT_PUBLIC_SECRET_KEY as string ;
 
 /**

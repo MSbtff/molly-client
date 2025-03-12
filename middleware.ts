@@ -3,7 +3,7 @@ import type {NextRequest} from 'next/server';
 
 // 보호할 경로 목록
 const protectedPaths = ['/mypage', '/buy', '/cart', '/seller'];
-const excludedPaths = ['/buy/success', '/fail'];
+const excludedPaths = ['/buy/success', '/fail?message='];
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;

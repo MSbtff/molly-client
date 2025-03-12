@@ -22,7 +22,6 @@ export default function BuyContainer() {
   const decryptedOrders = getDecryptedOrders();
   const orderNumber = decryptedOrders?.length - 1;
   const orderId = orders?.[orderNumber]?.orderId;
-  
 
   const [widgets, setWidgets] = useState<TossPaymentsWidgets | null>(null);
   const [ready, setReady] = useState<boolean>(false);
@@ -52,7 +51,7 @@ export default function BuyContainer() {
     }
   }, [orders, router]);
 
-  // // 뒤로가기 처리
+   // 뒤로가기 처리
   useEffect(() => {
     window.history.pushState({fromBuy: true}, '', window.location.href);
 
@@ -61,7 +60,6 @@ export default function BuyContainer() {
       const confirmed = window.confirm('결제를 취소하겠습니까?');
 
       // 뒤로가기로 인한 popstate 이벤트인 경우
-
       if (confirmed && orderId) {
         try {
           await buyCancel(orderId);
@@ -77,9 +75,7 @@ export default function BuyContainer() {
     };
 
     // 초기 진입 시 state 설정
-
     window.addEventListener('popstate', handlePopState);
-
     return () => {
       window.removeEventListener('popstate', handlePopState);
     };
@@ -133,7 +129,6 @@ export default function BuyContainer() {
             </div>
             <div className="mt-12 w-full h-9 rounded-[10px] border flex justify-between items-center p-2">
               <div>요청사항 없음</div>
-
               <ChevronRight size={20} />
             </div>
           </div>
@@ -168,7 +163,7 @@ export default function BuyContainer() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col bg-gray2 xs:w-[480px] sm:w-[700px] h-[60px] rounded-b-[10px] px-4">
+          <div className="flex flex-col bg-gray-300 xs:w-[480px] sm:w-[700px] h-[60px] rounded-b-[10px] px-4">
             <div className="font-bold text-lg">총 결제금액</div>
             <div className="text-right font-bold">
               {(totalPrice - (currentOrder?.pointUsage || 0)).toLocaleString()}

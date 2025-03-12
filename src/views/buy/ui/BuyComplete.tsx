@@ -17,6 +17,8 @@ export const BuyComplete = () => {
     items: item,
   };
 
+  console.log(orderInfo);
+
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-sm p-8">
