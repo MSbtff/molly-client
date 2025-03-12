@@ -7,3 +7,4 @@ jest.mock('next/image', () => ({
       return React.createElement('img', props); //jsx 대신 createElement 사용 
     },
   }));
+

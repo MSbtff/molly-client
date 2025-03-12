@@ -5,12 +5,12 @@ const createJestConfig = nextJest({
   dir: './',
 });
 
-
 const config: Config = {
   clearMocks: true,
   collectCoverage: true,
   coverageDirectory: 'coverage',
   coverageProvider: 'v8',
+
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
@@ -26,6 +26,7 @@ const config: Config = {
   extensionsToTreatAsEsm: ['.ts', '.tsx',], // TypeScript를 ESM으로 처리
   
   // The glob patterns Jest uses to detect test files
+
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[tj]s?(x)'],
 };
 
