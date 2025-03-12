@@ -1,0 +1,51 @@
+.swiper-button-prev,
+.swiper-button-next {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000; /* Arrow color */
+  /* transition: background-color 0.3s ease; */
+
+  opacity: 0;
+  visibility: hidden;
+  transition: background-color 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  background-color: rgba(255, 255, 255, 1);
+}
+
+/* Customize the navigation arrows */
+.swiper-button-prev:after,
+.swiper-button-next:after {
+  font-size: 18px; /* Smaller arrow size */
+  font-weight: bold;
+}
+
+/* Position the buttons */
+.swiper-button-prev {
+  left: 10px;
+}
+
+.swiper-button-next {
+  right: 10px;
+}
+
+/* Optional: Add a subtle shadow for better visibility */
+.swiper-button-prev,
+.swiper-button-next {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 그룹에 호버했을 때만 버튼 표시 */
+.swiper-container-group:hover .swiper-button-prev,
+.swiper-container-group:hover .swiper-button-next {
+  opacity: 1;
+  visibility: visible;
+}
+

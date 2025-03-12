@@ -72,15 +72,16 @@ export default function PopularItemsSection() {
       </div>
 
       {/* 상품 리스트 */}
-      <div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-2 sm:grid-cols-2  gap-2 mt-1">
         {products.map((product) => (
-          <div key={product.id} className="flex flex-col w-full overflow-hidden">
+          <div key={product.id} className="flex flex-col items-center mt-10">
             {imageUrl &&
             <Image
               src={imageError ? "/images/noImage.svg" : `${imageUrl}${product.thumbnail.path}`}
               alt={product.brandName}
               width={200}
               height={250}
+              className="w-full h-auto object-contain cursor-pointer"
               onError={() => setImageError(true)} // 에러 발생 시 상태 변경하여 기본 이미지 표시
             />}
             <button className="flex flex-col items-start w-full overflow-hidden">
