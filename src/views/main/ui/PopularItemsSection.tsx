@@ -51,10 +51,10 @@ export default function PopularItemsSection() {
     fetchProducts(category);
   };
 
-  //초기 데이터 불러오기
+  //초기 데이터 불러오기 -캐싱처리 필요
   useEffect(() => {
     fetchProducts(selectedCategory);
-  }, []);
+  }, [fetchProducts,setSelectedCategory]);
 
   return (
     <section className="px-20">

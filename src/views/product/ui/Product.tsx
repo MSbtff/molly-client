@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import {  useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Suspense } from "react";
 import CategoryButtons from "./CategoryButtons";
@@ -15,7 +15,6 @@ import LoadingSkeleton from "./LoadingSkeleton";
 export default function Product() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const deferredParams = useDeferredValue(searchParams);
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL; //api 서버 주소
   const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL; //이미지 서버 주소
@@ -27,13 +26,6 @@ export default function Product() {
   const [isSortModalOpen, setIsSortModalOpen] = useState(false); // 정렬 모달 열림 상태
 
 
-  const [productList, setProductList] = useState<Product[]>([]); //필터가 변경될 때만 초기화하고 아닐 때는 기존 데이터를 유지하면서 새로운 데이터를 추가해 저장하는 방식으로
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLast, setIsLast] = useState(false);
-  const [filters, setFilters] = useState({
-    keyword: "", categories: "", colorCode: "", productSize: "",
-    brandName: "", priceGoe: "", priceLt: "", excludeSoldOut: "",
-  });
 
   //정렬 옵션 매핑 (한글 → API 값)
   const sortOptions: Record<string, string> = {
@@ -79,6 +71,12 @@ export default function Product() {
 
   // API 관련 상태를 useProductList 훅에서 가져옴
   const { productList, fetchProductList, isLoading, isLast } = useProductList(productApiUrl);
+
+// useEffect(()=>{
+// const res = async () => {
+//   await fetchProductList(0);
+// }
+// },[])
 
 
   return (
