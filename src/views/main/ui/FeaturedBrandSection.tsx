@@ -78,7 +78,12 @@ export default function FeaturedBrandSection() {
         {brands.length > 0 && (
           <div className="relative w-full h-fit">
             <Image
-              src={`${imageUrl}${brands[0].brandThumbnailUrl}`}
+              // src={`${imageUrl}${brands[0].brandThumbnailUrl}`}
+              src={
+                imageError[0] // 첫 번째 브랜드(메인 배너)의 이미지에 에러가 발생했는지 확인
+                  ? "/images/noImage.svg"
+                  : `${imageUrl}${brands[0].brandThumbnailUrl}`
+              }
           
               alt={brands[0].brandName}
               width={611}
@@ -87,8 +92,8 @@ export default function FeaturedBrandSection() {
             />
             <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center p-6">
               <div className="text-white">
-                <h4 className="text-2xl font-bold">{brands[0].brandName}</h4>
-                <p>{`${brands[0].brandName} 느낄 시간`}</p>
+                <h4 className="text-2xl font-bold">{`새로워진 ${brands[0].brandName}`}</h4>
+                {/* <p>{`새로워진 ${brands[0].brandName}`}</p> */}
                 <button className="mt-2 px-4 py-2 border border-white text-white text-sm">
                   바로가기
                 </button>
@@ -117,7 +122,7 @@ export default function FeaturedBrandSection() {
                 onError={() => setImageError((prev) => ({ ...prev, [product.id]: true }))}
               />}
               <button className="flex flex-col items-start items-center w-full overflow-hidden mt-2">
-                <span className="text-left text-sm text-gray-700">{product.brandName}</span>
+                {/* <span className="text-left text-sm text-gray-700">{product.brandName}</span> */}
                 <span className="text-xs text-gray-500">{product.productName}</span>
                 <span className="text-black-500 font-semibold text-sm">
                   {product.price.toLocaleString()}원

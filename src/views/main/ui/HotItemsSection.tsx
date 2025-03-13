@@ -39,6 +39,7 @@ export default function HotItemsSection() {
   // 이미지 로딩 실패 시 기본 이미지로 대체
   const handleImageError = (id: number) => {
     setImageError((prev) => ({ ...prev, [id]: true }));
+    console.log("이미지 에러 상태 업데이트:", imageError);
   };
   useEffect(() => {
     fetchProducts();
@@ -77,10 +78,6 @@ export default function HotItemsSection() {
             </div>
           </div>
         ))}
-
-
-
-
       </div>
       {/* 신상템 상품 리스트 */}
       <div className="grid grid-cols-6 lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 gap-2 mt-4">
@@ -111,7 +108,7 @@ export default function HotItemsSection() {
       </div>
       {/* "다른 상품 더보기" 버튼 */}
       <div className="flex justify-center mt-8">
-        <button className="px-6 py-3 border border-gray-400 text-base font-medium hover:bg-gray-100 transition">
+        <button className="px-6 py-3 border border-gray-400 hover:bg-gray-100 transition">
           다른 상품 더보기
         </button>
       </div>

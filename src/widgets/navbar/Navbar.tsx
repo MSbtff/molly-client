@@ -48,12 +48,6 @@ export default function Navbar() {
           <Link href="/product/kid" className="hover:text-gray-600">
             키즈
           </Link>
-          <Link href="/product/sale" className="hover:text-gray-600">
-            할인
-          </Link>
-          <Link href="/product/brand" className="hover:text-gray-600">
-            브랜드
-          </Link>
         </div>
 
         {/* 우측 아이콘들 */}
@@ -64,7 +58,7 @@ export default function Navbar() {
             // onClick={() => setIsSearchOpen(true)}
             onClick={() => {
               setIsSearchOpen(true);
-              // setIsExiting(false); // ✅ 모달을 다시 열 수 있도록 초기화
+              // setIsExiting(false); // 모달을 다시 열 수 있도록 초기화
             }}
           >
             <Search size={20} className="text-black" />
