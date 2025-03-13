@@ -15,7 +15,7 @@ const config: Config = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     // next/headers 모킹
-    '^next/headers$': '<rootDir>/__mocks__/nextHeaders.js',
+    '^next/headers$': '<rootDir>/mocks/nextHeaders.ts',
   },
 
   testEnvironment: 'jsdom',

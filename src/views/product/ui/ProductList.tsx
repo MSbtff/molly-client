@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import type { Product } from "@/shared/types/product";
+import { useScrollStore } from "@/app/provider/scrollStore";
 // import fetchProductList from "@/features/product/hooks/useProductList";
 interface ProductListProps {
   productList: Product[];
@@ -16,10 +17,14 @@ interface ProductListProps {
 
 const ProductList: React.FC<ProductListProps> = ({ productList, imageUrl, handleProductClick, fetchProductList, isLoading, isLast }) => {
   const isEmpty = !isLoading && productList.length === 0;
-  const [page, setPage] = useState(0);
+  
  
   const triggerRef = useRef<HTMLDivElement | null>(null);
+  const {page,setPage} = useScrollStore()
+
+
   useEffect(()=>{//컴포넌트 렌더링될 때 실행, triggerRef가 화면에 나타나는지 감지함
+    const trgRef = triggerRef.current;
     if(!triggerRef.current || isLast) return;//ref가 연결된 dom 요소 없거나(triggerRef.currnet==null) isLast가 true이면 중단 
 
     const observer = new IntersectionObserver(//새로운 IntersectionObserver 객체 생성: 특정 요소(triggerRef.current)가 뷰토트에 진입했는지 감지하기 위해 사용
@@ -28,9 +33,8 @@ const ProductList: React.FC<ProductListProps> = ({ productList, imageUrl, handle
                                                       //스크롤이 특정 요소에 도달했을 때만 데이터 불러오고 api 요청 중이면 호출 안함
           console.log("triggerRef 감지되고 api 호출 중이 아님");
           fetchProductList(page);
-          setPage((prev) => prev + 1);
+          setPage(page + 1);//페이지 증가
           console.log("무한스크롤로 상품 목록 api 요청");
-
         }
       },
       { threshold: 1.0 }//감지된 요소가 100% 화면에 나타날 때만 실행
@@ -38,9 +42,9 @@ const ProductList: React.FC<ProductListProps> = ({ productList, imageUrl, handle
     observer.observe(triggerRef.current);//감지 대상 등록
 
     return ()=>{//useEffect 클린업 함수. 언마운트될때 실행됨
-      if (triggerRef.current) observer.unobserve(triggerRef.current);
+      if (trgRef) observer.unobserve(trgRef);
     };
-  },[isLoading, isLast, fetchProductList, page])//isLoading, fetchproductList, isLast를 넣으라는데 
+  },[isLoading, isLast, fetchProductList, page,setPage])//isLoading, fetchproductList, isLast를 넣으라는데 
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-2 sm:grid-cols-2 gap-2 mt-1">

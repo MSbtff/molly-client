@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import {  useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Suspense } from "react";
 import CategoryButtons from "./CategoryButtons";
@@ -24,6 +24,8 @@ export default function Product() {
 
   const [selectedSort, setSelectedSort] = useState("조회순"); // 현재 선택된 정렬 기준
   const [isSortModalOpen, setIsSortModalOpen] = useState(false); // 정렬 모달 열림 상태
+
+
 
   //정렬 옵션 매핑 (한글 → API 값)
   const sortOptions: Record<string, string> = {
@@ -69,6 +71,12 @@ export default function Product() {
 
   // API 관련 상태를 useProductList 훅에서 가져옴
   const { productList, fetchProductList, isLoading, isLast } = useProductList(productApiUrl);
+
+// useEffect(()=>{
+// const res = async () => {
+//   await fetchProductList(0);
+// }
+// },[])
 
 
   return (
