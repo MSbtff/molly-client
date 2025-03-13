@@ -10,7 +10,7 @@ interface ProductListProps {
   isLast: boolean
   handleProductClick: (id: number) => void;
   // fetchProductList: (nextPage: number) => void
-  fetchProductList: () => void
+  fetchProductList: (page:number) => void
 
 }
 
@@ -40,7 +40,7 @@ const ProductList: React.FC<ProductListProps> = ({ productList, imageUrl, handle
     return ()=>{//useEffect 클린업 함수. 언마운트될때 실행됨
       if (triggerRef.current) observer.unobserve(triggerRef.current);
     };
-  },[isLoading, isLast, fetchProductList])//isLoading, fetchproductList, isLast를 넣으라는데 
+  },[isLoading, isLast, fetchProductList, page])//isLoading, fetchproductList, isLast를 넣으라는데 
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-2 sm:grid-cols-2 gap-2 mt-1">
