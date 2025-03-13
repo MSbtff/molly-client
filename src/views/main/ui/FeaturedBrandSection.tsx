@@ -61,13 +61,13 @@ export default function FeaturedBrandSection() {
 
   useEffect(() => {
     fetchPopularBrands();
-  }, []);
+  }, [fetchPopularBrands]);
 
   useEffect(() => {
     if (selectedBrand) {
       fetchBrandProducts(selectedBrand);
     }
-  }, [selectedBrand]);
+  }, [selectedBrand,fetchBrandProducts]);
 
   return (
     <section className="px-20 mt-16">

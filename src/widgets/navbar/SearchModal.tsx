@@ -59,7 +59,7 @@ export default function SearchModal({ setIsOpen }: { setIsOpen: (value: boolean)
         } finally {
             // setLoading(false);
         }
-    }, []);
+    }, [baseUrl]);
 
     //디바운싱 구현
     useEffect(() => {
