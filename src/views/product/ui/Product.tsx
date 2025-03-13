@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { Suspense } from "react";
 import CategoryButtons from "./CategoryButtons";
 import ProductFilters from "./ProductFilters";
 import ProductList from "./ProductList";
@@ -9,6 +10,7 @@ import FilterSidebar from "../FilterSidebar";
 import SortModal from "../SortModal";
 import type { Product } from "@/shared/types/product";
 import useProductList from '@/features/product/hooks/useProductList';
+import LoadingSkeleton from "./LoadingSkeleton";
 
 export default function Product() {
   const router = useRouter();
@@ -23,12 +25,8 @@ export default function Product() {
   const [selectedSort, setSelectedSort] = useState("조회순"); // 현재 선택된 정렬 기준
   const [isSortModalOpen, setIsSortModalOpen] = useState(false); // 정렬 모달 열림 상태
 
-  // const observerRef = useRef<IntersectionObserver | null>(null);//intersectionObserver 객체를 저장, 특정 요소가 화면에 보일 때 api를 호출
-  // const triggerRef = useRef<HTMLDivElement>(null!);//스크롤이 끝에 도달했는지 감지하는 요소의 ref
-
-
   //정렬 옵션 매핑 (한글 → API 값)
-  const sortOptions: Record<string, string>  = {
+  const sortOptions: Record<string, string> = {
     "조회순": "VIEW_COUNT",
     "신상품순": "CREATED_AT",
     "판매순": "PURCHASE_COUNT",
@@ -70,7 +68,7 @@ export default function Product() {
   };
 
   // API 관련 상태를 useProductList 훅에서 가져옴
-  const { productList, fetchProductList, isLoading } = useProductList(productApiUrl);
+  const { productList, fetchProductList, isLoading, isLast } = useProductList(productApiUrl);
 
 
   return (
@@ -86,17 +84,19 @@ export default function Product() {
           setIsSortModalOpen={setIsSortModalOpen}
           searchParams={searchParams}
         />
-        <ProductList
-          productList={productList}
-          isLoading={isLoading}
-          fetchProductList={fetchProductList}
-          imageUrl={imageUrl ?? ""}
-          handleProductClick={handleProductClick}
-          // triggerRef={triggerRef}
-        />
+        <Suspense fallback={<LoadingSkeleton />}>
+          <ProductList
+            productList={productList}
+            isLoading={isLoading}
+            isLast={isLast}
+            fetchProductList={fetchProductList}
+            imageUrl={imageUrl ?? ""}
+            handleProductClick={handleProductClick}
+          />
+        </Suspense>
         {isFilterOpen && <FilterSidebar setIsOpen={setIsFilterOpen} />}
         {isSortModalOpen && <SortModal isOpen={isSortModalOpen} onClose={() => setIsSortModalOpen(false)} onSortSelect={handleSortChange}
-                                       selectedSort={selectedSort} />}
+          selectedSort={selectedSort} />}
       </div>
     </>
   );
