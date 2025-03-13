@@ -37,7 +37,7 @@ export default function useProductList(productApiUrl: string) {
   
   // 상품 목록 API 요청 _ 기존 데이터 유지하면서 새로운 데이터 추가하도록 수정
   // const fetchProductList = useCallback(async (nextPage: number) => {
-    const fetchProductList = useCallback(async () => {
+    const fetchProductList = useCallback(async (page: number) => {
     // if (isLast) return;
     if (isLast || isLoading) return;
 
@@ -103,7 +103,7 @@ export default function useProductList(productApiUrl: string) {
   useEffect(() => {
        
       // fetchProductList(0);
-      fetchProductList();
+      fetchProductList(0);
 
   
   }, [deferredParams, fetchProductList]);
