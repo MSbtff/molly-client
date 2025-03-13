@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import type { Product } from "@/shared/types/product";
-// import fetchProductList from "@/features/product/hooks/useProductList";
 interface ProductListProps {
   productList: Product[];
   isLoading: boolean;
