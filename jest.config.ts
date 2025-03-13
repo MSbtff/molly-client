@@ -15,7 +15,7 @@ const config: Config = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     // next/headers 모킹
-    '^next/headers$': '<rootDir>/__mocks__/nextHeaders.js',
+    '^next/headers$': '<rootDir>/mocks/nextHeaders.ts',
   },
 
   testEnvironment: 'jsdom',
@@ -26,7 +26,6 @@ const config: Config = {
   extensionsToTreatAsEsm: ['.ts', '.tsx',], // TypeScript를 ESM으로 처리
   
   // The glob patterns Jest uses to detect test files
-
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[tj]s?(x)'],
 };
 

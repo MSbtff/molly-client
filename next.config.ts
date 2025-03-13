@@ -1,7 +1,8 @@
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
-  reactStrictMode: false,
+  reactStrictMode: true,
+  productionBrowserSourceMaps: false,
   
   async rewrites() {
     return [
