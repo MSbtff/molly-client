@@ -15,6 +15,7 @@ import {TossPaymentsWidgets} from '@tosspayments/tosspayments-sdk';
 import {PointUse} from '@/features/buy/ui/PointUse';
 
 
+
 // 결제페이지
 export default function BuyContainer() {
   const router = useRouter();
@@ -111,7 +112,7 @@ export default function BuyContainer() {
             </div>
             <div className="mt-10 h-full overflow-auto">
               {decryptedOrders?.length > 0 &&
-                decryptedOrders[orderNumber].orderDetails?.map((item) => (
+                decryptedOrders[orderNumber].orderDetails?.slice(0,2).map((item) => (
                   <CartProductInfo
                     key={item.itemId}
                     cartId={0} // 필요한 경우 적절한 값으로 변경
@@ -124,6 +125,25 @@ export default function BuyContainer() {
                     size={item.size}
                     color={item.color}
                     url={item.image}
+                    priority={true}
+                    
+                  />
+                ))}
+                {decryptedOrders?.length > 0 &&
+                decryptedOrders[orderNumber].orderDetails?.slice(2).map((item) => (
+                  <CartProductInfo
+                    key={item.itemId}
+                    cartId={0} // 필요한 경우 적절한 값으로 변경
+                    itemId={item.itemId}
+                    productId={item.productId}
+                    brandName={item.brandName}
+                    productName={item.productName}
+                    price={item.price}
+                    quantity={item.quantity}
+                    size={item.size}
+                    color={item.color}
+                    url={item.image}
+                    priority={false}
                   />
                 ))}
             </div>

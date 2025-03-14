@@ -11,15 +11,15 @@ export async function setServerSideToken(token: string) {
     (await cookies()).set('Authorization', encryptedToken, { 
       httpOnly: true, 
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: 'lax',
       path: '/',
-      maxAge: 60 * 30 ,
+      maxAge: 60 * 60 ,
     });
     return true;
   }
   return false;
 }
-
+   
 export async function getServerSideToken() {
   const encryptedToken = await (await cookies()).get('Authorization')?.value;
   if (!encryptedToken) return null;

@@ -3,7 +3,7 @@ import type {NextRequest} from 'next/server';
 
 // 보호할 경로 목록
 const protectedPaths = ['/mypage', '/buy', '/cart', '/seller'];
-const excludedPaths = ['/buy/success', '/fail?message='];
+const excludedPaths = ['/fail?message='];
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -27,9 +27,6 @@ export function middleware(request: NextRequest) {
 
   // 보호된 경로일 때만 인증 체크
   const authToken = request.cookies.get('Authorization');
-
-  
-
 
   if (!authToken) {
     return NextResponse.redirect(new URL('/login', request.url));

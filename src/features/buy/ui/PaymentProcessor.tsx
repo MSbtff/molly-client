@@ -8,11 +8,15 @@ import {useEncryptStore} from '@/app/provider/EncryptStore';
 
 
 
+
+
 export default function PaymentProcessor() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const {orders} = useEncryptStore();
   const [isProcessing] = useState(false);
+
+  
   
   
 
@@ -53,7 +57,7 @@ export default function PaymentProcessor() {
           addrDetail,
           numberAddress,
           roadAddress,
-        
+          
         );
 
         console.log(data);

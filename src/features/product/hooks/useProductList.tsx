@@ -101,7 +101,6 @@ export default function useProductList(productApiUrl: string) {
 
   // filters 변경 시 API 요청 실행
   useEffect(() => {
-       
       // fetchProductList(0);
       fetchProductList(0);
 
