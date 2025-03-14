@@ -25,8 +25,6 @@ export default function Product() {
   const [selectedSort, setSelectedSort] = useState("조회순"); // 현재 선택된 정렬 기준
   const [isSortModalOpen, setIsSortModalOpen] = useState(false); // 정렬 모달 열림 상태
 
-
-
   //정렬 옵션 매핑 (한글 → API 값)
   const sortOptions: Record<string, string> = {
     "조회순": "VIEW_COUNT",
@@ -70,7 +68,8 @@ export default function Product() {
   };
 
   // API 관련 상태를 useProductList 훅에서 가져옴
-  const { productList, fetchProductList, isLoading, isLast } = useProductList(productApiUrl);
+  const { productList, fetchProductList, isLast } = useProductList(productApiUrl);
+  // const ProductList = lazy (()=> import ("./ProductList"))
 
 // useEffect(()=>{
 // const res = async () => {
@@ -95,7 +94,7 @@ export default function Product() {
         <Suspense fallback={<LoadingSkeleton />}>
           <ProductList
             productList={productList}
-            isLoading={isLoading}
+            // isLoading={isLoading}
             isLast={isLast}
             fetchProductList={fetchProductList}
             imageUrl={imageUrl ?? ""}

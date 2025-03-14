@@ -7,7 +7,7 @@ export default function useProductList(productApiUrl: string) {
   const deferredParams = useDeferredValue(searchParams);
 
   const [productList, setProductList] = useState<Product[]>([]); //필터가 변경될 때만 초기화하고 아닐 때는 기존 데이터를 유지하면서 새로운 데이터를 추가해 저장하는 방식으로
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   
   const [isLast, setIsLast] = useState(false);
   const [filters, setFilters] = useState({
@@ -36,10 +36,10 @@ export default function useProductList(productApiUrl: string) {
   // const fetchProductList = useCallback(async (nextPage: number) => {
     const fetchProductList = useCallback(async (page: number) => {
     // if (isLast) return;
-    if (isLast || isLoading) return;
+    if (isLast) return;
 
 
-    setIsLoading(true);
+    // setIsLoading(true);
 
     try {
       const params = new URLSearchParams();
@@ -91,24 +91,19 @@ export default function useProductList(productApiUrl: string) {
     } catch (error) {
       console.error("상품 목록 API 요청 에러:", error);
     } finally {
-      setIsLoading(() => false);
+      // setIsLoading(() => false);
     }
-  }, [isLast, productApiUrl, filters, isLoading]); //isLoading, page, isLast, productApiUrl,deferredParams 넣으라는데
+  }, [isLast, productApiUrl, filters]); //isLoading, page, isLast, productApiUrl,deferredParams 넣으라는데
   //원래 isLast, productApiUrl만 있었음
 
   // filters 변경 시 API 요청 실행
   useEffect(() => {
-       
-      // fetchProductList(0);
       fetchProductList(0);
-
-  
   }, [deferredParams, fetchProductList]);
 
   return {
     productList,
     isLast,
-    isLoading,
     fetchProductList,
   };
 }

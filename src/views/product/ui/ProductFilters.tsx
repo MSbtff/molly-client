@@ -1,5 +1,4 @@
 import React from "react";
-
 interface ProductFiltersProps {
   selectedSort: string;
   sortOptions: Record<string, string>;
