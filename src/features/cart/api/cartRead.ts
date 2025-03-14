@@ -1,7 +1,7 @@
 'use server';
 
 import {get} from '@/shared/util/lib/fetchAPI';
-import {cookies} from 'next/headers';
+
 
 interface SizeDetail {
   id: number;

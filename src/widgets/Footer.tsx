@@ -1,6 +1,8 @@
 export default function Footer() {
   return (
-    <footer className="bg-white border-t border-gray-300 py-10 px-6 text-gray-700 mt-16">
+    <footer className="bg-white border-t border-gray-300 py-10 px-6 text-gray-700 mt-16" style={
+      {minHeight: '200px',contain: 'layout paint style', contentVisibility: 'auto'}
+    }>
       {/* 상단 정보 */}
       <div className="max-w-screen-lg mx-auto grid grid-cols-4 gap-8 text-center md:text-left">
         <div>

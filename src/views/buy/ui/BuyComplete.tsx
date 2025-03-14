@@ -17,6 +17,8 @@ export const BuyComplete = () => {
     items: item,
   };
 
+  console.log(orderInfo);
+
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-sm p-8">
@@ -47,11 +49,6 @@ export const BuyComplete = () => {
               <span className="text-gray-600">주문 상품</span>
               <span className="font-medium">{orderInfo.items}개 상품</span>
             </div>
-
-            {/* <div className="flex justify-between py-3 border-b border-gray-100">
-              <span className="text-gray-600">결제 수단</span>
-              <span className="font-medium">{orderInfo.paymentMethod}</span>
-            </div> */}
 
             <div className="flex justify-between py-3 border-b border-gray-100">
               <span className="text-gray-600">결제 시간</span>

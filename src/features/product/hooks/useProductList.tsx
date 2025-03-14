@@ -67,7 +67,7 @@ export default function useProductList(productApiUrl: string) {
       }
 
       const data = await response.json();
-      console.log("상품 목록 api 응답 성공:", data)
+      console.log("상품 목록 api 응답 성공:", data, new Date().toLocaleString());
 
       const formattedData = data.data.map((item: Product) => ({
         id: item.id,
@@ -98,7 +98,6 @@ export default function useProductList(productApiUrl: string) {
 
   // filters 변경 시 API 요청 실행
   useEffect(() => {
-       
       // fetchProductList(0);
       fetchProductList(0);
 
