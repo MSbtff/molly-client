@@ -3,17 +3,17 @@ import { useSearchParams } from "next/navigation";
 import type { Product } from "@/shared/types/product";
 
 export default function useProductList(productApiUrl: string) {
-  // const searchParams = useSearchParams();
-  // const deferredParams = useDeferredValue(searchParams);
+  const searchParams = useSearchParams();
+  const deferredParams = useDeferredValue(searchParams);
 
-  // const [productList, setProductList] = useState<Product[]>([]); //필터가 변경될 때만 초기화하고 아닐 때는 기존 데이터를 유지하면서 새로운 데이터를 추가해 저장하는 방식으로
-  // const [isLoading, setIsLoading] = useState(false);
+  const [productList, setProductList] = useState<Product[]>([]); //필터가 변경될 때만 초기화하고 아닐 때는 기존 데이터를 유지하면서 새로운 데이터를 추가해 저장하는 방식으로
+  const [isLoading, setIsLoading] = useState(false);
   
-  // const [isLast, setIsLast] = useState(false);
-  // const [filters, setFilters] = useState({
-  //   keyword: "", categories: "", colorCode: "", productSize: "",
-  //   brandName: "", priceGoe: "", priceLt: "", excludeSoldOut: "",
-  // });
+  const [isLast, setIsLast] = useState(false);
+  const [filters, setFilters] = useState({
+    keyword: "", categories: "", colorCode: "", productSize: "",
+    brandName: "", priceGoe: "", priceLt: "", excludeSoldOut: "",
+  });
 
   // url 상태 업데이트 (searchParams 변경 감지)
   useEffect(() => {
@@ -30,9 +30,6 @@ export default function useProductList(productApiUrl: string) {
     setProductList([]);
   }, [deferredParams]);
 
-  console.log(deferredParams);
-  console.log(filters);
-  
   
   
   // 상품 목록 API 요청 _ 기존 데이터 유지하면서 새로운 데이터 추가하도록 수정
@@ -94,9 +91,9 @@ export default function useProductList(productApiUrl: string) {
     } catch (error) {
       console.error("상품 목록 API 요청 에러:", error);
     } finally {
-      setIsLoading(false);
+      setIsLoading(() => false);
     }
-  }, [isLast, productApiUrl]); //isLoading, page, isLast, productApiUrl,deferredParams 넣으라는데
+  }, [isLast, productApiUrl, filters, isLoading]); //isLoading, page, isLast, productApiUrl,deferredParams 넣으라는데
   //원래 isLast, productApiUrl만 있었음
 
   // filters 변경 시 API 요청 실행

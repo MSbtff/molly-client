@@ -221,12 +221,14 @@ export default function PostModal({isOpen, onClose}: PostModalProps) {
           <button
             className="border border-gray-400 text-black px-4 py-2 rounded-md"
             onClick={onClose}
+            disabled={isPending}
           >
             취소
           </button>
           <button
             className="bg-black text-white px-4 py-2 rounded-md"
             onClick={handleSubmit}
+            disabled={isPending}
           >
             등록
           </button>

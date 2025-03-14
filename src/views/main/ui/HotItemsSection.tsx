@@ -19,12 +19,12 @@ export default function HotItemsSection() {
   const productApiUrl = `${baseUrl}/product`; //API 엔드포인트
 
   const [products, setProducts] = useState<Product[]>([]); // 상품 데이터
-  const [loading, setLoading] = useState(false); // 로딩 상태
+  // const [loading, setLoading] = useState(false); // 로딩 상태
   const [imageError, setImageError] = useState<{ [key: number]: boolean }>({}); //이미지 에러 처리
 
   // API 요청
   const fetchProducts = async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
       const response = await fetch(`${productApiUrl}?orderBy=CREATED_AT&page=0&size=8`);
       const data = await response.json();
@@ -33,7 +33,7 @@ export default function HotItemsSection() {
     } catch (error) {
       console.error("지금 핫한 신상템 API 요청 실패:", error);
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
   // 이미지 로딩 실패 시 기본 이미지로 대체

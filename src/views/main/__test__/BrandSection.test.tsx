@@ -13,6 +13,8 @@
 useRouter를 목킹, 네스트 이미지 목킹
 */
 
+/* eslint-disable @next/next/no-img-element */
+
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import BrandSection from '../ui/BrandSection';

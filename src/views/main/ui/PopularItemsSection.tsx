@@ -25,12 +25,13 @@ export default function PopularItemsSection() {
 
   const [selectedCategory, setSelectedCategory] = useState("아우터");//현재 선택된 카테고리
   const [products, setProducts] = useState<Product[]>([]);//api로 가져온 상품 리스트
-  const [loading, setLoading] = useState(false);///데이터 로딩 상태
+  // const [loading, setLoading] = useState(false);///데이터 로딩 상태
   const [imageError, setImageError] = useState(false);
+
 
   //데이터를 products 상태에 저장
   const fetchProducts = async (category: string) => {
-    setLoading(true);
+    // setLoading(true);
     try {
       const response = await fetch(
         `${productApiUrl}?categories=${encodeURIComponent(category)}&orderBy=CREATED_AT&page=0&size=12`
@@ -41,9 +42,14 @@ export default function PopularItemsSection() {
     } catch (error) {
       console.error("지금 인기있는 상품 api 요청 실패:", error);
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
+
+  //초기 데이터 불러오기 -캐싱처리 필요
+  useEffect(() => {
+    fetchProducts(selectedCategory);
+  }, [fetchProducts,selectedCategory]);
 
   //카테고리 선택 핸들러 추가
   const handleCategoryChange = (category: string) => {
@@ -51,10 +57,6 @@ export default function PopularItemsSection() {
     fetchProducts(category);
   };
 
-  //초기 데이터 불러오기 -캐싱처리 필요
-  useEffect(() => {
-    fetchProducts(selectedCategory);
-  }, [fetchProducts,setSelectedCategory]);
 
   return (
     <section className="px-20">

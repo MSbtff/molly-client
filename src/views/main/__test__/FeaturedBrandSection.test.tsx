@@ -7,6 +7,7 @@
 6. 이미지 로딩 실패 시 기본 이미지(/images/noImage.svg)로 변경되는지 확인
 7. 다른 상품 더보기 버튼이 정상적으로 표시되는지 확인
 */
+/* eslint-disable @next/next/no-img-element */
 
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";

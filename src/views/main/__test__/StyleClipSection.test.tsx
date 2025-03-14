@@ -5,6 +5,7 @@
     3. 이미지가 정상적으로 렌더링되는지 확인
     3. 슬라이드 이동 동작이 정상적으로 수행되는지 확인
 */
+/* eslint-disable @next/next/no-img-element */
 
 import React, { ReactNode } from "react";
 import { render, screen, fireEvent } from "@testing-library/react";

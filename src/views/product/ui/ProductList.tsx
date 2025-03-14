@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import type { Product } from "@/shared/types/product";
 import { useScrollStore } from "@/app/provider/scrollStore";

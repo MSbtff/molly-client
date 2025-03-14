@@ -21,7 +21,7 @@ export default function FeaturedBrandSection() {
   const [brands, setBrands] = useState<Brand[]>([]); // 인기 브랜드 리스트
   const [brandProducts, setBrandProducts] = useState<Product[]>([]); // 특정 브랜드의 상품 리스트
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null); // 선택된 브랜드명
-  const [loading, setLoading] = useState(false); // 로딩 상태
+  // const [ setLoading] = useState(false); // 로딩 상태
   const [imageError, setImageError] = useState<{ [key: number]: boolean }>({}); // 이미지 에러 처리
 
 
@@ -43,7 +43,7 @@ export default function FeaturedBrandSection() {
 
   //인기 브랜드의 특정 상품 조회
   const fetchBrandProducts = async (brandName: string) => {
-    setLoading(true);
+    // setLoading(true);
     try {
       const response = await fetch(
         `${productApiUrl}?brandName=${encodeURIComponent(brandName)}&orderBy=CREATED_AT&page=0&size=3`
@@ -55,7 +55,7 @@ export default function FeaturedBrandSection() {
     } catch (error) {
       console.error("인기 브랜드의 특정 상품 API 요청 실패:", error);
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
