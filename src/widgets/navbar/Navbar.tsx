@@ -44,10 +44,6 @@ export default function Navbar({nickname}: {nickname: string}) {
           >
             여성
           </button>
-
-          <Link href="/product/kid" className="hover:text-gray-600">
-            키즈
-          </Link>
         </div>
 
         {/* 우측 아이콘들 */}

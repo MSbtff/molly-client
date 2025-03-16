@@ -6,7 +6,7 @@ export default function useProductList(productApiUrl: string) {
   const searchParams = useSearchParams();
   const deferredParams = useDeferredValue(searchParams);
 
-  const [productList, setProductList] = useState<Product[]>([]); //필터가 변경될 때만 초기화하고 아닐 때는 기존 데이터를 유지하면서 새로운 데이터를 추가해 저장하는 방식으로
+  const [productList, setProductList] = useState<Product[] | null>(null); //필터가 변경될 때만 초기화하고 아닐 때는 기존 데이터를 유지하면서 새로운 데이터를 추가해 저장하는 방식으로
   const [isLoading, setIsLoading] = useState(false);
 
   const [isLast, setIsLast] = useState(false);
@@ -73,8 +73,8 @@ export default function useProductList(productApiUrl: string) {
       }));
 
       setProductList((prev) => [
-        ...prev,
-        ...formattedData.filter((newItem: Product) => !prev.some((item) => item.id === newItem.id)),
+        ...(prev ?? []),
+        ...formattedData.filter((newItem: Product) => !(prev ?? []).some((item) => item.id === newItem.id)),
       ]);
 
       // setPage(nextPage);
