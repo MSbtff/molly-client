@@ -83,12 +83,14 @@ export default function useProductList(productApiUrl: string) {
       // console.log("+1 한 후:",page);
 
       setIsLast(data.pageable.isLast);
+      setIsLoading(false);
     } catch (error) {
       console.error("상품 목록 API 요청 에러:", error);
     } finally {
       setIsLoading(() => false);
     }
   };
+
 
   // filters 변경 시 API 요청 실행
   useEffect(() => {

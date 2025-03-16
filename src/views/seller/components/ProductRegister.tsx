@@ -4,11 +4,12 @@ import {useRef, useState} from 'react';
 import {z} from 'zod';
 import registerProduct from '../api/registerProduct';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 const productType = z.object({
   categories: z.tuple([
-    z.enum(['남성', '여성', '키즈']),
-    z.enum(['아우터', '상의', '하의', '액세사리']),
+    z.enum(['','남성', '여성', '키즈']),
+    z.enum(['','아우터', '상의', '하의', '액세사리']),
   ]),
   brandName: z.string().min(1, '브랜드명을 입력해주세요'),
   productName: z.string().min(1, '상품명을 입력해주세요'),
@@ -32,14 +33,31 @@ type Product = z.infer<typeof productType>;
 type MainCategory = z.infer<typeof productType>['categories'][0];
 type SubCategory = z.infer<typeof productType>['categories'][1];
 
+
+const COLORS = [
+  { name: '블랙', code: '#000000' },
+  { name: '화이트', code: '#FFFFFF' },
+  { name: '레드', code: '#FF0000' },
+  { name: '블루', code: '#0000FF' },
+  { name: '그린', code: '#008000' },
+  { name: '옐로우', code: '#FFFF00' },
+  { name: '핑크', code: '#FFC0CB' },
+  { name: '그레이', code: '#808080' },
+  { name: '베이지', code: '#F5F5DC' },
+  { name: '퍼플', code: '#800080' }
+]
+
+const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '28', '29', '30', '31', '32', '33', '34', '35', '36', 'FREE'];
+
 export const ProductRegister = () => {
+  const router = useRouter();
   const ref = useRef<HTMLInputElement | null>(null);
   const thumbnailRef = useRef<HTMLInputElement>(null);
   const productImagesRef = useRef<HTMLInputElement>(null);
   const descriptionImagesRef = useRef<HTMLInputElement>(null);
 
   const [product, setProduct] = useState<Product>({
-    categories: ['남성', '아우터'] as [MainCategory, SubCategory],
+    categories: ['' as MainCategory, '' as SubCategory ] ,
     brandName: '',
     productName: '',
     price: 0,
@@ -57,6 +75,7 @@ export const ProductRegister = () => {
       },
     ],
   });
+  
 
   const handleProductChange = (key: string, value: string | number) => {
     setProduct((state) => ({
@@ -95,6 +114,11 @@ export const ProductRegister = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if(!product.categories[0] || !product.categories[1]){
+      alert('카테고리와 상세 카테고리를 모두 선택해주세요');
+      return;
+    }
 
     try {
       const validationResult = productType.safeParse(product);
@@ -138,6 +162,30 @@ export const ProductRegister = () => {
       // fetch로 formData 전송
       const res = await registerProduct(formData);
       console.log(res);
+      if(res.success) {
+        alert('상품 등록이 완료되었습니다.');
+        // 성공적으로 등록된 후 초기화
+        setProduct({
+          categories: ['' as MainCategory, '' as SubCategory],
+          brandName: '',
+          productName: '',
+          price: 0,
+          description: '',
+          thumbnail: '',
+          productImages: [],
+          productDescriptionImages: [],
+          items: [
+            {
+              id: null,
+              color: '',
+              colorCode: '',
+              size: '',
+              quantity: 0,
+            },
+          ],
+        });
+        router.push('/seller')
+      }
     } catch (error) {
       console.error(error);
     }
@@ -190,6 +238,21 @@ export const ProductRegister = () => {
       ...prev,
       [type]: prev[type].filter((_, i) => i !== index),
     }));
+  };
+
+  const handleColorSelect = (index: number, colorName: string) => {
+    const selectedColor = COLORS.find(color => color.name === colorName);
+    if (selectedColor) {
+      // 색상과 색상코드 함께 업데이트
+      setProduct(prev => ({
+        ...prev,
+        items: prev.items.map((item, i) => 
+          i === index 
+            ? {...item, color: colorName, colorCode: selectedColor.code} 
+            : item
+        )
+      }));
+    }
   };
 
   return (
@@ -262,9 +325,7 @@ export const ProductRegister = () => {
                 }
                 value={product.categories[1]}
               >
-                <option value="" disabled>
-                  상세 카테고리 선택
-                </option>
+                <option value="" disabled>상세 카테고리 선택</option>
                 <option value="아우터">아우터</option>
                 <option value="상의">상의</option>
                 <option value="하의">하의</option>
@@ -421,67 +482,57 @@ export const ProductRegister = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-1">
-                      색상
-                    </label>
-                    <input
-                      type="text"
+                    <label className="block text-sm font-medium mb-1">색상</label>
+                    <select
                       className="w-full p-2 border rounded-md"
-                      placeholder="색상을 입력하세요"
                       value={item.color}
-                      ref={ref}
-                      onChange={(e) =>
-                        handleItemChange(index, 'color', e.target.value)
-                      }
-                    />
+                      onChange={(e) => handleColorSelect(index, e.target.value)}
+                    >
+                      <option value="" disabled>색상을 선택하세요</option>
+                      {COLORS.map(color => (
+                        <option key={color.code} value={color.name}>
+                          {color.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
+                  
                   <div>
-                    <label className="block text-sm font-medium mb-1">
-                      색상코드
-                    </label>
+                    <label className="block text-sm font-medium mb-1">색상코드</label>
                     <input
                       type="text"
-                      className="w-full p-2 border rounded-md"
-                      placeholder="색상코드 입력하세요"
+                      className="w-full p-2 border rounded-md bg-gray-100"
                       value={item.colorCode}
-                      onChange={(e) =>
-                        handleItemChange(index, 'colorCode', e.target.value)
-                      }
+                      disabled
+                    />
+                    <div 
+                      className="w-6 h-6 rounded-full mt-1 inline-block" 
+                      style={{ backgroundColor: item.colorCode }}
                     />
                   </div>
-
+                
                   <div>
-                    <label className="block text-sm font-medium mb-1">
-                      사이즈
-                    </label>
-                    <input
-                      type="text"
+                    <label className="block text-sm font-medium mb-1">사이즈</label>
+                    <select
                       className="w-full p-2 border rounded-md"
-                      placeholder="사이즈를 입력하세요"
                       value={item.size}
-                      onChange={(e) =>
-                        handleItemChange(index, 'size', e.target.value)
-                      }
-                    />
+                      onChange={(e) => handleItemChange(index, 'size', e.target.value)}
+                    >
+                      <option value="" disabled>사이즈를 선택하세요</option>
+                      {SIZES.map(size => (
+                        <option key={size} value={size}>{size}</option>
+                      ))}
+                    </select>
                   </div>
-
+                
                   <div>
-                    <label className="block text-sm font-medium mb-1">
-                      수량
-                    </label>
+                    <label className="block text-sm font-medium mb-1">수량</label>
                     <input
                       type="number"
                       className="w-full p-2 border rounded-md"
                       placeholder="수량을 입력하세요"
                       value={item.quantity}
-                      ref={ref}
-                      onChange={(e) =>
-                        handleItemChange(
-                          index,
-                          'quantity',
-                          Number(e.target.value)
-                        )
-                      }
+                      onChange={(e) => handleItemChange(index, 'quantity', Number(e.target.value))}
                     />
                   </div>
                 </div>

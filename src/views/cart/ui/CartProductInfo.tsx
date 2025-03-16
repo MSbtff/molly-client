@@ -2,42 +2,91 @@ import Image from 'next/image';
 import {CartItemDto} from '@/features/cart/api/cartRead';
 import { memo } from 'react';
 
-export const CartProductInfo = memo((props: CartItemDto & {priority? : boolean}) => {
-  const {productName, brandName, price, size, quantity, color, url , priority} = props;
+interface CartProductInfoProps extends CartItemDto {
+  priority?: boolean;
+  hideShippingInfo?: boolean;
+}
+
+export const CartProductInfo = memo((props: CartProductInfoProps) => {
+  const {
+    productName, 
+    brandName, 
+    price, 
+    size, 
+    quantity, 
+    color, 
+    url, 
+    priority, 
+    hideShippingInfo = false
+  } = props;
+  
   const won = Number(price) * Number(quantity);
   const sumWon = won.toLocaleString();
 
+  // 결제 페이지 레이아웃
+  if (hideShippingInfo) {
+    return (
+      <div className="w-full py-2">
+        <div className="flex gap-4">
+          <div className="relative w-16 h-16 flex-shrink-0 bg-gray-50">
+            <Image
+              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${url}`}
+              alt={productName}
+              width={64}
+              height={64}
+              priority={priority}
+              className="object-cover"
+            />
+          </div>
+          
+          <div className="flex-1">
+            <div className="font-semibold line-clamp-1">{productName} / {brandName}</div>
+            <div className="text-sm text-gray-600">
+              {color} / {size} / {quantity}개
+            </div>
+            <div className="font-medium mt-1">{sumWon}원</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 장바구니 레이아웃
   return (
-    <>
-      <div className="w-full h-full min-h-[1.5rem]">
-        <div className="w-full h-20 flex gap-x-4 items-start">
+    <div className="w-full h-full min-h-[1.5rem]">
+      <div className="w-full h-20 flex gap-x-4 items-start">
         <div className="relative w-20 h-20 flex-shrink-0 bg-gray-50">
           <Image
             src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${url}`}
             alt={productName}
             width={80}
             height={80}
+            priority={priority}
             loading={priority ? "eager" : "lazy"}
             className='object-cover'
           />
         </div>
-          <div className="w-full flex flex-col gap-2">
-            <p className="font-semibold">
-              {productName} / {brandName}
-            </p>
-            <div className="flex justify-between min-h-[1.25rem]">
-              <p className="text-gray-600">color:{color}</p>
-            </div>
-            <div className='min-h-[1.2rem]'>
-              <strong>사이즈: {size}</strong>
-            </div>
-            <div className="flex gap-2 min-h-[1.2rem]">
-              <div className="font-bold">수량 : {quantity} 개</div>
-            </div>
-            <div className="flex justify-between min-h-[1.2rem] line-clamp-2">
-              <div>상품 금액</div>
-              <strong>{sumWon}원</strong>
-            </div>
+        <div className="w-full flex flex-col gap-2">
+          <p className="font-semibold line-clamp-1 text-wrap cart-item-title flex flex-col">
+            <span className="inline-block">{productName}</span>
+            <span className="inline-block text-gray-700">{brandName}</span>
+          </p>
+          <div className="flex justify-between min-h-[1.25rem]">
+            <p className="text-gray-600">color:{color}</p>
+          </div>
+          <div className='min-h-[1.2rem]'>
+            <strong>사이즈: {size}</strong>
+          </div>
+          <div className="flex gap-2 min-h-[1.2rem]">
+            <div className="font-bold">수량 : {quantity}개</div>
+          </div>
+          <div className="flex justify-between min-h-[1.2rem]">
+            <div>상품 금액</div>
+            <strong>{sumWon}원</strong>
+          </div>
+          
+          {/* 배송 정보 조건부 렌더링 */}
+          {!hideShippingInfo && (
             <div className="flex justify-between">
               <div>배송 비용</div>
               <div className="text-gray2">
@@ -45,9 +94,9 @@ export const CartProductInfo = memo((props: CartItemDto & {priority? : boolean})
                 <p className="underline">배송 예정일 3-5일</p>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
-    </>
+    </div>
   );
 });
