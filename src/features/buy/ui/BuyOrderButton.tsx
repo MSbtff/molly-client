@@ -54,7 +54,7 @@ export const BuyOrderButton = ({
         disabled={!ready}
         className="w-[705px] h-14 flex justify-center items-center gap-2 border bg-[#EB6455] rounded-[10px] text-white font-semibold disabled:bg-gray-400 hover:bg-red-400"
       >
-        <div>{currentOrder?.totalAmount?.toLocaleString() || 0}원</div>
+        <div>총 {currentOrder?.totalAmount?.toLocaleString() || 0}원</div>
         <p>/</p>
         <div>결제하기</div>
       </button>

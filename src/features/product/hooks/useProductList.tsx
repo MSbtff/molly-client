@@ -88,11 +88,10 @@ export default function useProductList(productApiUrl: string) {
       // console.log("+1 한 후:",page);
 
       setIsLast(data.pageable.isLast);
+      setIsLoading(false);
     } catch (error) {
       console.error("상품 목록 API 요청 에러:", error);
-    } finally {
-      setIsLoading(() => false);
-    }
+    } 
   }, [isLast, productApiUrl, filters, isLoading]); //isLoading, page, isLast, productApiUrl,deferredParams 넣으라는데
   //원래 isLast, productApiUrl만 있었음
 
