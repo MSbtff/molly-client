@@ -1,10 +1,12 @@
 'use server';
 
+import { decryptToken } from '@/shared/util/lib/encrypteToken';
 import {cookies} from 'next/headers';
 
 // 주문취소
 export default async function buyCancel(orderId: number) {
-  const authToken = (await cookies()).get('Authorization')?.value;
+  const enToken = (await cookies()).get('Authorization')?.value as string;
+  const authToken = (await decryptToken (enToken))
 
   if (!authToken) {
     throw new Error('인증되지 않은 요청입니다.');

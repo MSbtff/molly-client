@@ -177,7 +177,7 @@ export const CartComponent = () => {
       )}
       <div className={`w-screen flex flex-col justify-center`}>
         <div className="w-full h-full bg-[#EFF2F1] flex flex-col items-center">
-          <div className="text-2xl mt-2">쇼핑 정보</div>
+          <header className="text-2xl mt-2">쇼핑 정보</header>
           <div className=" xs:w-[480px] sm:w-[600px] md:w-[680px]">
             <div className="w-full flex items-center justify-between">
               <div className="flex gap-2">
@@ -210,12 +210,12 @@ export const CartComponent = () => {
                   onChange={() => handleItemSelect(item.cartInfoDto.cartId)}
                   className="cursor-pointer"
                 />
-                <div
-                  className="w-12 h-8 border rounded-[10px] flex justify-center items-center cursor-pointer hover:text-gray-500"
+                <Button
+                  className="w-12 h-8 border rounded-[10px] flex justify-center items-center hover:text-gray-500"
                   onClick={() => handleDeleteItem(item.cartInfoDto.cartId)}
                 >
                   삭제
-                </div>
+                </Button>
               </div>
               <CartProductInfo {...item.cartInfoDto} />
               <div className="flex gap-8">

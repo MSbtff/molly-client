@@ -8,6 +8,18 @@ jest.mock('../util/lib/authTokenValue', () => ({
   getValidAuthToken: jest.fn().mockResolvedValue('test-token'),
 }));
 
+// fetchAPI 타입 정의
+interface FetchOptions {
+  method: string;
+  path: string;
+  body?: Record<string, unknown>;
+  headers?: Record<string, string>;
+  [key: string]: unknown;
+}
+
+// 래퍼 함수 직접 모킹 타입
+type MockFetchAPI = jest.Mock<Promise<unknown>, [FetchOptions]>;
+
 // fetchAPI 모듈에 대한 모킹 설정
 jest.mock('../util/lib/fetchAPI', () => {
   // 원본 모듈을 가져와서 확장
@@ -137,12 +149,13 @@ describe('API 유틸리티 테스트', () => {
       // 기존 모킹 제거하고 새로운 모킹 설정
       jest.resetModules();
       jest.mock('../util/lib/fetchAPI', () => {
-        const fetchAPIMock = jest.fn().mockImplementation(options => ({ success: true, options }));
+        const fetchAPIMock = jest.fn().mockImplementation((options: FetchOptions) => ({ success: true, options }));
         
         return {
           fetchAPI: fetchAPIMock,
-          get: (path: string, options?: any) => fetchAPIMock({...options, method: 'GET', path}),
-          post: (path: string, body?: any, options?: any) => fetchAPIMock({method: 'POST', path, body, ...options}),
+          get: (path: string, options?: Record<string, unknown>) => fetchAPIMock({...options, method: 'GET', path}),
+          post: (path: string, body?: Record<string, unknown>, options?: Record<string, unknown>) => 
+            fetchAPIMock({method: 'POST', path, body, ...options}),
         };
       });
     });
@@ -152,25 +165,29 @@ describe('API 유틸리티 테스트', () => {
     });
 
     it('get 함수 테스트', async () => {
-      // 다시 임포트해서 모킹된 버전 사용
+      // ESLint 규칙 일시적 비활성화
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { get, fetchAPI } = require('../util/lib/fetchAPI');
+      const fetchAPIMock = fetchAPI as MockFetchAPI;
       
-      const result = await get('/test');
+      await get('/test');
       
       // 모킹된 함수가 호출되었는지 확인
-      expect(fetchAPI).toHaveBeenCalledWith({
+      expect(fetchAPIMock).toHaveBeenCalledWith({
         method: 'GET',
         path: '/test',
       });
     });
 
     it('post 함수 테스트', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { post, fetchAPI } = require('../util/lib/fetchAPI');
+      const fetchAPIMock = fetchAPI as MockFetchAPI;
       
       const body = { test: 'data' };
-      const result = await post('/test', body);
+      await post('/test', body);
       
-      expect(fetchAPI).toHaveBeenCalledWith({
+      expect(fetchAPIMock).toHaveBeenCalledWith({
         method: 'POST',
         path: '/test',
         body,

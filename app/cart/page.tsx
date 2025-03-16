@@ -5,9 +5,13 @@ import Footer from '@/widgets/Footer';
 export default async function CartPage() {
   return (
     <>
+      <div className="flex flex-col min-h-screen">
       <Navbar />
-      <CartComponent />
+      <main className="flex-grow">
+        <CartComponent />
+      </main>
       <Footer />
+    </div>
     </>
   );
 }

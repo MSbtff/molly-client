@@ -1,9 +1,10 @@
 'use server';
 
-import {cookies} from 'next/headers';
+import { getValidAuthToken } from '@/shared/util/lib/authTokenValue';
 
 export default async function orderComplete() {
-  const authToken = (await cookies()).get('Authorization');
+
+  const authToken = getValidAuthToken();
 
   if (!authToken) {
     throw new Error('유효하지 않은 토큰 입니다.');

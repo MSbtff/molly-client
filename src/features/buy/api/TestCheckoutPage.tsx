@@ -115,27 +115,7 @@ export function TestCheckoutPage({onWidgetsReady}: TestCheckoutPageProps) {
       <div className="box_section">
         <div id="payment-method" />
         <div id="agreement" />
-        {/* <div className="w-full flex justify-between">
-          <div className="">
-            <label htmlFor="coupon-box">
-              <input
-                id="coupon-box"
-                type="checkbox"
-                aria-checked="true"
-                disabled={!ready}
-                onChange={(event) => {
-                  setAmount((prev) => ({
-                    ...prev,
-                    value: event.target.checked
-                      ? prev.value - 5_000
-                      : prev.value + 5_000,
-                  }));
-                }}
-              />
-              <span>포인트 사용</span>
-            </label>
-          </div>
-        </div> */}
+        {/* 포인트 사용 */}
       </div>
     </div>
   );

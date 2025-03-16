@@ -12,7 +12,7 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-white h-screen">
+      <body className="bg-white min-h-screen">
         <main>{children}</main>
       </body>
     </html>

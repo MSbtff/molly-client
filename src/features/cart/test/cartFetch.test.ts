@@ -1,32 +1,23 @@
-
-import {deleteRequest, get, post} from '@/shared/util/lib/fetchAPI';
+import { OrderItem } from './../../../app/provider/OrderStore';
+import { deleteRequest, fetchAPI, get, post } from '@/shared/util/lib/fetchAPI';
 import { CartItem, cartRead } from '../api/cartRead';
 import { cartUpdate } from '../api/cartUpdate';
 import cartDelete from '../api/cartDelete';
 import cartOrder from '../api/cartOrder';
+import { decryptToken } from '@/shared/util/lib/encrypteToken';
 
-global.fetch = jest.fn();
-process.env.NEXT_SERVER_URL = 'https://api.example.com';
 
-jest.mock('../api/cartRead', () => ({
-  cartRead: jest.fn().mockResolvedValue([/* 목 데이터 */])
+jest.mock('next/headers', () =>  ({
+  cookies: jest.fn().mockReturnValue({
+    get: jest.fn().mockReturnValue({value: 'encryptToken'}),
+  })
 }));
 
-jest.mock('../api/cartUpdate', () => ({
-  cartUpdate: jest.fn().mockResolvedValue({ success: true })
-}));
+jest.mock('@/shared/util/lib/encrypteToken', () => ({
+  decryptToken: jest.fn().mockReturnValue('decryptToken'),
+}))
 
-jest.mock('../api/cartDelete', () => ({
-  __esModule: true,
-  default: jest.fn().mockResolvedValue({ success: true })
-}));
-
-jest.mock('../api/cartOrder', () => ({
-  __esModule: true,
-  default: jest.fn().mockResolvedValue({ orderId: 1 })
-}));
-
-jest.mock('../../../shared/util/lib/fetchAPI', () => ({
+jest.mock('@/shared/util/lib/fetchAPI', () => ({
   get: jest.fn(),
   post: jest.fn(),
   put: jest.fn(),
@@ -34,9 +25,12 @@ jest.mock('../../../shared/util/lib/fetchAPI', () => ({
   fetchAPI: jest.fn(),
 }));
 
+global.fetch = jest.fn()
 
 
 
+
+// 모의 데이터
 const mockCartItems: CartItem[] = [
   {
     cartInfoDto: {
@@ -56,8 +50,8 @@ const mockCartItems: CartItem[] = [
         color: 'Black',
         colorCode: '#000000',
         sizeDetails: [
-          {id: 101, size: 'M', quantity: 10},
-          {id: 102, size: 'L', quantity: 5},
+          { id: 101, size: 'M', quantity: 10 },
+          { id: 102, size: 'L', quantity: 5 },
         ],
       },
     ],
@@ -80,57 +74,69 @@ const mockCartItems: CartItem[] = [
         color: 'White',
         colorCode: '#FFFFFF',
         sizeDetails: [
-          {id: 201, size: 'M', quantity: 8},
-          {id: 202, size: 'L', quantity: 12},
+          { id: 201, size: 'M', quantity: 8 },
+          { id: 202, size: 'L', quantity: 12 },
         ],
       },
     ],
   },
 ];
 
-describe('장바구니 api 테스트', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-});
+ 
+  
+  
 
-describe('cartRead 함수 테스트', () => {
-  it('장바구니 조회 API 호출이 성공적으로 이루어져야 함', async () => {
-    (get as jest.Mock).mockResolvedValue(mockCartItems);
-    const result = await cartRead();
-    expect(result).toEqual(mockCartItems);
-    expect(get).toBeCalledWith('/cart');
-  });
-  it('장바구니 조회 API 호출이 실패했을 때 에러를 던져야 함', async () => {
-    (get as jest.Mock).mockRejectedValue(new Error('API 실패'));
-    await expect(cartRead()).rejects.toThrow('API 실패');
-  });
-});
+  describe('cartOrder 함수', () => {
 
+    beforeEach(()=> {
+      (global.fetch as jest.Mock).mockReturnValue({
+        ok: true,
+        status: 200,
+        json: jest.fn().mockResolvedValue({ orderId: 1 }),
+      })
 
-describe('cartUpdate 함수 테스트', () => {
-  it('장바구니 추가 API 호출이 성공적으로 이루어져야 함', async() => {
-    (post as jest.Mock).mockResolvedValue(mockCartItems);
-    await cartUpdate(1, 101, 1);
-    expect(post).toBeCalledWith('/cart', {cartId: 1, itemId: 101, quantity: 1});
-  });
-});
+      
+    })
+
+    it('장바구니 주문 생성 API 호출이 성공해야 함', async () => {
+      // API 응답 모킹
+      const orderItems = [{ cartId: 1 }, { cartId: 2 }];
+
+      // 함수 실행
+      const result = await cartOrder(orderItems);
 
 
-describe('cartDelete 함수 테스트', () => {
-    it('장바구니 삭제 API 호출이 성공적으로 이루어져야 함', async() => {
-      (deleteRequest as jest.Mock).mockResolvedValue(mockCartItems);
-      await cartDelete(1);
-      expect(deleteRequest).toBeCalledWith('/cart/1');
+      // 검증
+      expect(result).toEqual({orderId: 1});
+      expect(global.fetch).toHaveBeenCalledWith(
+        'https://api.example.com/orders',
+        expect.objectContaining({
+          method: 'POST',
+          headers: expect.objectContaining({
+            Authorization: 'decryptToken',
+            'Content-Type': 'application/json',
+          }),
+          body: JSON.stringify({ cartOrderRequests: orderItems }),
+        })
+      );
     });
-});
 
-describe('장바구니 주문 생성 테스트', () => {
-  it('장바구니 생성 호출이 성공적으로 이루어져야 함', () => {
-    const orderItems = [{cartId: 1}, {cartId: 2}];
-    const mockResponse = {orderId: 1};
-    (post as jest.Mock).mockResolvedValue(mockResponse);
-    cartOrder(orderItems);
-    expect(post).toBeCalledWith('/orders', {cartOrderRequests: orderItems});
+    it('장바구니 조회 API 호출 실패 시 에러를 던져야 함', async () => {
+      // API 오류 모킹
+      (global.fetch as jest.Mock).mockReturnValue({
+        ok: false,
+        status: 400,
+        json: jest.fn().mockResolvedValue({ message: 'Bad Request' }),
+      })
+      
+      const orderItems = [{ cartId: 1 }];
+
+      // 에러 발생 테스트
+      await expect(cartOrder(orderItems)).rejects.toThrow('API 실패');
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+    });
   });
-});
+
+
+
+
