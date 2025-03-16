@@ -10,7 +10,7 @@ import SearchModal from './SearchModal';
 import NotificationSidebar from './NotificationSidebar';
 import {Search, UserRound, ShoppingCart} from 'lucide-react';
 
-export default function Navbar() {
+export default function Navbar({nickname}: {nickname: string}) {
   const router = useRouter();
   const [isProfileOpen, setProfileIsOpen] = useState(false); //프로필 모달
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -64,7 +64,9 @@ export default function Navbar() {
             <Search size={20} className="text-black" />
             <span className="ml-2 text-[#707072]">검색</span>
           </div>
-
+          <div>
+            <p className="text-sm text-gray-500">{nickname}님</p>
+          </div>
           {/* 프로필 */}
           <button
             onClick={() => {
