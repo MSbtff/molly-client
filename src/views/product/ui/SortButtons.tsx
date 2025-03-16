@@ -9,7 +9,7 @@ interface ProductFiltersProps {
   searchParams: URLSearchParams;
 }
 
-const ProductFilters: React.FC<ProductFiltersProps> = ({
+const SortButtons: React.FC<ProductFiltersProps> = ({
   selectedSort,
   sortOptions,
   handleExcludeSoldOutChange,
@@ -26,7 +26,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
             id="exclude-sold-out"
             className="w-4 h-4"
             onChange={handleExcludeSoldOutChange}
-            checked={!!searchParams.get("excludeSoldOut")}
+            checked={!!searchParams.get("excludeSoldOut")} //ui에 반영
           />
           품절 제외
         </label>
@@ -56,4 +56,4 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
   );
 };
 
-export default ProductFilters;
+export default SortButtons;

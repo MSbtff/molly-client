@@ -49,7 +49,7 @@ export default function PopularItemsSection() {
   //초기 데이터 불러오기 -캐싱처리 필요
   useEffect(() => {
     fetchProducts(selectedCategory);
-  }, [fetchProducts,selectedCategory]);
+  }, [selectedCategory]);
 
   //카테고리 선택 핸들러 추가
   const handleCategoryChange = (category: string) => {

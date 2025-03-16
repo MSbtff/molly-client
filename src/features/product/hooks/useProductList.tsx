@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useDeferredValue } from "react";
+import { useState, useEffect, useDeferredValue } from "react";
 import { useSearchParams } from "next/navigation";
 import type { Product } from "@/shared/types/product";
 
@@ -7,8 +7,8 @@ export default function useProductList(productApiUrl: string) {
   const deferredParams = useDeferredValue(searchParams);
 
   const [productList, setProductList] = useState<Product[]>([]); //필터가 변경될 때만 초기화하고 아닐 때는 기존 데이터를 유지하면서 새로운 데이터를 추가해 저장하는 방식으로
-  // const [isLoading, setIsLoading] = useState(false);
-  
+  const [isLoading, setIsLoading] = useState(false);
+
   const [isLast, setIsLast] = useState(false);
   const [filters, setFilters] = useState({
     keyword: "", categories: "", colorCode: "", productSize: "",
@@ -25,21 +25,16 @@ export default function useProductList(productApiUrl: string) {
     });
 
     setFilters(updatedFilters as typeof filters);
-    
+
     setIsLast(false);
-    setProductList([]);
+    setProductList([]); //기존 데이터를 초기화하는게 맞긴 한데 무한스크롤 시에는 초기화되면 안됨. 어떻게 하지
   }, [deferredParams]);
 
-  
-  
-  // 상품 목록 API 요청 _ 기존 데이터 유지하면서 새로운 데이터 추가하도록 수정
-  // const fetchProductList = useCallback(async (nextPage: number) => {
-    const fetchProductList = useCallback(async (page: number) => {
-    // if (isLast) return;
+
+
+  const fetchProductList = async (page: number) => {
     if (isLast) return;
-
-
-    // setIsLoading(true);
+    setIsLoading(true);
 
     try {
       const params = new URLSearchParams();
@@ -91,19 +86,19 @@ export default function useProductList(productApiUrl: string) {
     } catch (error) {
       console.error("상품 목록 API 요청 에러:", error);
     } finally {
-      // setIsLoading(() => false);
+      setIsLoading(() => false);
     }
-  }, [isLast, productApiUrl, filters]); //isLoading, page, isLast, productApiUrl,deferredParams 넣으라는데
-  //원래 isLast, productApiUrl만 있었음
+  };
 
   // filters 변경 시 API 요청 실행
   useEffect(() => {
-      fetchProductList(0);
-  }, [deferredParams, fetchProductList]);
+    fetchProductList(0);
+  }, [deferredParams]);
 
   return {
     productList,
     isLast,
     fetchProductList,
+    isLoading
   };
 }

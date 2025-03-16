@@ -25,7 +25,7 @@ export default function FeaturedBrandSection() {
   const [imageError, setImageError] = useState<{ [key: number]: boolean }>({}); // 이미지 에러 처리
 
 
-  //인기 브랜드 조회
+  //인기 브랜드 조회 api 요청
   const fetchPopularBrands = async () => {
     try {
       const response = await fetch(`${brandApiUrl}?page=0&size=5`);
@@ -41,7 +41,7 @@ export default function FeaturedBrandSection() {
     }
   };
 
-  //인기 브랜드의 특정 상품 조회
+  //인기 브랜드의 특정 상품 조회 api 요청
   const fetchBrandProducts = async (brandName: string) => {
     // setLoading(true);
     try {
@@ -54,20 +54,18 @@ export default function FeaturedBrandSection() {
       setBrandProducts(data.data || []);
     } catch (error) {
       console.error("인기 브랜드의 특정 상품 API 요청 실패:", error);
-    } finally {
-      // setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchPopularBrands();
-  }, [fetchPopularBrands]);
+  }, []);
 
   useEffect(() => {
     if (selectedBrand) {
       fetchBrandProducts(selectedBrand);
     }
-  }, [selectedBrand,fetchBrandProducts]);
+  }, [selectedBrand]);
 
   return (
     <section className="px-20 mt-16">
