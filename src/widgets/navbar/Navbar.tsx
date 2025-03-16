@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
+import Link from "next/link";
 // import { useRouter } from "next/navigation";
 // import Image from "next/image";
-import {useRouter} from 'next/navigation';
-import {useState} from 'react';
-import ProfileModal from './ProfileModal';
-import SearchModal from './SearchModal';
-import NotificationSidebar from './NotificationSidebar';
-import {Search, UserRound, ShoppingCart} from 'lucide-react';
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import ProfileModal from "./ProfileModal";
+import SearchModal from "./SearchModal";
+import NotificationSidebar from "./NotificationSidebar";
+import { Search, UserRound, ShoppingCart } from "lucide-react";
 
-export default function Navbar({nickname}: {nickname: string}) {
+export default function Navbar({ nickname }: { nickname: string }) {
   const router = useRouter();
   const [isProfileOpen, setProfileIsOpen] = useState(false); //프로필 모달
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -33,13 +33,13 @@ export default function Navbar({nickname}: {nickname: string}) {
         <div className="flex gap-6">
           {/* <Link href="/product/men" className="hover:text-gray-600">남성</Link> */}
           <button
-            onClick={() => handleCategoryClick('남성')}
+            onClick={() => handleCategoryClick("남성")}
             className="hover:text-gray-600"
           >
             남성
           </button>
           <button
-            onClick={() => handleCategoryClick('여성')}
+            onClick={() => handleCategoryClick("여성")}
             className="hover:text-gray-600"
           >
             여성
@@ -61,7 +61,7 @@ export default function Navbar({nickname}: {nickname: string}) {
             <span className="ml-2 text-[#707072]">검색</span>
           </div>
           <div>
-            <p className="text-sm text-gray-500">{nickname}님</p>
+            {nickname && <p className="text-sm text-gray-500">{nickname}</p>}
           </div>
           {/* 프로필 */}
           <button
