@@ -333,6 +333,8 @@ export default function Product1() {
                                         alt={item.productName}
                                         width={250}
                                         height={300}
+                                        loading='eager'
+                                        priority={true}
                                         className="w-full h-auto object-contain cursor-pointer"
                                         onClick={() => handleProductClick(item.id)}
                                     />
@@ -349,7 +351,7 @@ export default function Product1() {
 
                             {/* 추가 로딩 중인 경우: 기존 UI는 그대로 유지하면서 하단에 스켈레톤 UI 추가 */}
                             {isLoading && (
-                                Array.from({ length: 24 }).map((_, index) => (
+                                Array.from({ length: 48 }).map((_, index) => (
                                     <div key={index} className="flex flex-col items-left mt-10 animate-pulse">
                                         <div className="w-full aspect-[5/6] bg-gray-300 animate-pulse" />
                                         <div className="w-32 h-4 bg-gray-300 mt-2" />
