@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import {CheckCircle} from 'lucide-react';
-import {Button} from '@/shared/ui/Button';
-import {useEncryptStore} from '@/app/provider/EncryptStore';
+import Link from "next/link";
+import { CheckCircle } from "lucide-react";
+import { Button } from "@/shared/ui/Button";
+import { useEncryptStore } from "@/app/provider/EncryptStore";
 
 export const BuyComplete = () => {
-  const {orders} = useEncryptStore();
-  const {orderId, totalAmount, orderedAt} = orders[orders.length - 1];
+  const { orders } = useEncryptStore();
+  const { orderId, totalAmount, orderedAt } = orders[orders.length - 1];
   const item = orders[orders.length - 1].orderDetails.length;
   // 실제 구현 시 이 데이터는 API에서 받아오거나 파라미터로 전달받아야 함
   const orderInfo = {
@@ -15,6 +15,9 @@ export const BuyComplete = () => {
     totalAmount: totalAmount.toLocaleString(),
     paymentTime: orderedAt.slice(0, 16),
     items: item,
+    quantity: orders[orders.length - 1].orderDetails.map(
+      (item) => item.quantity
+    ),
   };
 
   console.log(orderInfo);
@@ -47,7 +50,7 @@ export const BuyComplete = () => {
 
             <div className="flex justify-between py-3 border-b border-gray-100">
               <span className="text-gray-600">주문 상품</span>
-              <span className="font-medium">{orderInfo.items}개 상품</span>
+              <span className="font-medium">{orderInfo.quantity}개 상품</span>
             </div>
 
             <div className="flex justify-between py-3 border-b border-gray-100">

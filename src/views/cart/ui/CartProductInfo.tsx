@@ -44,6 +44,7 @@ export const CartProductInfo = memo(
                 alt={productName || "상품"}
                 width={64}
                 height={64}
+                fetchPriority="high"
                 priority={priority}
                 sizes="(max-width: 768px) 64px, 80px"
                 quality={80}

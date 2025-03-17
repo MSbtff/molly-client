@@ -61,7 +61,7 @@ export default function Navbar({ nickname }: { nickname: string }) {
             <span className="ml-2 text-[#707072]">검색</span>
           </div>
           <div>
-            {nickname && <p className="text-sm text-gray-500">{nickname}</p>}
+            {nickname && <p className="text-sm text-gray-500">{nickname} 님</p>}
           </div>
           {/* 프로필 */}
           <button
