@@ -71,9 +71,9 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
 
     //카테고리(성별 + 옷) 필터 추가
     const selectedCategories = [
-                                  ...(selectedGender ? [selectedGender] : []), 
-                                  ...(selectedCategory ? [selectedCategory] : [])
-                               ];//성별이 앞에 오도록
+      ...(selectedGender ? [selectedGender] : []),
+      ...(selectedCategory ? [selectedCategory] : [])
+    ];//성별이 앞에 오도록
     if (selectedCategories.length > 0) {
       queryParams.append('categories', selectedCategories.join(','));
     }
@@ -100,11 +100,26 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
     //     }
     //   });
     // }
+
+    // if (selectedPrice) {
+    //   const priceRange = selectedPrice.match(/\d+/g); // 숫자만 추출하여 배열로 저장
+    //   if (priceRange) {
+    //     const [min, max] = priceRange.map(Number); // 숫자로 변환
+    //     if (!isNaN(min)) queryParams.append("priceGoe", min.toString()); // 최소값 추가
+    //     if (!isNaN(max)) queryParams.append("priceLt", max.toString() ); // 최대값 추가
+    //   }
+    // }
     if (selectedPrice) {
       const priceRange = selectedPrice.replace(/[^0-9~]/g, '');
       const [min, max] = priceRange.split('~').map(Number);
-      if (!isNaN(min)) queryParams.append('priceLt', min.toString());
-      if (!isNaN(max)) queryParams.append('priceGoe', max.toString());
+      if (!isNaN(min)) queryParams.append('priceGoe', min.toString());
+      if (!isNaN(max)) queryParams.append('priceLt', max.toString());
+      // const priceRange = selectedPrice.match(/\d+/g);
+      // if (priceRange) {
+      //   const [min, max] = priceRange.map(Number);
+      //   if (!isNaN(min)) queryParams.append("priceGoe", min.toString());
+      //   if (!isNaN(max)) queryParams.append("priceLt", max.toString());
+      // }
     }
 
     //사이즈 필터 
@@ -112,7 +127,7 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
       queryParams.append('productSize', selectedSize.join(','));
     }
 
-    // router.push(`/product?${queryParams.toString()}`);
+    router.push(`/product?${queryParams.toString()}`);
     //선택된 필터가 있을 경우만 url 변경
     if (selectedCategories.length > 0 || selectedColor.length > 0 || selectedPrice || selectedSize.length > 0) {
       router.push(`/product?page=0&size=48&${queryParams.toString()}`);
@@ -234,7 +249,7 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
 
             <div className="flex flex-wrap gap-2">
               {[...(selectedGender ? [selectedGender] : []),
-              ...(selectedCategory ? [selectedCategory] : []), 
+              ...(selectedCategory ? [selectedCategory] : []),
               ...selectedColor,
               ...(selectedPrice ? [selectedPrice] : []),
               ...selectedSize].map((item) => (
@@ -265,7 +280,7 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
 
         {/* 버튼 */}
         <div className="flex items-center justify-between p-4">
-          <button className="border border-gray-500 px-4 py-2 rounded-md text-sm" onClick={() => {
+          <button className="border border-gray-500 px-12 py-2 rounded-md text-sm" onClick={() => {
             setSelectedCategory(null);
             setSelectedColor([]);
             setSelectedPrice(null);
@@ -274,7 +289,7 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
           }}>
             초기화
           </button>
-          <button className="bg-black text-white px-4 py-2 rounded-md text-sm"
+          <button className="bg-black text-white px-12 py-2 rounded-md text-sm"
             onClick={() => {
               handleApplyFilters();
               setIsOpen(false);
