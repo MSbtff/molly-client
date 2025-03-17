@@ -137,9 +137,10 @@ export async function fetchReviews(
   const authToken = (await cookies()).get('Authorization'); // 쿠키에서 토큰 가져오기
   console.log('Authorization 토큰:', authToken);
 
-  const endpoint = authToken
-    ? `${baseUrl}/review/${productId}`
-    : `${baseUrl}/review/${productId}/new`;
+  // const endpoint = authToken
+  //   ? `${baseUrl}/review/${productId}`
+  //   : `${baseUrl}/review/${productId}/new`;
+  const endpoint = `${baseUrl}/review/${productId}/new`
   const url = `${endpoint}?page=${page}&size=${size}`;
 
   try {
