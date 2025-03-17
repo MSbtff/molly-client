@@ -1,13 +1,15 @@
 'use server';
 
 import {cookies} from 'next/headers';
+import { decryptToken } from './encrypteToken';
 
 /**
  * 쿠키에서 인증 토큰을 검색
  * @returns {string | undefined} 인증 토큰
  */
 export default async function authTokenValue(): Promise<string | undefined> {
-  const authToken = (await cookies()).get('Authorization')?.value;
+  const enToken = (await cookies()).get('Authorization')?.value as string;
+  const authToken = await decryptToken(enToken);
   return authToken;
 }
 

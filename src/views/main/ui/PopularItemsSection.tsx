@@ -25,12 +25,13 @@ export default function PopularItemsSection() {
 
   const [selectedCategory, setSelectedCategory] = useState("아우터");//현재 선택된 카테고리
   const [products, setProducts] = useState<Product[]>([]);//api로 가져온 상품 리스트
-  const [loading, setLoading] = useState(false);///데이터 로딩 상태
+  // const [loading, setLoading] = useState(false);///데이터 로딩 상태
   const [imageError, setImageError] = useState(false);
+
 
   //데이터를 products 상태에 저장
   const fetchProducts = async (category: string) => {
-    setLoading(true);
+    // setLoading(true);
     try {
       const response = await fetch(
         `${productApiUrl}?categories=${encodeURIComponent(category)}&orderBy=CREATED_AT&page=0&size=12`
@@ -41,9 +42,14 @@ export default function PopularItemsSection() {
     } catch (error) {
       console.error("지금 인기있는 상품 api 요청 실패:", error);
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
+
+  //초기 데이터 불러오기 -캐싱처리 필요
+  useEffect(() => {
+    fetchProducts(selectedCategory);
+  }, [selectedCategory]);
 
   //카테고리 선택 핸들러 추가
   const handleCategoryChange = (category: string) => {
@@ -51,10 +57,6 @@ export default function PopularItemsSection() {
     fetchProducts(category);
   };
 
-  //초기 데이터 불러오기
-  useEffect(() => {
-    fetchProducts(selectedCategory);
-  }, []);
 
   return (
     <section className="px-20">
@@ -72,15 +74,16 @@ export default function PopularItemsSection() {
       </div>
 
       {/* 상품 리스트 */}
-      <div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-2 sm:grid-cols-2  gap-2 mt-1">
         {products.map((product) => (
-          <div key={product.id} className="flex flex-col w-full overflow-hidden">
+          <div key={product.id} className="flex flex-col items-center mt-10">
             {imageUrl &&
             <Image
               src={imageError ? "/images/noImage.svg" : `${imageUrl}${product.thumbnail.path}`}
               alt={product.brandName}
               width={200}
               height={250}
+              className="w-full h-auto object-contain cursor-pointer"
               onError={() => setImageError(true)} // 에러 발생 시 상태 변경하여 기본 이미지 표시
             />}
             <button className="flex flex-col items-start w-full overflow-hidden">

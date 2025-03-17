@@ -9,7 +9,7 @@ interface FilterSidebarProps {
 }
 
 const categories = ['아우터', '상의', '바지', '원피스/스커트', '패션소품'];
-const genders = ['남성', '여성', '키즈'];
+const genders = ['남성', '여성'];
 const colors = [
   { name: '블랙', hex: '#000000', color: 'bg-black' },
   { name: '블루', hex: '#1790C8', color: 'bg-blue-500' },

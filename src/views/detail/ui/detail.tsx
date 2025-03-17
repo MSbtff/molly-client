@@ -65,7 +65,7 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
   const [isPending, startTransition] = useTransition();
 
   // 초기값을 initialReview로 설정(서버에서 받은 데이터)
-  const [reviews, setReviews] = useState<Review[]>(initialReviews || []);
+  const [reviews] = useState<Review[]>(initialReviews || []);
   //바로 구매 api 성공 응답을 주스탠드 스토어에 저장
   const { setOrders } = useEncryptStore();
   //추천 상품 저장
@@ -85,9 +85,12 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
       console.error("추천 상품 API 요청 실패:", error);
     }
   };
+
+
   useEffect(() => {
     if (product) fetchRecommendedProducts();
-  }, [product]); // product가 변경될 때만 요청 실행
+  }, [product, fetchRecommendedProducts]); // product가 변경될 때만 요청 실행
+  //원래 의존성배열에 product만 있었음
 
 
   //바로 구매
