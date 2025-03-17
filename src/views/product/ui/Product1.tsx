@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useDeferredValue } from 'react';
+import { useState, useEffect, useRef} from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useScrollStore } from "@/app/provider/scrollStore";
 import Image from 'next/image';
@@ -24,7 +24,7 @@ const categories = ['카테고리', '성별', '색상', '가격', '사이즈', '
 export default function Product1() {
     const router = useRouter();
     const searchParams = useSearchParams(); //쿼리 파라미터 가져오기(현재url의 쿼리 파라미터 가져오기)
-    const deferredParams = useDeferredValue(searchParams);
+    // const deferredParams = useDeferredValue(searchParams);
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL; //api 서버 주소
     const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL; //이미지 서버 주소
