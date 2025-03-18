@@ -25,13 +25,15 @@ export const CartProductInfo = memo(
     const sumWon = won.toLocaleString();
 
     // 최적화된 텍스트 렌더링 - 사전 계산
-    // const optimizedProductName = useMemo(() => {
-    //   if (!productName) return '';
+    const optimizedProductName = useMemo(() => {
+      if (!productName) return "";
 
-    //   return productName.length > 30 ? productName.substring(0, 30) + '...' : productName;
-    // }, [productName]);
+      return productName.length > 30
+        ? productName.substring(0, 30) + "..."
+        : productName;
+    }, [productName]);
 
-    // const optimizedBrandName = useMemo(() => brandName || '', [brandName]);
+    const optimizedBrandName = useMemo(() => brandName || "", [brandName]);
 
     // 결제 페이지 레이아웃
     if (hideShippingInfo) {
@@ -53,7 +55,7 @@ export const CartProductInfo = memo(
 
             <div className="flex-1">
               <p className="text-base font-semibold text-black line-clamp-1">
-                {productName} / {brandName}
+                {optimizedProductName} / {optimizedBrandName}
               </p>
 
               <div className="text-sm text-gray-600">
@@ -83,8 +85,10 @@ export const CartProductInfo = memo(
           </div>
           <div className="w-full flex flex-col gap-2">
             <p className="font-semibold line-clamp-1 text-wrap cart-item-title flex flex-col">
-              <span className="inline-block">{productName}</span>
-              <span className="inline-block text-gray-700">{brandName}</span>
+              <span className="inline-block">{optimizedProductName}</span>
+              <span className="inline-block text-gray-700">
+                {optimizedBrandName}
+              </span>
             </p>
             <div className="flex justify-between min-h-[1.25rem]">
               <p className="text-gray-600">color:{color}</p>

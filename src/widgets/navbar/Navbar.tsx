@@ -1,8 +1,6 @@
 "use client";
 
 import Link from "next/link";
-// import { useRouter } from "next/navigation";
-// import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ProfileModal from "./ProfileModal";
@@ -15,7 +13,6 @@ export default function Navbar({ nickname }: { nickname: string }) {
   const [isProfileOpen, setProfileIsOpen] = useState(false); //프로필 모달
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  // const router = useRouter();
 
   const handleCategoryClick = (category: string) => {
     router.push(`/product?categories=${encodeURIComponent(category)}`);
