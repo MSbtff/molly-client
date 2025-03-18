@@ -1,8 +1,6 @@
 "use client";
 
 import Link from "next/link";
-// import { useRouter } from "next/navigation";
-// import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ProfileModal from "./ProfileModal";
@@ -15,7 +13,6 @@ export default function Navbar({ nickname }: { nickname: string }) {
   const [isProfileOpen, setProfileIsOpen] = useState(false); //프로필 모달
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  // const router = useRouter();
 
   const handleCategoryClick = (category: string) => {
     router.push(`/product?categories=${encodeURIComponent(category)}`);
@@ -61,7 +58,7 @@ export default function Navbar({ nickname }: { nickname: string }) {
             <span className="ml-2 text-[#707072]">검색</span>
           </div>
           <div>
-            {nickname && <p className="text-sm text-gray-500">{nickname}</p>}
+            {nickname && <p className="text-sm text-gray-500">{nickname} 님</p>}
           </div>
           {/* 프로필 */}
           <button

@@ -1,8 +1,11 @@
-import ProductDetail from '../../../src/views/detail/ui/detail';
-import { fetchReviews } from "@/features/detail/action";
+import ProductDetail from "../../../src/views/detail/ui/detail";
+import { fetchReviews } from "@/features/detail/api/action";
 
-export default async function Page({ params }: { params: { productId: string } }) {
-
+export default async function Page({
+  params,
+}: {
+  params: { productId: string };
+}) {
   console.log("params.productId 값", params.productId); //undefined
   const productId = Number(params.productId); // URL에서 productId 가져오기
   console.log("변환된 productId 값", productId); //NaN

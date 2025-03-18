@@ -65,7 +65,7 @@ export default function BuyContainer() {
         try {
           await buyCancel(orderId);
           setOrders([]);
-          router.push("/cart");
+          window.location.href = "/cart";
         } catch (error) {
           console.error("결제 취소 실패:", error);
         }

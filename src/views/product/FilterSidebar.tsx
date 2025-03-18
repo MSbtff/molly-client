@@ -1,38 +1,42 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { X } from 'lucide-react'; // 닫기 버튼 아이콘
-import clsx from 'clsx'; // Tailwind 클래스 조건부 적용
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { X } from "lucide-react"; // 닫기 버튼 아이콘
+import clsx from "clsx"; // Tailwind 클래스 조건부 적용
 interface FilterSidebarProps {
   setIsOpen: (value: boolean) => void;
 }
 
-const categories = ['아우터', '상의', '바지', '원피스/스커트', '패션소품'];
-const genders = ['남성', '여성'];
+const categories = ["아우터", "상의", "바지", "원피스/스커트", "패션소품"];
+const genders = ["남성", "여성"];
 const colors = [
-  { name: '블랙', hex: '#000000', color: 'bg-black' },
-  { name: '블루', hex: '#1790C8', color: 'bg-blue-500' },
-  { name: '브라운', hex: '#825D41', color: 'bg-yellow-700' },
-  { name: '그린', hex: '#7BBA3C', color: 'bg-green-500' },
-  { name: '그레이', hex: '#808080', color: 'bg-gray-500' },
-  { name: '멀티컬러', hex: 'multi', color: 'bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500' },
-  { name: '오렌지', hex: '#F36B26', color: 'bg-orange-500' },
-  { name: '핑크', hex: '#F0728F', color: 'bg-pink-500' },
-  { name: '퍼플', hex: '#8D429F', color: 'bg-purple-500' },
-  { name: '레드', hex: '#E7352B', color: 'bg-red-500' },
-  { name: '화이트', hex: '#FFFFFF', color: 'bg-white border' },
-  { name: '옐로우', hex: '#FED533', color: 'bg-yellow-500' },
+  { name: "블랙", hex: "#000000", color: "bg-black" },
+  { name: "블루", hex: "#1790C8", color: "bg-blue-500" },
+  { name: "브라운", hex: "#825D41", color: "bg-yellow-700" },
+  { name: "그린", hex: "#7BBA3C", color: "bg-green-500" },
+  { name: "그레이", hex: "#808080", color: "bg-gray-500" },
+  {
+    name: "멀티컬러",
+    hex: "multi",
+    color:
+      "bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500",
+  },
+  { name: "오렌지", hex: "#F36B26", color: "bg-orange-500" },
+  { name: "핑크", hex: "#F0728F", color: "bg-pink-500" },
+  { name: "퍼플", hex: "#8D429F", color: "bg-purple-500" },
+  { name: "레드", hex: "#E7352B", color: "bg-red-500" },
+  { name: "화이트", hex: "#FFFFFF", color: "bg-white border" },
+  { name: "옐로우", hex: "#FED533", color: "bg-yellow-500" },
 ];
 const priceRanges = [
-  '0 - 50,000 원',
-  '50,000 - 100,000 원',
-  '100,000 - 150,000 원',
-  '150,000 - 200,000 원',
-  '200,000 원 이상',
+  "0 - 50,000 원",
+  "50,000 - 100,000 원",
+  "100,000 - 150,000 원",
+  "150,000 - 200,000 원",
+  "200,000 원 이상",
 ];
-const sizes = ['XS', 'S', 'M', 'L', 'XL', '2XL', 'FREE'];
-
+const sizes = ["XS", "S", "M", "L", "XL", "2XL", "FREE"];
 
 export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
   const router = useRouter();
@@ -45,7 +49,11 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
   const [selectedGender, setSelectedGender] = useState<string | null>(null);
 
   //필터 선택 로직
-  const toggleSelection = (selectedList: string[], setList: (value: string[]) => void, item: string) => {
+  const toggleSelection = (
+    selectedList: string[],
+    setList: (value: string[]) => void,
+    item: string
+  ) => {
     if (selectedList.includes(item)) {
       setList(selectedList.filter((i) => i !== item)); // 이미 선택된 경우 제거
     } else {
@@ -72,18 +80,18 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
     //카테고리(성별 + 옷) 필터 추가
     const selectedCategories = [
       ...(selectedGender ? [selectedGender] : []),
-      ...(selectedCategory ? [selectedCategory] : [])
-    ];//성별이 앞에 오도록
+      ...(selectedCategory ? [selectedCategory] : []),
+    ]; //성별이 앞에 오도록
     if (selectedCategories.length > 0) {
-      queryParams.append('categories', selectedCategories.join(','));
+      queryParams.append("categories", selectedCategories.join(","));
     }
-    //색상 필터 추가 
+    //색상 필터 추가
     if (selectedColor.length > 0) {
-      const colorHexValues = selectedColor.map(name => {
-        const colorObj = colors.find(c => c.name === name);
+      const colorHexValues = selectedColor.map((name) => {
+        const colorObj = colors.find((c) => c.name === name);
         return colorObj ? colorObj.hex : name; // Hex 코드 변환, 없으면 그대로
       });
-      queryParams.append('colorCode', colorHexValues.join(','));
+      queryParams.append("colorCode", colorHexValues.join(","));
     }
     //가격 필터 추가 (최소, 최대)
     // if (selectedPrice.length > 0) {
@@ -110,10 +118,10 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
     //   }
     // }
     if (selectedPrice) {
-      const priceRange = selectedPrice.replace(/[^0-9~]/g, '');
-      const [min, max] = priceRange.split('~').map(Number);
-      if (!isNaN(min)) queryParams.append('priceGoe', min.toString());
-      if (!isNaN(max)) queryParams.append('priceLt', max.toString());
+      const priceRange = selectedPrice.replace(/[^0-9~]/g, "");
+      const [min, max] = priceRange.split("~").map(Number);
+      if (!isNaN(min)) queryParams.append("priceGoe", min.toString());
+      if (!isNaN(max)) queryParams.append("priceLt", max.toString());
       // const priceRange = selectedPrice.match(/\d+/g);
       // if (priceRange) {
       //   const [min, max] = priceRange.map(Number);
@@ -122,14 +130,19 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
       // }
     }
 
-    //사이즈 필터 
+    //사이즈 필터
     if (selectedSize.length > 0) {
-      queryParams.append('productSize', selectedSize.join(','));
+      queryParams.append("productSize", selectedSize.join(","));
     }
 
     router.push(`/product?${queryParams.toString()}`);
     //선택된 필터가 있을 경우만 url 변경
-    if (selectedCategories.length > 0 || selectedColor.length > 0 || selectedPrice || selectedSize.length > 0) {
+    if (
+      selectedCategories.length > 0 ||
+      selectedColor.length > 0 ||
+      selectedPrice ||
+      selectedSize.length > 0
+    ) {
       router.push(`/product?page=0&size=48&${queryParams.toString()}`);
     }
   };
@@ -139,14 +152,17 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
       {/* 블러 배경 오버레이 */}
       <div
         className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-md"
-        onClick={() => setIsOpen(false)}>
-      </div>
+        onClick={() => setIsOpen(false)}
+      ></div>
 
       <div className="fixed top-0 left-0 w-[320px] h-full bg-white shadow-lg z-50 overflow-y-auto">
         {/* 헤더 */}
         <div className="flex items-center justify-between px-4 py-4">
           <h2 className="text-lg font-semibold">필터</h2>
-          <button onClick={() => setIsOpen(false)} className="text-gray-500 text-xl">
+          <button
+            onClick={() => setIsOpen(false)}
+            className="text-gray-500 text-xl"
+          >
             <X />
           </button>
         </div>
@@ -158,7 +174,9 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
               key={gender}
               className={clsx(
                 "text-sm px-3 py-2 rounded-md transition",
-                selectedGender === gender ? "bg-gray-200 text-black font-semibold" : "text-gray-600"
+                selectedGender === gender
+                  ? "bg-gray-200 text-black font-semibold"
+                  : "text-gray-600"
               )}
               onClick={() => handleGenderSelect(gender)}
             >
@@ -174,7 +192,9 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
               key={category}
               className={clsx(
                 "block text-left w-full py-2",
-                selectedCategory === category ? "bg-gray-200 rounded-lg font-bold text-black" : "text-gray-700"
+                selectedCategory === category
+                  ? "bg-gray-200 rounded-lg font-bold text-black"
+                  : "text-gray-700"
               )}
               onClick={() => handleCategorySelect(category)}
             >
@@ -190,12 +210,20 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
             {colors.map(({ name, color }) => (
               <button
                 key={name}
-                className={clsx("w-8 h-8 rounded-full flex items-center justify-center", color, {
-                  "border-2 border-black": selectedColor.includes(name),
-                })}
-                onClick={() => toggleSelection(selectedColor, setSelectedColor, name)}
+                className={clsx(
+                  "w-8 h-8 rounded-full flex items-center justify-center",
+                  color,
+                  {
+                    "border-2 border-black": selectedColor.includes(name),
+                  }
+                )}
+                onClick={() =>
+                  toggleSelection(selectedColor, setSelectedColor, name)
+                }
               >
-                {selectedColor.includes(name) && <span className="text-xs text-white">✓</span>}
+                {selectedColor.includes(name) && (
+                  <span className="text-xs text-white">✓</span>
+                )}
               </button>
             ))}
           </div>
@@ -209,7 +237,9 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
               key={price}
               className={clsx(
                 "border px-3 py-2 rounded-md text-sm",
-                selectedPrice === price ? "bg-black text-white" : "text-gray-700"
+                selectedPrice === price
+                  ? "bg-black text-white"
+                  : "text-gray-700"
               )}
               onClick={() => handlePriceSelect(price)}
             >
@@ -227,9 +257,13 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
                 key={size}
                 className={clsx(
                   "border px-3 py-2 rounded-md text-sm",
-                  selectedSize?.includes(size) ? "bg-black text-white" : "text-gray-700"
+                  selectedSize?.includes(size)
+                    ? "bg-black text-white"
+                    : "text-gray-700"
                 )}
-                onClick={() => toggleSelection(selectedSize, setSelectedSize, size)}
+                onClick={() =>
+                  toggleSelection(selectedSize, setSelectedSize, size)
+                }
               >
                 {size}
               </button>
@@ -243,16 +277,22 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
         </div> */}
 
         {/*선택한 옵션*/}
-        {(selectedGender || selectedCategory || selectedColor.length > 0 || selectedPrice || selectedSize.length > 0) && (
+        {(selectedGender ||
+          selectedCategory ||
+          selectedColor.length > 0 ||
+          selectedPrice ||
+          selectedSize.length > 0) && (
           <div className="px-4 py-4 border-b">
             <h3 className="text-sm font-semibold mb-3">선택한 필터</h3>
 
             <div className="flex flex-wrap gap-2">
-              {[...(selectedGender ? [selectedGender] : []),
-              ...(selectedCategory ? [selectedCategory] : []),
-              ...selectedColor,
-              ...(selectedPrice ? [selectedPrice] : []),
-              ...selectedSize].map((item) => (
+              {[
+                ...(selectedGender ? [selectedGender] : []),
+                ...(selectedCategory ? [selectedCategory] : []),
+                ...selectedColor,
+                ...(selectedPrice ? [selectedPrice] : []),
+                ...selectedSize,
+              ].map((item) => (
                 <button
                   key={item}
                   className="flex items-center gap-2 px-3 py-1 text-sm bg-gray-200 rounded-full"
@@ -280,16 +320,20 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
 
         {/* 버튼 */}
         <div className="flex items-center justify-between p-4">
-          <button className="border border-gray-500 px-12 py-2 rounded-md text-sm" onClick={() => {
-            setSelectedCategory(null);
-            setSelectedColor([]);
-            setSelectedPrice(null);
-            setSelectedSize([]);
-            setSelectedGender(null);
-          }}>
+          <button
+            className="border border-gray-500 px-10 py-2 rounded-md text-sm"
+            onClick={() => {
+              setSelectedCategory(null);
+              setSelectedColor([]);
+              setSelectedPrice(null);
+              setSelectedSize([]);
+              setSelectedGender(null);
+            }}
+          >
             초기화
           </button>
-          <button className="bg-black text-white px-12 py-2 rounded-md text-sm"
+          <button
+            className="bg-black text-white px-10 py-2 rounded-md text-sm"
             onClick={() => {
               handleApplyFilters();
               setIsOpen(false);
