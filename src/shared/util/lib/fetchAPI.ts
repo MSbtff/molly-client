@@ -1,8 +1,8 @@
-'use server';
+"use server";
 
-import {getValidAuthToken} from './authTokenValue';
+import { getValidAuthToken } from "./authTokenValue";
 
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 type BodyType = object | string | FormData | undefined | null;
 
 interface FetchAPIOptions<B extends BodyType = object> {
@@ -34,11 +34,11 @@ export async function fetchAPI<T, B extends BodyType = object>({
   if (body !== undefined && body !== null) {
     if (body instanceof FormData) {
       processedBody = body;
-    } else if (typeof body === 'string') {
-      defaultHeaders['Content-Type'] = 'application/json';
+    } else if (typeof body === "string") {
+      defaultHeaders["Content-Type"] = "application/json";
       processedBody = JSON.stringify(body);
     } else {
-      defaultHeaders['Content-Type'] = 'application/json';
+      defaultHeaders["Content-Type"] = "application/json";
       processedBody = JSON.stringify(body);
     }
   }
@@ -54,12 +54,12 @@ export async function fetchAPI<T, B extends BodyType = object>({
     });
 
     if (!res.ok) {
-      throw new Error('요청에 실패했습니다.');
+      throw new Error("요청에 실패했습니다.");
     }
-    const contentType = res.headers.get('content-type');
-    if (contentType?.includes('application/json')) {
+    const contentType = res.headers.get("content-type");
+    if (contentType?.includes("application/json")) {
       return (await res.json()) as T;
-    } else if (contentType?.includes('text/')) {
+    } else if (contentType?.includes("text/")) {
       return (await res.text()) as unknown as T;
     } else {
       // 바이너리 데이터 등 다른 형식의 응답 처리
@@ -77,9 +77,9 @@ export async function fetchAPI<T, B extends BodyType = object>({
  */
 export async function get<T>(
   path: string,
-  options?: Omit<FetchAPIOptions, 'method' | 'path'>
+  options?: Omit<FetchAPIOptions, "method" | "path">
 ): Promise<T> {
-  return fetchAPI<T>({...options, method: 'GET', path});
+  return fetchAPI<T>({ ...options, method: "GET", path });
 }
 
 /**
@@ -89,9 +89,9 @@ export async function get<T>(
 export async function post<T, B extends BodyType = object>(
   path: string,
   body?: B,
-  options?: Omit<FetchAPIOptions<B>, 'method' | 'path' | 'body'>
+  options?: Omit<FetchAPIOptions<B>, "method" | "path" | "body">
 ): Promise<T> {
-  return fetchAPI<T, B>({method: 'POST', path, body, ...options});
+  return fetchAPI<T, B>({ method: "POST", path, body, ...options });
 }
 
 /**
@@ -101,9 +101,9 @@ export async function post<T, B extends BodyType = object>(
 export async function put<T, B extends BodyType = object>(
   path: string,
   body?: B,
-  options?: Omit<FetchAPIOptions<B>, 'method' | 'path' | 'body'>
+  options?: Omit<FetchAPIOptions<B>, "method" | "path" | "body">
 ): Promise<T> {
-  return fetchAPI<T, B>({method: 'PUT', path, body, ...options});
+  return fetchAPI<T, B>({ method: "PUT", path, body, ...options });
 }
 
 /**
@@ -113,9 +113,9 @@ export async function put<T, B extends BodyType = object>(
 export async function patch<T, B extends BodyType = object>(
   path: string,
   body?: B,
-  options?: Omit<FetchAPIOptions<B>, 'method' | 'path' | 'body'>
+  options?: Omit<FetchAPIOptions<B>, "method" | "path" | "body">
 ): Promise<T> {
-  return fetchAPI<T, B>({method: 'PATCH', path, body, ...options});
+  return fetchAPI<T, B>({ method: "PATCH", path, body, ...options });
 }
 
 /**
@@ -125,7 +125,7 @@ export async function patch<T, B extends BodyType = object>(
 export async function deleteRequest<T, B extends BodyType = object>(
   path: string,
   body?: B,
-  options?: Omit<FetchAPIOptions<B>, 'method' | 'path' | 'body'>
+  options?: Omit<FetchAPIOptions<B>, "method" | "path" | "body">
 ): Promise<T> {
-  return fetchAPI<T, B>({method: 'DELETE', path, body, ...options});
+  return fetchAPI<T, B>({ method: "DELETE", path, body, ...options });
 }
