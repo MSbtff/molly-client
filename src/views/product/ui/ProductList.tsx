@@ -15,8 +15,6 @@ const ProductList: React.FC<ProductListProps> = ({ handleProductClick, }) => {
   const { page, setPage } = useScrollStore()
 
   const { productList, fetchProductList, isLast, isLoading } = useProductList(productApiUrl);
-  // console.log("productList:", productList);
-  // console.log(isLoading);
 
   useEffect(() => {
     const trgRef = triggerRef.current;
@@ -25,8 +23,7 @@ const ProductList: React.FC<ProductListProps> = ({ handleProductClick, }) => {
 
     const observer = new IntersectionObserver(//새로운 IntersectionObserver 객체 생성: 특정 요소(triggerRef.current)가 뷰토트에 진입했는지 감지하기 위해 사용
       (entries) => {//감지된 요소임. 하나의 triggerRef만 감지
-        if (entries[0].isIntersecting && !isLoading) {//감지된 요소(triggerRef.current)가 뷰포트에 보이면 true, 데이터를 불러오고 있는 중이 아니라면 실행
-          //스크롤이 특정 요소에 도달했을 때만 데이터 불러오고 api 요청 중이면 호출 안함
+        if (entries[0].isIntersecting && !isLoading) {
           fetchProductList(page);
           console.log("페이지 증가 전", page);
           setPage(page + 1);//페이지 증가
@@ -41,14 +38,7 @@ const ProductList: React.FC<ProductListProps> = ({ handleProductClick, }) => {
       if (trgRef) observer.unobserve(trgRef);
     };
   }, [page, isLoading, isLast])//isLoading, fetchproductList, isLast를 넣으라는데 
-
-
-  /*
-  문제 : 
-  무한스크롤 할 시 이전 데이터 ui 밑에 스켈레톤 ui가 렌더링되어야 하는데 
-  걍 렌더링이 새롭게 됨. 모든 요소가. 
-  */
-
+  //왜 의존성 배열에 이렇게 넣어야 무한스크롤 트리거 되는지 모르겠음. 
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-2 sm:grid-cols-2 gap-2 mt-1">
@@ -119,14 +109,14 @@ const ProductList: React.FC<ProductListProps> = ({ handleProductClick, }) => {
 
           {/* 추가 로딩 중인 경우: 기존 UI는 그대로 유지하면서 하단에 스켈레톤 UI 추가 */}
           {isLoading && (
-              Array.from({ length: 24 }).map((_, index) => (
-                <div key={index} className="flex flex-col items-left mt-10 animate-pulse">
-                  <div className="w-full aspect-[5/6] bg-gray-300 animate-pulse" />
-                  <div className="w-32 h-4 bg-gray-300 mt-2" />
-                  <div className="w-28 h-4 bg-gray-200 mt-1" />
-                  <div className="w-24 h-4 bg-gray-200 mt-1" />
-                </div>
-              ))
+            Array.from({ length: 24 }).map((_, index) => (
+              <div key={index} className="flex flex-col items-left mt-10 animate-pulse">
+                <div className="w-full aspect-[5/6] bg-gray-300 animate-pulse" />
+                <div className="w-32 h-4 bg-gray-300 mt-2" />
+                <div className="w-28 h-4 bg-gray-200 mt-1" />
+                <div className="w-24 h-4 bg-gray-200 mt-1" />
+              </div>
+            ))
           )}
         </>
       )}
