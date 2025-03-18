@@ -4,7 +4,7 @@ import { fetchReviews } from "@/features/detail/api/action";
 export default async function Page({
   params,
 }: {
-  params: { productId: string };
+  params: { productId: number };
 }) {
   console.log("params.productId 값", params.productId); //undefined
   const productId = Number(params.productId); // URL에서 productId 가져오기

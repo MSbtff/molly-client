@@ -1,7 +1,6 @@
 "use server";
 
 import { getValidAuthToken } from "@/shared/util/lib/authTokenValue";
-import { cookies } from "next/headers";
 
 export default async function cartDelete(id: number[] | number) {
   const authToken = await getValidAuthToken();
