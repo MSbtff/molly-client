@@ -6,7 +6,11 @@ export async function generateStaticParams() {
   return [{ productId: "1" }, { productId: "113102" }]; // 실제 데이터베이스에서 가져오는 로직으로 변경 가능
 }
 
-export default async function Page({params}: {params: Promise<{ productId: string }>}) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ productId: string }>;
+}) {
   const resolvedParams = await params;
   console.log("전체 params 값:", resolvedParams);
   // export default async function Page({ params }: PageProps) {
