@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Default from '../../../../public/images/default.webp';
+import noImage from "../../../../public/images/noImage.svg";
 import image1 from "../../../../public/images/suggestion/추천.jpg";
 import image2 from "../../../../public/images/suggestion/추천2.jpg";
 import image3 from "../../../../public/images/suggestion/추천3.jpg";
@@ -57,7 +57,7 @@ export default function RecommendedItemsSection() {
         {dummyProducts.map((item) => (
           <div key={item.id} className="flex flex-col items-center mt-10">
             <Image
-              src={item.image || Default} // 이미지가 없으면 기본 이미지 사용
+              src={item.image || noImage} // 이미지가 없으면 기본 이미지 사용
               alt={item.name}
               width={250}
               height={250}
