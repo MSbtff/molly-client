@@ -1,7 +1,5 @@
 import PaymentProcessor from "@/features/buy/ui/PaymentProcessor";
 import { BuyComplete } from "@/views/buy/ui/BuyComplete";
-import Footer from "@/widgets/Footer";
-import Navbar from "@/widgets/navbar/Navbar";
 
 export default async function BuySuccess() {
   return (
