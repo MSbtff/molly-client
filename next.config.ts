@@ -15,11 +15,11 @@ const nextConfig: NextConfig = {
 
   images: {
     formats: ["image/webp"],
-    domains: ["3.35.175.203", "172.16.24.53", "persimmontree.ddns.net"], // API에서 제공하는 이미지 도메인(IP) (외부 이미지 도메인 허용)
+    domains: ["15.165.65.222", "172.16.24.53", "persimmontree.ddns.net"], // API에서 제공하는 이미지 도메인(IP) (외부 이미지 도메인 허용)
     remotePatterns: [
       {
         protocol: "http",
-        hostname: "3.35.175.203",
+        hostname: "15.165.65.222",
         port: "8080",
         pathname: "/**",
       },
