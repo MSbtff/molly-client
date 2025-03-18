@@ -3,7 +3,8 @@
 import {getValidAuthToken} from '@/shared/util/lib/authTokenValue';
 
 export default async function addressRetriever() {
-  const authToken = getValidAuthToken();
+  const authToken = (await getValidAuthToken())
+  console.log(authToken);
 
   try {
     const res = await fetch(`${process.env.NEXT_SERVER_URL}/addresses`, {

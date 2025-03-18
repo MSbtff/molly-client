@@ -1,21 +1,18 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-// import { useRouter } from "next/navigation";
-// import Image from "next/image";
-import {useRouter} from 'next/navigation';
-import {useState} from 'react';
-import ProfileModal from './ProfileModal';
-import SearchModal from './SearchModal';
-import NotificationSidebar from './NotificationSidebar';
-import {Search, UserRound, ShoppingCart} from 'lucide-react';
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import ProfileModal from "./ProfileModal";
+import SearchModal from "./SearchModal";
+import NotificationSidebar from "./NotificationSidebar";
+import { Search, UserRound, ShoppingCart } from "lucide-react";
 
-export default function Navbar() {
+export default function Navbar({ nickname }: { nickname: string }) {
   const router = useRouter();
   const [isProfileOpen, setProfileIsOpen] = useState(false); //프로필 모달
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  // const router = useRouter();
 
   const handleCategoryClick = (category: string) => {
     router.push(`/product?categories=${encodeURIComponent(category)}`);
@@ -33,27 +30,17 @@ export default function Navbar() {
         <div className="flex gap-6">
           {/* <Link href="/product/men" className="hover:text-gray-600">남성</Link> */}
           <button
-            onClick={() => handleCategoryClick('남성')}
+            onClick={() => handleCategoryClick("남성")}
             className="hover:text-gray-600"
           >
             남성
           </button>
           <button
-            onClick={() => handleCategoryClick('여성')}
+            onClick={() => handleCategoryClick("여성")}
             className="hover:text-gray-600"
           >
             여성
           </button>
-
-          <Link href="/product/kid" className="hover:text-gray-600">
-            키즈
-          </Link>
-          <Link href="/product/sale" className="hover:text-gray-600">
-            할인
-          </Link>
-          <Link href="/product/brand" className="hover:text-gray-600">
-            브랜드
-          </Link>
         </div>
 
         {/* 우측 아이콘들 */}
@@ -64,13 +51,15 @@ export default function Navbar() {
             // onClick={() => setIsSearchOpen(true)}
             onClick={() => {
               setIsSearchOpen(true);
-              // setIsExiting(false); // ✅ 모달을 다시 열 수 있도록 초기화
+              // setIsExiting(false); // 모달을 다시 열 수 있도록 초기화
             }}
           >
             <Search size={20} className="text-black" />
             <span className="ml-2 text-[#707072]">검색</span>
           </div>
-
+          <div>
+            {nickname && <p className="text-sm text-gray-500">{nickname} 님</p>}
+          </div>
           {/* 프로필 */}
           <button
             onClick={() => {

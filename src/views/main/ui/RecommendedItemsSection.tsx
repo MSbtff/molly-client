@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Default from '../../../../public/images/default.webp';
+import noImage from "../../../../public/images/noImage.svg";
 import image1 from "../../../../public/images/suggestion/추천.jpg";
 import image2 from "../../../../public/images/suggestion/추천2.jpg";
 import image3 from "../../../../public/images/suggestion/추천3.jpg";
@@ -53,20 +53,20 @@ export default function RecommendedItemsSection() {
                   ))}
                 </div> */}
       {/* 상품 리스트 (2줄, 5개씩) */}
-      <div className="grid grid-cols-6 lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-2 sm:grid-cols-2  gap-2 mt-1">
         {dummyProducts.map((item) => (
-          <div key={item.id} className="flex flex-col items-center w-full overflow-hidden">
+          <div key={item.id} className="flex flex-col items-center mt-10">
             <Image
-              src={item.image || Default} // 이미지가 없으면 기본 이미지 사용
+              src={item.image || noImage} // 이미지가 없으면 기본 이미지 사용
               alt={item.name}
               width={250}
               height={250}
-              className="object-cover"
+              className="w-full h-auto object-contain cursor-pointer"
             />
             <button className="flex flex-col items-start w-full overflow-hidden">
-              <span className="text-left mt-2 font-semibold text-sm">{item.brand}</span>
-              <span className="text-left text-xs text-gray-500 truncate w-full">{item.name}</span>
-              <span className="text-left text-black-500 font-semibold text-sm">{item.price}</span>
+              <span className="text-left mt-1 text-sm font-semibold">{item.brand}</span>
+              <span className="text-left text-sm text-gray-500 truncate w-full">{item.name}</span>
+              <span className="text-left text-black-500 font-semibold">{item.price}</span>
             </button>
           </div>
         ))}

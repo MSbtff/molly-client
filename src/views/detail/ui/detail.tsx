@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useTransition } from 'react';
+import { useState, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import Image from 'next/image';
-import { Heart, Share2 } from 'lucide-react';
+import Image from "next/image";
+import { Heart, Share2 } from "lucide-react";
 // import ReviewModal from '../../public/images/review.jpg';
-import { buyNow, addToCart } from '@/features/detail/action';
-import ReviewModal from '@/views/detail/ui/ReviewModal';
+import { buyNow, addToCart } from "@/features/detail/api/action";
+import ReviewModal from "@/views/detail/ui/ReviewModal";
 import { useEncryptStore } from "@/app/provider/EncryptStore";
-import { OrderItem } from '@/app/provider/OrderStore';
+import { OrderItem } from "@/app/provider/OrderStore";
 interface Product {
   id: number;
   categories: string[];
@@ -48,11 +48,16 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL;
 const productApiUrl = `${baseUrl}/product`;
 
-export default function ProductDetail({ productId, initialReviews }: ProductDetailProps) {
+export default function ProductDetail({
+  productId,
+  initialReviews,
+}: ProductDetailProps) {
   const router = useRouter();
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(true); // 초기값을 true로 설정 (초기 렌더링 시 무조건 로딩 UI 보장)
-  const [selectedOption, setSelectedOption] = useState<Product["items"][0] | null>(null);
+  const [selectedOption, setSelectedOption] = useState<
+    Product["items"][0] | null
+  >(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const [quantity, setQuantity] = useState(1);
@@ -65,7 +70,7 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
   const [isPending, startTransition] = useTransition();
 
   // 초기값을 initialReview로 설정(서버에서 받은 데이터)
-  const [reviews, setReviews] = useState<Review[]>(initialReviews || []);
+  const [reviews] = useState<Review[]>(initialReviews || []);
   //바로 구매 api 성공 응답을 주스탠드 스토어에 저장
   const { setOrders } = useEncryptStore();
   //추천 상품 저장
@@ -76,8 +81,11 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
     if (!product?.brandName) return; // 브랜드 이름이 없으면 요청 안 함
 
     try {
-      const response = await fetch(`${productApiUrl}?brand=${product.brandName}&page=0&size=12`);
-      if (!response.ok) throw new Error(`추천 상품 API 요청 실패: ${response.status}`);
+      const response = await fetch(
+        `${productApiUrl}?brand=${product.brandName}&page=0&size=12`
+      );
+      if (!response.ok)
+        throw new Error(`추천 상품 API 요청 실패: ${response.status}`);
 
       const data = await response.json();
       setRecommendedProducts(data.data); // API 응답이 리스트라면 .content 사용
@@ -85,10 +93,11 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
       console.error("추천 상품 API 요청 실패:", error);
     }
   };
+
   useEffect(() => {
     if (product) fetchRecommendedProducts();
-  }, [product]); // product가 변경될 때만 요청 실행
-
+  }, [product, fetchRecommendedProducts]); // product가 변경될 때만 요청 실행
+  //원래 의존성배열에 product만 있었음
 
   //바로 구매
   const handleBuyNow = () => {
@@ -104,7 +113,11 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
 
     startTransition(async () => {
       try {
-        const orderData = await buyNow(parsedProductId, selectedOption.id, quantity);
+        const orderData = await buyNow(
+          parsedProductId,
+          selectedOption.id,
+          quantity
+        );
         console.log("바로 구매 api 요청 성공");
         console.log("바로 구매 api 응답 데이터", orderData);
 
@@ -114,20 +127,19 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
           pointSave: orderData.pointSave || null,
           payment: orderData.payment || [],
           delivery: orderData.delivery || [],
-
-        }
+        };
 
         // 여기서 orderData 사용 가능
         // 예: 상태에 저장
         setOrders([orderData, formattedOrder]);
 
         // 구매 성공 후 /buy 페이지로 이동
-        router.push('/buy');
+        router.push("/buy");
       } catch (error) {
         console.error("order api 요청 중 오류 발생:", error);
       }
     });
-  }
+  };
 
   //장바구니 담기
   const handleCartButton = () => {
@@ -143,10 +155,10 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
     startTransition(async () => {
       try {
         const message = await addToCart(selectedOption.id, quantity);
-        console.log("api 응답:", message);//응답 값 확인
+        console.log("api 응답:", message); //응답 값 확인
 
         // 구매 성공 후 /buy 페이지로 이동
-        router.push('/cart');
+        router.push("/cart");
         // alert(message);
       } catch (error) {
         console.error("장바구니 api 오류 발생:", error);
@@ -158,7 +170,6 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
   useEffect(() => {
     if (!productId) return;
     fetchProduct();
-
   }, [productId]);
 
   const fetchProduct = async () => {
@@ -175,7 +186,10 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
 
       // 이미지 서버 연결 안될 때 기본 이미지로 대체(504 떠도 페이지 렌더링하기)
       if (!data.thumbnail || !data.thumbnail.path) {
-        data.thumbnail = { path: "/images/noImage.svg", filename: "default.jpg" };
+        data.thumbnail = {
+          path: "/images/noImage.svg",
+          filename: "default.jpg",
+        };
       }
 
       console.log("API 요청 성공:", data);
@@ -199,7 +213,11 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
   }
   // product가 null이면 오류 메시지 표시
   if (!product) {
-    return <p className="text-center text-gray-500">상품 정보를 불러오지 못했습니다.</p>;
+    return (
+      <p className="text-center text-gray-500">
+        상품 정보를 불러오지 못했습니다.
+      </p>
+    );
   }
 
   //수량 추가
@@ -223,14 +241,12 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
     setIsreviewModalOpen(false); // 모달 닫기
     setSelectedReview(null); // 선택한 리뷰 데이터 초기화
   };
-  //선택한 옵션이 렌더링 
+  //선택한 옵션이 렌더링
   const handleOptionSelect = (option: Product["items"][0]) => {
-    console.log("옵션 아이디", option.id)
+    console.log("옵션 아이디", option.id);
     setSelectedOption(option);
     setIsDropdownOpen(false);
   };
-
-
 
   return (
     <>
@@ -276,9 +292,7 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
               <span className="text-red-500 font-bold text-2xl">
                 {product.price.toLocaleString()}원
               </span>
-              <span className="text-red-500 text-lg">
-                30%
-              </span>
+              <span className="text-red-500 text-lg">30%</span>
               {/* <span className="text-black-500 font-bold text-2xl">
                 {product.price}원
               </span> */}
@@ -288,7 +302,9 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
           <div className="border-t pt-4 space-y-1">
             <div className="flex gap-14">
               <span className="text-sm text-gray-600">구매 적립금</span>
-              <span className="text-sm ml-2">최대 1,431 마일리지 적립 예정</span>
+              <span className="text-sm ml-2">
+                최대 1,431 마일리지 적립 예정
+              </span>
             </div>
 
             <div className="flex gap-12">
@@ -296,7 +312,9 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
               <div className="text-sm ml-4">
                 최대 7개월 무이자 할부 시 월 19,420원 결제
                 <br />
-                <span className="text-blue-500 underline cursor-pointer">카드사별 할부 혜택 안내</span>
+                <span className="text-blue-500 underline cursor-pointer">
+                  카드사별 할부 혜택 안내
+                </span>
               </div>
             </div>
 
@@ -310,19 +328,26 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
               <div className="text-sm ml-4">
                 <span className="">3,000원</span>
                 <br />
-                <span className="text-gray-500">70,000원 이상 구매 시 무료배송</span>
+                <span className="text-gray-500">
+                  70,000원 이상 구매 시 무료배송
+                </span>
                 <br />
-                <span className="text-gray-500">제주/도서산간 3,000원 추가</span>
+                <span className="text-gray-500">
+                  제주/도서산간 3,000원 추가
+                </span>
               </div>
             </div>
           </div>
           {/* 옵션 선택 */}
           <div className="mt-4 relative border-t">
             <p className="font-semibold mt-4">옵션 선택</p>
-            <button className="w-full border px-4 py-3 mt-2 text-left "
+            <button
+              className="w-full border px-4 py-3 mt-2 text-left "
               onClick={() => setIsDropdownOpen((prev) => !prev)}
             >
-              {selectedOption ? `${selectedOption.color} / ${selectedOption.size}` : "색상/사이즈 선택"}
+              {selectedOption
+                ? `${selectedOption.color} / ${selectedOption.size}`
+                : "색상/사이즈 선택"}
             </button>
             {/* 드롭다운 메뉴 */}
             {isDropdownOpen && (
@@ -332,7 +357,6 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
                     key={item.id}
                     className="px-4 py-2 cursor-pointer hover:bg-gray-100"
                     onClick={() => handleOptionSelect(item)}
-
                   >
                     {item.color} / {item.size}
                   </li>
@@ -348,11 +372,19 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
 
               <div className="flex justify-between items-center w-full mt-2">
                 <div className="flex items-center border rounded-md overflow-hidden bg-white">
-                  <button className="px-4 py-2 border-r bg-white" onClick={handleDecrease}>
+                  <button
+                    className="px-4 py-2 border-r bg-white"
+                    onClick={handleDecrease}
+                  >
                     -
                   </button>
-                  <span className="px-6 py-2 text-center bg-white">{quantity}</span>
-                  <button className="px-4 py-2 border-l bg-white" onClick={handleIncrease}>
+                  <span className="px-6 py-2 text-center bg-white">
+                    {quantity}
+                  </span>
+                  <button
+                    className="px-4 py-2 border-l bg-white"
+                    onClick={handleIncrease}
+                  >
                     +
                   </button>
                 </div>
@@ -365,12 +397,20 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
           )}
           {/* 구매 버튼 */}
           <div className="flex gap-4 mt-4">
-            <button className="w-1/2 bg-black text-white py-3 text-lg font-semibold hover:bg-orange-600"
-              onClick={handleBuyNow}> 바로 구매
+            <button
+              className="w-1/2 bg-black text-white py-3 text-lg font-semibold hover:bg-orange-600"
+              onClick={handleBuyNow}
+            >
+              {" "}
+              바로 구매
             </button>
-            <button className="w-1/2 border border-black py-3 text-lg font-semibold"
+            <button
+              className="w-1/2 border border-black py-3 text-lg font-semibold"
               onClick={handleCartButton}
-              disabled={isPending}> 장바구니 담기
+              disabled={isPending}
+            >
+              {" "}
+              장바구니 담기
             </button>
           </div>
         </div>
@@ -391,15 +431,20 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
           )}
         </div>
 
-
         {/* 상품 이미지 및 그라데이션 */}
-        <div className={`${showDetails ? 'h-auto' : 'h-[3300px] overflow-hidden'} relative`}>
+        <div
+          className={`${
+            showDetails ? "h-auto" : "h-[3300px] overflow-hidden"
+          } relative`}
+        >
           <div className="flex flex-col gap-6">
             {product?.productDescriptionImages.map((img, index) => (
               <Image
                 key={index}
                 // src={`${imageUrl}${img.path}`}
-                src={img.path ? `${imageUrl}${img.path}` : "/images/noImage.svg"}
+                src={
+                  img.path ? `${imageUrl}${img.path}` : "/images/noImage.svg"
+                }
                 // src={"/images/noImage.svg"}
                 alt={`Product Description Image ${index + 1}`}
                 width={800}
@@ -438,7 +483,6 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
             </button>
           </div>
         )}
-
       </section>
 
       {/* 추천 상품 섹션 */}
@@ -504,23 +548,28 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
         ) : (
           <>
             <div
-              className={`${reviewExpanded ? 'h-auto' : 'h-[600px] overflow-hidden relative'
-                } grid grid-cols-3 gap-6`}
+              className={`${
+                reviewExpanded ? "h-auto" : "h-[600px] overflow-hidden relative"
+              } grid grid-cols-3 gap-6`}
             >
               {reviews.slice(0, visibleReviews).map((review, index) => (
                 <div key={index} className="flex flex-col items-center">
                   {review.images.length > 0 && (
                     <Image
                       // src={review.images[0]} // images 배열의 첫 번째 이미지 사용
-                      src={review.images[0] ? `${imageUrl}${review.images[0]}` : "/images/noImage.svg"}
+                      src={
+                        review.images[0]
+                          ? `${imageUrl}${review.images[0]}`
+                          : "/images/noImage.svg"
+                      }
                       // src={"/images/noImage.svg"}
                       alt={`리뷰 이미지 ${index + 1}`}
                       width={300}
                       height={300}
                       className="rounded-lg w-full h-full object-cover"
                       onClick={() => reviewOopenModal(review)}
-                    // onClick={() => setSelectedReview(review)} ??
-                    //   onError={(e) => (e.currentTarget.src = "/images/noImage.svg")} // 이미지 로드 실패 시 기본 이미지 사용
+                      // onClick={() => setSelectedReview(review)} ??
+                      //   onError={(e) => (e.currentTarget.src = "/images/noImage.svg")} // 이미지 로드 실패 시 기본 이미지 사용
                     />
                   )}
 
@@ -529,7 +578,10 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
 
                   {/* 사용자 정보 및 좋아요 버튼 */}
                   <div className="flex justify-between items-center w-full mt-2 text-sm text-gray-700">
-                    <div className="flex items-center" onClick={() => reviewOopenModal(review)}>
+                    <div
+                      className="flex items-center"
+                      onClick={() => reviewOopenModal(review)}
+                    >
                       <Image
                         src={"/icons/profile.svg"}
                         alt="User Profile"
@@ -537,16 +589,23 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
                         height={24}
                         className="rounded-full"
                       />
-                      <span className="ml-2 font-semibold">{review.user.name}</span>
+                      <span className="ml-2 font-semibold">
+                        {review.user.name}
+                      </span>
                     </div>
                     <button className="text-gray-500 hover:bg-gray-200 rounded-full transition px-1 py-1">
-                      <Heart className="w-5 h-5" fill={review.isLike ? "red" : "none"} />
+                      <Heart
+                        className="w-5 h-5"
+                        fill={review.isLike ? "red" : "none"}
+                      />
                     </button>
                   </div>
 
                   {/* 리뷰 내용 */}
                   <span
-                    className="text-gray-600 mt-1 text-left w-full" onClick={() => reviewOopenModal(review)}>
+                    className="text-gray-600 mt-1 text-left w-full"
+                    onClick={() => reviewOopenModal(review)}
+                  >
                     {review.comment}
                   </span>
                 </div>
@@ -563,7 +622,7 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
                 className="px-6 py-3 border border-gray-400 text-lg font-medium hover:bg-gray-100 transition"
                 onClick={toggleReviews}
               >
-                {reviewExpanded ? '접기' : '리뷰 더보기'}
+                {reviewExpanded ? "접기" : "리뷰 더보기"}
               </button>
             </div>
           </>
@@ -576,11 +635,27 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
         <div className="border-t pt-8">
           <h3 className="text-2xl font-semibold mb-4">배송정보</h3>
           <ul className="text-gray-700 space-y-2">
-            <li>• Delivery 브랜드 업체발송은 상품설명에 별도로 기입된 브랜드 알림 배송공지 기준으로 출고되고 브랜드마다 개별 배송비가 부여됩니다.</li>
-            <li>• Delivery 29CM 자체발송은 오후 2시까지 결제확인된 주문은 확인 출고되며 5만원 이상 주문은 무료배송, 5만원 미만은 3,000원의 배송비가 추가됩니다.</li>
-            <li>• SPECIAL ORDER, PT 등 예약주문은 상세설명의 출고일정을 확인하시기 바랍니다.</li>
-            <li>• 구두, 액세서리, 침구, 액자, 가구 등 상품설명의 제작기간을 숙지해주시기 바랍니다.</li>
-            <li>• 가구 및 일부 상품, 제주도를 포함한 도서산간 지역은 추가배송비 입금요청이 있을 수 있습니다.</li>
+            <li>
+              • Delivery 브랜드 업체발송은 상품설명에 별도로 기입된 브랜드 알림
+              배송공지 기준으로 출고되고 브랜드마다 개별 배송비가 부여됩니다.
+            </li>
+            <li>
+              • Delivery 29CM 자체발송은 오후 2시까지 결제확인된 주문은 확인
+              출고되며 5만원 이상 주문은 무료배송, 5만원 미만은 3,000원의
+              배송비가 추가됩니다.
+            </li>
+            <li>
+              • SPECIAL ORDER, PT 등 예약주문은 상세설명의 출고일정을 확인하시기
+              바랍니다.
+            </li>
+            <li>
+              • 구두, 액세서리, 침구, 액자, 가구 등 상품설명의 제작기간을
+              숙지해주시기 바랍니다.
+            </li>
+            <li>
+              • 가구 및 일부 상품, 제주도를 포함한 도서산간 지역은 추가배송비
+              입금요청이 있을 수 있습니다.
+            </li>
           </ul>
         </div>
 
@@ -589,15 +664,34 @@ export default function ProductDetail({ productId, initialReviews }: ProductDeta
           <h3 className="text-2xl font-semibold mb-4">교환, 환불, A/S 안내</h3>
           <ul className="text-gray-700 space-y-2">
             <li>• 상품 수령일로부터 7일 이내 반품 / 환불 가능합니다.</li>
-            <li>• 변심 반품의 경우 왕복배송비를 차감한 금액이 환불되며, 제품 및 포장 상태가 재판매 가능하여야 합니다.</li>
-            <li>• 동일상품 또는 동일상품 내 추가금액이 없는 옵션만 교환 가능합니다.</li>
+            <li>
+              • 변심 반품의 경우 왕복배송비를 차감한 금액이 환불되며, 제품 및
+              포장 상태가 재판매 가능하여야 합니다.
+            </li>
+            <li>
+              • 동일상품 또는 동일상품 내 추가금액이 없는 옵션만 교환
+              가능합니다.
+            </li>
             <li>• 상품 불량인 경우는 배송비를 포함한 전액이 환불됩니다.</li>
             <li>• 출고 이후 환불요청 시 상품 회수 후 처리됩니다.</li>
-            <li>• 알리 등 주문제작상품 / 카메라 / 밀봉포장상품 등은 변심에 따른 반품 / 환불이 불가합니다.</li>
+            <li>
+              • 알리 등 주문제작상품 / 카메라 / 밀봉포장상품 등은 변심에 따른
+              반품 / 환불이 불가합니다.
+            </li>
             <li>• 일부 완제품으로 수입된 상품의 경우 A/S가 불가합니다.</li>
-            <li>• 특정브랜드의 상품설명에 별도로 기입된 교환 / 환불 / A/S 기준이 우선합니다.</li>
-            <li>• 구매자가 미성년자인 경우에는 상품 구입 시 법정대리인이 동의하지 아니하면 법정대리인 본인 또는 법정대리인이 구매취소 할 수 있습니다.</li>
-            <li>• 상품의 색상과 이미지는 기기의 해상도에 따라 다르게 보일 수 있습니다.</li>
+            <li>
+              • 특정브랜드의 상품설명에 별도로 기입된 교환 / 환불 / A/S 기준이
+              우선합니다.
+            </li>
+            <li>
+              • 구매자가 미성년자인 경우에는 상품 구입 시 법정대리인이 동의하지
+              아니하면 법정대리인 본인 또는 법정대리인이 구매취소 할 수
+              있습니다.
+            </li>
+            <li>
+              • 상품의 색상과 이미지는 기기의 해상도에 따라 다르게 보일 수
+              있습니다.
+            </li>
           </ul>
         </div>
       </section>

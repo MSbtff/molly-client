@@ -1,6 +1,5 @@
 'use server';
 
-import {getValidAuthToken} from '@/shared/util/lib/authTokenValue';
 import {post} from '@/shared/util/lib/fetchAPI';
 
 export interface AddressData {

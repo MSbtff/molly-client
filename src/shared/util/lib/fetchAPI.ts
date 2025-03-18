@@ -12,6 +12,10 @@ interface FetchAPIOptions<B extends BodyType = object> {
   headers?: Record<string, string>;
 }
 
+/**
+ * API 요청 함수
+ * @returns {Promise<T>} 응답 데이터
+ */
 export async function fetchAPI<T, B extends BodyType = object>({
   method,
   path,
@@ -69,6 +73,7 @@ export async function fetchAPI<T, B extends BodyType = object>({
 
 /**
  * GET 요청 간편 래퍼
+ * @returns {Promise<T>} 응답 데이터
  */
 export async function get<T>(
   path: string,
@@ -79,6 +84,7 @@ export async function get<T>(
 
 /**
  * POST 요청 간편 래퍼
+ * @returns {Promise<T>} 응답 데이터
  */
 export async function post<T, B extends BodyType = object>(
   path: string,
@@ -86,4 +92,40 @@ export async function post<T, B extends BodyType = object>(
   options?: Omit<FetchAPIOptions<B>, 'method' | 'path' | 'body'>
 ): Promise<T> {
   return fetchAPI<T, B>({method: 'POST', path, body, ...options});
+}
+
+/**
+ * PUT 요청 간편 래퍼
+ * @returns {Promise<T>} 응답 데이터
+ */
+export async function put<T, B extends BodyType = object>(
+  path: string,
+  body?: B,
+  options?: Omit<FetchAPIOptions<B>, 'method' | 'path' | 'body'>
+): Promise<T> {
+  return fetchAPI<T, B>({method: 'PUT', path, body, ...options});
+}
+
+/**
+ *  PATCH 요청 간편 래퍼
+ *  @returns {Promise<T>} 응답 데이터
+ */
+export async function patch<T, B extends BodyType = object>(
+  path: string,
+  body?: B,
+  options?: Omit<FetchAPIOptions<B>, 'method' | 'path' | 'body'>
+): Promise<T> {
+  return fetchAPI<T, B>({method: 'PATCH', path, body, ...options});
+}
+
+/**
+ * DELETE 요청 간편 래퍼
+ * @returns {Promise<T>} 응답 데이터
+ */
+export async function deleteRequest<T, B extends BodyType = object>(
+  path: string,
+  body?: B,
+  options?: Omit<FetchAPIOptions<B>, 'method' | 'path' | 'body'>
+): Promise<T> {
+  return fetchAPI<T, B>({method: 'DELETE', path, body, ...options});
 }

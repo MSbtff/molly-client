@@ -3,8 +3,14 @@ import type {NextRequest} from 'next/server';
 
 // 보호할 경로 목록
 const protectedPaths = ['/mypage', '/buy', '/cart', '/seller'];
+const excludedPaths = ['/fail?message='];
 
 export function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+  if (excludedPaths.some(excludedPath => pathname.startsWith(excludedPath))) {
+    return NextResponse.next();
+  }
+
   // 현재 경로가 보호된 경로인지 체크
   const isProtectedPath = protectedPaths.some((path) =>
     request.nextUrl.pathname.startsWith(path)

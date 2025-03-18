@@ -1,30 +1,32 @@
-'use client';
+"use client";
 
-import {Button} from '../../../shared/ui/Button';
-import React, {useEffect, useMemo, useState} from 'react';
-import {OptionModal} from './OptionModal';
-import {CartNotice} from './CartNotice';
-import {CartOrderButton} from './CartOrderButton';
-import {CartProductInfo} from './CartProductInfo';
-import {CartItem, cartRead} from '@/features/cart/api/cartRead';
-import cartDelete from '@/features/cart/api/cartDelete';
-import cartOrder from '@/features/cart/api/cartOrder';
+import { Button } from "../../../shared/ui/Button";
+import React, { useEffect, useMemo, useState } from "react";
+import { OptionModal } from "./OptionModal";
+import { CartNotice } from "./CartNotice";
+import { CartOrderButton } from "./CartOrderButton";
+import { CartProductInfo } from "./CartProductInfo";
+import { CartItem, cartRead } from "@/features/cart/api/cartRead";
+import cartDelete from "@/features/cart/api/cartDelete";
+import cartOrder from "@/features/cart/api/cartOrder";
 
-import {useRouter} from 'next/navigation';
-import {useCartStore} from '@/app/provider/CartStore';
-import {OrderItem} from '@/app/provider/OrderStore';
-import {useEncryptStore} from '@/app/provider/EncryptStore';
+import { useRouter } from "next/navigation";
+import { useCartStore } from "@/app/provider/CartStore";
+import { OrderItem } from "@/app/provider/OrderStore";
+import { useEncryptStore } from "@/app/provider/EncryptStore";
+import { CartSkelton } from "./CartSkelton";
 
 export const CartComponent = () => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
   const [selectedCartItem, setSelectedCartItem] = useState<CartItem | null>(
     null
   );
-  const {orders, setOrders} = useEncryptStore();
-  const {setCartState} = useCartStore();
+  const { orders, setOrders } = useEncryptStore();
+  const { setCartState } = useCartStore();
 
   const selectedItemsInfo = useMemo(() => {
     const selectedItemsList = cartItems.filter((item) =>
@@ -44,6 +46,7 @@ export const CartComponent = () => {
 
   useEffect(() => {
     async function fetchCartItems() {
+      setIsLoading(true);
       try {
         const data = await cartRead();
         if (data) {
@@ -51,29 +54,31 @@ export const CartComponent = () => {
           setCartState(data);
         }
       } catch (error) {
-        console.error('카트 데이터 조회 중 오류', error);
+        console.error("카트 데이터 조회 중 오류", error);
+      } finally {
+        setIsLoading(false);
       }
     }
     fetchCartItems();
   }, [setCartState]);
 
   useEffect(() => {
-    console.log('orders 상태 업데이트 됨:', orders);
+    console.log("orders 상태 업데이트 됨:", orders);
   }, [orders]);
 
   useEffect(() => {
-    console.log('cartItems 상태 업데이트 됨:', cartItems);
+    console.log("cartItems 상태 업데이트 됨:", cartItems);
   }, [cartItems]);
 
   const refreshCartItems = async () => {
     try {
       const data = await cartRead();
-      console.log('새로운 데이터:', data);
+      console.log("새로운 데이터:", data);
       if (data) {
         setCartItems(data);
       }
     } catch (error) {
-      console.error('카트 데이터 조회 중 오류', error);
+      console.error("카트 데이터 조회 중 오류", error);
     }
   };
 
@@ -105,7 +110,7 @@ export const CartComponent = () => {
       newSelected.delete(cartId);
       setSelectedItems(newSelected);
     } catch (error) {
-      console.error('상품 삭제 중 오류:', error);
+      console.error("상품 삭제 중 오류:", error);
     }
   };
 
@@ -116,13 +121,13 @@ export const CartComponent = () => {
       await refreshCartItems();
       setSelectedItems(new Set());
     } catch (error) {
-      console.error('선택 삭제 중 오류:', error);
+      console.error("선택 삭제 중 오류:", error);
     }
   };
 
   const handleOrder = async () => {
     if (selectedItems.size === 0) {
-      alert('주문할 상품을 선택해주세요.');
+      alert("주문할 상품을 선택해주세요.");
       return;
     }
     try {
@@ -134,10 +139,10 @@ export const CartComponent = () => {
         cartId: item.cartInfoDto.cartId,
       }));
 
-      console.log('주문 요청:', orderItems); // 주문 요청 데이터 확인
+      console.log("주문 요청:", orderItems); // 주문 요청 데이터 확인
 
       const orderResponse = await cartOrder(orderItems);
-      console.log('서버 응답:', orderResponse); // 서버 응답 확인
+      console.log("서버 응답:", orderResponse); // 서버 응답 확인
 
       // OrderItem 타입에 맞게 변환
       const formattedOrder: OrderItem = {
@@ -148,19 +153,19 @@ export const CartComponent = () => {
         delivery: orderResponse.delivery || [],
       };
 
-      console.log('변환된 주문:', formattedOrder); // 변환된 데이터 확인
+      console.log("변환된 주문:", formattedOrder); // 변환된 데이터 확인
 
       // store 업데이트
       setOrders([...orders, formattedOrder]);
 
-      console.log('업데이트된 orders:', orders); // store 업데이트 확인
+      console.log("업데이트된 orders:", orders); // store 업데이트 확인
 
       await refreshCartItems();
       setSelectedItems(new Set());
-      router.push('/buy');
+      router.push("/buy");
     } catch (error) {
-      console.error('주문 처리 중 에러:', error);
-      alert('주문 처리 중 오류가 발생했습니다.');
+      console.error("주문 처리 중 에러:", error);
+      alert("주문 처리 중 오류가 발생했습니다.");
     }
   };
 
@@ -177,8 +182,8 @@ export const CartComponent = () => {
       )}
       <div className={`w-screen flex flex-col justify-center`}>
         <div className="w-full h-full bg-[#EFF2F1] flex flex-col items-center">
-          <div className="text-2xl mt-2">쇼핑 정보</div>
-          <div className=" xs:w-[480px] sm:w-[600px] md:w-[680px]">
+          <header className="text-2xl mt-2">쇼핑 정보</header>
+          <div className="xs:w-[480px] sm:w-[600px] md:w-[680px]">
             <div className="w-full flex items-center justify-between">
               <div className="flex gap-2">
                 <input
@@ -198,65 +203,91 @@ export const CartComponent = () => {
             </div>
           </div>
 
-          {cartItems.map((item) => (
-            <div
-              key={item.cartInfoDto.cartId}
-              className="mt-4 xs:w-[480px] sm:w-[600px] md:w-[680px] h-[400px]  bg-white flex flex-col gap-4 p-8 rounded-[10px]"
-            >
-              <div className="flex justify-between">
-                <input
-                  type="checkbox"
-                  checked={selectedItems.has(item.cartInfoDto.cartId)}
-                  onChange={() => handleItemSelect(item.cartInfoDto.cartId)}
-                  className="cursor-pointer"
-                />
+          {isLoading || cartItems.length === 0
+            ? // 일반적인 장바구니 아이템 평균 개수만큼 스켈레톤 표시 (2-3개)
+              Array.from({ length: 2 }).map((_, index) => (
                 <div
-                  className="w-12 h-8 border rounded-[10px] flex justify-center items-center cursor-pointer hover:text-gray-500"
-                  onClick={() => handleDeleteItem(item.cartInfoDto.cartId)}
+                  key={`skeleton-${index}`}
+                  className="mt-4 xs:w-[480px] sm:w-[600px] md:w-[680px] h-[400px] bg-white flex flex-col gap-4 p-8 rounded-[10px]"
+                  style={{ contain: "layout paint" }}
+                  // 레이아웃 시프트 방지
+                  // contain: 'strict' // 레이아웃 시프트 방지
+                  // contain: 'content' // 레이아웃 시프트 방지
                 >
-                  삭제
+                  <div className="flex justify-between">
+                    <div className="w-5 h-5 rounded-sm bg-gray-200"></div>
+                    <div className="w-12 h-8 rounded-[10px] bg-gray-200"></div>
+                  </div>
+                  <CartSkelton />
+                  <div className="flex gap-8">
+                    <div className="h-[36px] w-[330px] bg-gray-200 rounded-[10px]"></div>
+                    <div className="h-[36px] w-[330px] bg-gray-200 rounded-[10px]"></div>
+                  </div>
                 </div>
-              </div>
-              <CartProductInfo {...item.cartInfoDto} />
-              <div className="flex gap-8">
-                <Button
-                  width="330px"
-                  height="36px"
-                  radius="10px"
-                  border="2px solid #000"
-                  className="hover:text-slate-400"
-                  onClick={(e: React.MouseEvent) => {
-                    e.preventDefault();
-                    setIsOpen(true);
-                    setSelectedCartItem(item);
-                  }}
+              ))
+            : cartItems.map((item) => (
+                <div
+                  key={item.cartInfoDto.cartId}
+                  className="mt-4 xs:w-[480px] sm:w-[600px] md:w-[680px] h-[400px] bg-white flex flex-col gap-4 p-8 rounded-[10px]"
                 >
-                  옵션 변경
-                </Button>
-                <Button
-                  width="330px"
-                  height="36px"
-                  radius="10px"
-                  className="hover:text-gray-500 text-white bg-black"
-                  totalAmount={selectedItemsInfo.totalAmount}
-                  totalItems={selectedItemsInfo.totalItems}
-                  handleOrder={handleOrder}
-                >
-                  주문 하기
-                </Button>
-              </div>
-            </div>
-          ))}
+                  <div className="flex justify-between">
+                    <input
+                      type="checkbox"
+                      checked={selectedItems.has(item.cartInfoDto.cartId)}
+                      onChange={() => handleItemSelect(item.cartInfoDto.cartId)}
+                      className="cursor-pointer"
+                    />
+                    <Button
+                      className="w-12 h-8 border rounded-[10px] flex justify-center items-center hover:text-gray-500"
+                      onClick={() => handleDeleteItem(item.cartInfoDto.cartId)}
+                    >
+                      삭제
+                    </Button>
+                  </div>
+                  <CartProductInfo {...item.cartInfoDto} />
+                  <div className="flex gap-8">
+                    <Button
+                      width="330px"
+                      height="36px"
+                      radius="10px"
+                      border="2px solid #000"
+                      className="hover:text-slate-400"
+                      onClick={(e: React.MouseEvent) => {
+                        e.preventDefault();
+                        setIsOpen(true);
+                        setSelectedCartItem(item);
+                      }}
+                    >
+                      옵션 변경
+                    </Button>
+                    <Button
+                      width="330px"
+                      height="36px"
+                      radius="10px"
+                      className="hover:text-gray-500 text-white bg-black"
+                      totalAmount={selectedItemsInfo.totalAmount}
+                      totalItems={selectedItemsInfo.totalItems}
+                      handleOrder={handleOrder}
+                    >
+                      주문 하기
+                    </Button>
+                  </div>
+                </div>
+              ))}
 
           <div className="mb-4">
             <CartNotice />
           </div>
         </div>
-        <CartOrderButton
-          totalAmount={selectedItemsInfo.totalAmount}
-          totalItems={selectedItemsInfo.totalItems}
-          handleOrder={handleOrder}
-        />
+
+        {/* 주문 버튼 고정 위치 (레이아웃 시프트 방지) */}
+        <div className="sticky bottom-0 w-full">
+          <CartOrderButton
+            totalAmount={selectedItemsInfo.totalAmount}
+            totalItems={selectedItemsInfo.totalItems}
+            handleOrder={handleOrder}
+          />
+        </div>
       </div>
     </>
   );
