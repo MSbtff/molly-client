@@ -1,13 +1,9 @@
-import {RegisterContain} from '../../src/features/register/RegisterContain';
-import Footer from '../../src/widgets/Footer';
-import Navbar from '../../src/widgets/navbar/Navbar';
+import { RegisterContain } from "../../src/features/register/RegisterContain";
 
 export default function RegisterPage() {
   return (
     <>
-      <Navbar />
       <RegisterContain />
-      <Footer />
     </>
   );
 }
