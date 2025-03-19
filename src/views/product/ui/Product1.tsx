@@ -38,14 +38,8 @@ export default function Product1() {
   const [isLoading, setIsLoading] = useState(false);
   const [isLast, setIsLast] = useState(false);
   const [filters, setFilters] = useState({
-    keyword: "",
-    categories: "",
-    colorCode: "",
-    productSize: "",
-    brandName: "",
-    priceGoe: "",
-    priceLt: "",
-    excludeSoldOut: "",
+    keyword: "", categories: "", colorCode: "", productSize: "",
+    brandName: "", priceGoe: "", priceLt: "", excludeSoldOut: "",
   });
   const triggerRef = useRef<HTMLDivElement | null>(null);
   const { page, setPage } = useScrollStore();
@@ -121,7 +115,6 @@ export default function Product1() {
 
     try {
       const params = new URLSearchParams();
-      // params.append("page", nextPage.toString());
       params.append("page", page.toString());
       console.log("api 호출 시 현재 페이지:", page);
       params.append("size", "48");
@@ -133,13 +126,6 @@ export default function Product1() {
       const paramsString = `${productApiUrl}?${params.toString()}`;
       console.log(paramsString);
       const response = await getProduct(paramsString);
-
-      //   if (!response.ok) throw new Error(`API 요청 실패: ${response.status}`);
-
-      //   if (response.status === 204) {
-      //     console.log("상품 목록이 없습니다.");
-      //     return;
-      //   }
 
       if (!response) {
         throw new Error("상품 목록 API 요청 실패");
@@ -180,7 +166,9 @@ export default function Product1() {
   // filters 변경 시 API 요청 실행
   useEffect(() => {
     // return ()=>{fetchProductList(0);}
-    fetchProductList(0);
+    if (!Object.values(filters).some(value => value)) {
+      fetchProductList(0);
+    }
   }, [filters]);
 
   useEffect(() => {

@@ -137,7 +137,7 @@ export default function ProductDetail({
         router.push("/buy");
       } catch (error) {
         console.error("order api 요청 중 오류 발생:", error);
-        router.push("/login");
+        // router.push("/login");
       }
     });
   };
@@ -163,7 +163,7 @@ export default function ProductDetail({
         // alert(message);
       } catch (error) {
         console.error("장바구니 api 오류 발생:", error);
-        router.push("/login");
+        // router.push("/login");
       }
     });
   };
