@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import getProduct from "@/shared/api/getProduct";
 interface Brand {
   brandThumbnailUrl: string;
   brandName: string;
@@ -28,8 +29,10 @@ export default function FeaturedBrandSection() {
   //인기 브랜드 조회 api 요청
   const fetchPopularBrands = async () => {
     try {
-      const response = await fetch(`${brandApiUrl}?page=0&size=5`);
-      const data = await response.json();
+      // const response = await fetch(`${brandApiUrl}?page=0&size=5`);
+      const paramsString =`${brandApiUrl}?page=0&size=5`;
+      const response = await getProduct(paramsString);
+      const data = await response;
       console.log("인기 브랜드 API 성공:", data);
 
       if (data.data.length > 0) {
@@ -45,10 +48,10 @@ export default function FeaturedBrandSection() {
   const fetchBrandProducts = async (brandName: string) => {
     // setLoading(true);
     try {
-      const response = await fetch(
-        `${productApiUrl}?brandName=${encodeURIComponent(brandName)}&orderBy=CREATED_AT&page=0&size=3`
-      );
-      const data = await response.json();
+      // const response = await fetch(`${productApiUrl}?brandName=${encodeURIComponent(brandName)}&orderBy=CREATED_AT&page=0&size=3`);
+      const paramsString = `${productApiUrl}?brandName=${encodeURIComponent(brandName)}&orderBy=CREATED_AT&page=0&size=3`;
+      const response = await getProduct(paramsString);
+      const data = await response;
       console.log("인기 브랜드의 특정 상품 API 성공:", data);
 
       setBrandProducts(data.data || []);

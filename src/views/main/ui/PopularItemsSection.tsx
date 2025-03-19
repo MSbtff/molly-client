@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { RotateCcw } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import getProduct from "@/shared/api/getProduct";
 interface Thumbnail {
   path: string;
   filename: string;
@@ -33,10 +34,10 @@ export default function PopularItemsSection() {
   const fetchProducts = async (category: string) => {
     // setLoading(true);
     try {
-      const response = await fetch(
-        `${productApiUrl}?categories=${encodeURIComponent(category)}&orderBy=CREATED_AT&page=0&size=12`
-      );
-      const data = await response.json();
+      // const response = await fetch(`${productApiUrl}?categories=${encodeURIComponent(category)}&orderBy=CREATED_AT&page=0&size=12`);
+      const paramsString = `${productApiUrl}?categories=${encodeURIComponent(category)}&orderBy=CREATED_AT&page=0&size=12`;
+      const response = await getProduct(paramsString);
+      const data = await response;
       console.log("지금 인기있는 상품 api 성공", data);
       setProducts(data.data || []); // 받아온 데이터 저장
     } catch (error) {

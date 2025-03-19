@@ -6,7 +6,7 @@ import { useScrollStore } from "@/app/provider/scrollStore";
 import Image from "next/image";
 import FilterSidebar from "../FilterSidebar";
 import SortModal from "../SortModal";
-import getProduct from "@/features/product/api/getProduct";
+import getProduct from "@/shared/api/getProduct";
 interface Thumbnail {
   path: string;
   filename: string;
@@ -23,8 +23,8 @@ interface Product {
 const categories = ["카테고리", "성별", "색상", "가격", "사이즈", "브랜드"];
 
 export default function Product1() {
-    const router = useRouter();
-    const searchParams = useSearchParams(); //쿼리 파라미터 가져오기(현재url의 쿼리 파라미터 가져오기)
+  const router = useRouter();
+  const searchParams = useSearchParams(); //쿼리 파라미터 가져오기(현재url의 쿼리 파라미터 가져오기)
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL; //api 서버 주소
   const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL; //이미지 서버 주소
@@ -34,8 +34,6 @@ export default function Product1() {
   const [isSortModalOpen, setIsSortModalOpen] = useState(false); //정렬 모달창 열림 상태(반응형)
   const [isFilterOpen, setIsFilterOpen] = useState(false); //필터 모달창 열림 상태
 
-
-  // const [productList, setProductList] = useState<Product[]>([]);
   const [productList, setProductList] = useState<Product[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLast, setIsLast] = useState(false);
@@ -68,8 +66,6 @@ export default function Product1() {
     const params = new URLSearchParams(window.location.search); // 현재 URL 파라미터 가져오기
     // setExcludeSoldOut(checked);
 
-    // 현재 URL의 검색어 & 카테고리 유지하면서 excludeSoldOut 값 추가
-    // const params = new URLSearchParams(window.location.search);
     if (checked) {
       params.set("excludeSoldOut", "true");
     } else {
@@ -96,7 +92,7 @@ export default function Product1() {
     // setSelectedSort(sortLabel); // 선택된 정렬 상태 업데이트
     setSelectedSort(
       Object.keys(sortOptions).find((key) => sortOptions[key] === orderBy) ||
-        "조회순"
+      "조회순"
     ); // UI에 표시할 한글 값 업데이트
     router.push(`/product?${params.toString()}`); // URL 변경 → useEffect 감지 후 API 요청됨
   };
@@ -106,90 +102,6 @@ export default function Product1() {
     router.push(`/detail/${id}`);
   };
 
-  // useEffect(() => {
-  //     const paramsString = searchParams.toString(); // 의존성 배열을 단순화
-
-  //     const updatedFilters: Partial<typeof filters> = {};
-  //     searchParams.forEach((value, key) => {
-  //         if (value) {
-  //             updatedFilters[key as keyof typeof filters] = value;
-  //         }
-  //     });
-
-  //     setFilters(updatedFilters as typeof filters);
-  //     resetPagination();
-  // }, [searchParams.toString()]); //searchParams 대신 paramsString 사용
-
-  // const fetchSearchResults = useCallback(async () => {
-  //     if (isLastPage) return;
-
-  //     try {
-  //         const params = new URLSearchParams();
-  //         if (cursorId) params.append("cursorId", cursorId.toString());
-  //         if (lastCreatedAt) params.append("lastCreatedAt", lastCreatedAt);
-  //         params.append("keyword", filters.keyword);
-
-  //         const response = await fetch(`${searchApiUrl}?${params.toString()}`);
-  //         if (!response.ok) throw new Error(`검색 API 요청 실패: ${response.status}`);
-
-  //         const data = await response.json();
-  //         console.log("검색 API 요청 성공:", data);
-
-  //         setSearchList((prev) => (page === 0 ? data.item : [...prev, ...data.item]));
-
-  //         setCursorId(data.nextCursorId);
-  //         setLastCreatedAt(data.nextLastCreatedAt);
-  //         setIsLastPage(data.isLastPage);
-  //     } catch (error) {
-  //         console.error("검색 API 요청 에러:", error);
-  //     }
-  // }, [filters.keyword, isLastPage, page, searchApiUrl, cursorId, lastCreatedAt]); //불필요한 의존성(cursorId, lastCreatedAt) 제거
-
-  // const fetchProductList = useCallback(async (nextPage: number) => {
-  //     if (isLast) return;
-
-  //     try {
-  //         const params = new URLSearchParams();
-  //         params.append("page", (nextPage ?? page).toString());
-  //         params.append("size", "48");
-
-  //         Object.entries(filters).forEach(([key, value]) => {
-  //             if (value) params.append(key, value);
-  //         });
-
-  //         const response = await fetch(`${productApiUrl}?${params.toString()}`);
-  //         if (!response.ok) throw new Error(`상품 목록 API 요청 실패: ${response.status}`);
-
-  //         if (response.status === 204) {
-  //             console.log("상품 목록이 없습니다.");
-  //             return;
-  //         }
-
-  //         const data = await response.json();
-  //         console.log(`상품 목록 API 요청 성공(page: ${nextPage ?? page}):`, data);
-
-  //         const formattedData = data.data.map((item: Product) => ({
-  //             id: item.id,
-  //             url: item.thumbnail?.path,
-  //             brandName: item.brandName,
-  //             productName: item.productName,
-  //             price: item.price,
-  //         }));
-
-  //         setProductList((prev) => [
-  //             ...prev,
-  //             ...formattedData.filter((newItem: Product) => !prev.some((item) => item.id === newItem.id)),
-  //         ]);
-
-  //         setPage((prev) => prev + 1);
-  //         setIsLast(data.pageable.isLast);
-  //     } catch (error) {
-  //         console.error("상품 목록 API 요청 에러:", error);
-  //     }
-  // }, [filters, isLast, page, productApiUrl]);
-
-  //-------------------------------------------------------------
-  // url 상태 업데이트 (searchParams 변경 감지)
   useEffect(() => {
     const updatedFilters: Partial<typeof filters> = {};
     searchParams.forEach((value, key) => {
@@ -335,11 +247,10 @@ export default function Product1() {
             {Object.keys(sortOptions).map((label) => (
               <button
                 key={label}
-                className={`hover:underline hover:text-black ${
-                  selectedSort === label
-                    ? "text-black underline"
-                    : "text-gray-500"
-                }`}
+                className={`hover:underline hover:text-black ${selectedSort === label
+                  ? "text-black underline"
+                  : "text-gray-500"
+                  }`}
                 onClick={() => handleSortChange(label)} // 한글 → API 값 변환 후 요청
               >
                 {label}
