@@ -9,6 +9,8 @@ import { buyNow, addToCart } from "@/features/detail/api/action";
 import ReviewModal from "@/views/detail/ui/ReviewModal";
 import { useEncryptStore } from "@/app/provider/EncryptStore";
 import { OrderItem } from "@/app/provider/OrderStore";
+import getProduct from "@/shared/api/getProduct";
+
 interface Product {
   id: number;
   categories: string[];
@@ -81,13 +83,11 @@ export default function ProductDetail({
     if (!product?.brandName) return; // 브랜드 이름이 없으면 요청 안 함
 
     try {
-      const response = await fetch(
-        `${productApiUrl}?brand=${product.brandName}&page=0&size=12`
-      );
-      if (!response.ok)
-        throw new Error(`추천 상품 API 요청 실패: ${response.status}`);
+      // const response = await fetch(`${productApiUrl}?brand=${product.brandName}&page=0&size=12`);
+      const paramsString = `${productApiUrl}?brand=${product.brandName}&page=0&size=12`; 
+      const response = await getProduct(paramsString);
 
-      const data = await response.json();
+      const data = await response;
       setRecommendedProducts(data.data); // API 응답이 리스트라면 .content 사용
     } catch (error) {
       console.error("추천 상품 API 요청 실패:", error);
@@ -96,7 +96,7 @@ export default function ProductDetail({
 
   useEffect(() => {
     if (product) fetchRecommendedProducts();
-  }, [product, fetchRecommendedProducts]); // product가 변경될 때만 요청 실행
+  }, [product]); // product가 변경될 때만 요청 실행
   //원래 의존성배열에 product만 있었음
 
   //바로 구매
@@ -137,6 +137,7 @@ export default function ProductDetail({
         router.push("/buy");
       } catch (error) {
         console.error("order api 요청 중 오류 발생:", error);
+        // router.push("/login");
       }
     });
   };
@@ -162,6 +163,7 @@ export default function ProductDetail({
         // alert(message);
       } catch (error) {
         console.error("장바구니 api 오류 발생:", error);
+        // router.push("/login");
       }
     });
   };
@@ -172,17 +174,17 @@ export default function ProductDetail({
     fetchProduct();
   }, [productId]);
 
+  //상품 상세 api 요청
   const fetchProduct = async () => {
     // setLoading(true);
     // setError(null);
 
     try {
-      const response = await fetch(`${baseUrl}/product/${productId}`);
-      if (!response.ok) {
-        // throw new Error("상품 정보를 불러오지 못했습니다.");
-        throw new Error(`API요청 실패: ${response.status}`);
-      }
-      const data = await response.json();
+      // const response = await fetch(`${baseUrl}/product/${productId}`);
+      const paramsString = `${baseUrl}/product/${productId}`;
+      const response = await getProduct(paramsString);
+      
+      const data = await response;
 
       // 이미지 서버 연결 안될 때 기본 이미지로 대체(504 떠도 페이지 렌더링하기)
       if (!data.thumbnail || !data.thumbnail.path) {

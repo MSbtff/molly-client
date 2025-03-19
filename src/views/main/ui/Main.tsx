@@ -1,13 +1,6 @@
 'use client'
 
-// import Image from "next/image";
 import BannerSection from "./BannerSection";
-// import BrandSection from './BrandSection';
-// import PopularItemsSection from './PopularItemsSection';
-// import StyleClipSection from './StyleClipSection';
-// import HotItemsSection from './HotItemsSection';
-// import FeaturedBrandSection from './FeaturedBrandSection';
-// import RecommendedItemsSection from './RecommendedItemsSection';
 import { lazy, Suspense } from "react";
 
 const BrandSection = lazy(() => import("./BrandSection"));
@@ -28,7 +21,6 @@ const SectionFallback = () =>
 ));
 
 export default function Main() {
-
 
   return (
     <div className="space-y-16">

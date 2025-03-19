@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { useState, useEffect } from 'react';
+import getProduct from "@/shared/api/getProduct";
 interface Thumbnail {
   path: string;
   filename: string;
@@ -26,8 +27,10 @@ export default function HotItemsSection() {
   const fetchProducts = async () => {
     // setLoading(true);
     try {
-      const response = await fetch(`${productApiUrl}?orderBy=CREATED_AT&page=0&size=8`);
-      const data = await response.json();
+      // const response = await fetch(`${productApiUrl}?orderBy=CREATED_AT&page=0&size=8`);
+      const paramsString = `${productApiUrl}?orderBy=CREATED_AT&page=0&size=8`;
+      const response = await getProduct(paramsString);
+      const data = await response;
       console.log("지금 핫한 신상템 API 성공", data);
       setProducts(data.data || []);
     } catch (error) {
