@@ -10,7 +10,6 @@ import ReviewModal from "@/views/detail/ui/ReviewModal";
 import { useEncryptStore } from "@/app/provider/EncryptStore";
 import { OrderItem } from "@/app/provider/OrderStore";
 import getProduct from "@/shared/api/getProduct";
-
 interface Product {
   id: number;
   categories: string[];
