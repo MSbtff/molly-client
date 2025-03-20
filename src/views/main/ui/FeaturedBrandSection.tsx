@@ -27,8 +27,9 @@ export default function FeaturedBrandSection() {
   //인기 브랜드 조회 api 요청
   const fetchPopularBrands = async () => {
     try {
+
       // const response = await fetch(`${brandApiUrl}?page=0&size=5`);
-      const paramsString = `${brandApiUrl}?page=0&size=5`;
+      //const paramsString = `${brandApiUrl}?page=0&size=5`;
       // const response = await getProduct(paramsString);
       // const data = await response;
 
@@ -41,6 +42,7 @@ export default function FeaturedBrandSection() {
       ).json();
 
       const data: any = response;
+
       console.log("인기 브랜드 API 성공:", data);
 
       if (data.data.length > 0) {
@@ -55,6 +57,7 @@ export default function FeaturedBrandSection() {
   //인기 브랜드의 특정 상품 조회 api 요청
   const fetchBrandProducts = async (brandName: string) => {
     try {
+
       // const response = await fetch(`${productApiUrl}?brandName=${encodeURIComponent(brandName)}&orderBy=CREATED_AT&page=0&size=3`);
       const paramsString = `${productApiUrl}?brandName=${encodeURIComponent(
         brandName
@@ -107,6 +110,8 @@ export default function FeaturedBrandSection() {
           </div>
         )}
 
+
+
         {/* 오른쪽 상품 리스트 (2개) */}
         <div className="grid grid-cols-3">
           {brandProducts.map((product) => (
@@ -131,10 +136,12 @@ export default function FeaturedBrandSection() {
                 />
               )}
               <button className="flex flex-col items-start items-center w-full overflow-hidden mt-2">
+
                 {/* <span className="text-left text-sm text-gray-700">{product.brandName}</span> */}
                 <span className="text-xs text-gray-500">
                   {product.productName}
                 </span>
+>>>>>>>>> Temporary merge branch 2
                 <span className="text-black-500 font-semibold text-sm">
                   {product.price.toLocaleString()}원
                 </span>
