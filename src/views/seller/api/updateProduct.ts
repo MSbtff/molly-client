@@ -57,18 +57,6 @@ export async function updateProduct(
     console.log("응답 상태:", response.status);
     console.log("응답 헤더:", Object.fromEntries(response.headers.entries()));
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("API 오류 응답 전체:", errorText);
-      try {
-        const errorJson = JSON.parse(errorText);
-        console.error("오류 세부 정보:", errorJson);
-      } catch (e) {
-        console.error("오류 응답이 JSON 형식이 아님");
-      }
-      throw new Error(`상품 수정 실패: ${response.status}`);
-    }
-
     revalidatePath("/seller");
     return await response.json();
   } catch (error) {

@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import authTokenValue, {
   getValidAuthToken,
 } from "@/shared/util/lib/authTokenValue";
-import { NextResponse } from "next/server";
+
 interface ReviewApiResponse {
   reviewInfo: {
     reviewId: number;

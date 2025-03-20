@@ -1,6 +1,4 @@
-import authTokenValue, {
-  getValidAuthToken,
-} from "@/shared/util/lib/authTokenValue";
+import { getValidAuthToken } from "@/shared/util/lib/authTokenValue";
 
 export default async function orderRetriever() {
   const authToken = await getValidAuthToken();

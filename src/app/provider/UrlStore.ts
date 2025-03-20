@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { useSearchParams, useRouter } from "next/navigation";
 
 // URL 상태 타입 정의
 interface UrlStoreState {
@@ -12,7 +11,7 @@ interface UrlStoreState {
 export const useUrlStore = create<UrlStoreState>((set) => ({
   searchParams: "", // 초기 상태
   setSearchParams: (params) => set({ searchParams: params }),
-  
+
   // 특정 쿼리 파라미터 추가/삭제 후 상태 업데이트
   updateSearchParams: (key, value) => {
     set((state) => {
@@ -24,5 +23,5 @@ export const useUrlStore = create<UrlStoreState>((set) => ({
       }
       return { searchParams: urlParams.toString() };
     });
-  }
+  },
 }));

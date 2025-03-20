@@ -40,7 +40,7 @@ export default function FeaturedBrandSection() {
         await fetch(`${brandApiUrl}?page=0&size=5`)
       ).json();
 
-      const data: any = response;
+      const data = response;
 
       console.log("인기 브랜드 API 성공:", data);
 
@@ -131,7 +131,7 @@ export default function FeaturedBrandSection() {
                   }
                 />
               )}
-              <button className="flex flex-col items-start items-center w-full overflow-hidden mt-2">
+              <button className="flex flex-col items-start w-full overflow-hidden mt-2">
                 {/* <span className="text-left text-sm text-gray-700">{product.brandName}</span> */}
                 <span className="text-xs text-gray-500">
                   {product.productName}
