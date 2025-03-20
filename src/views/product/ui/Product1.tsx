@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useScrollStore } from "@/app/provider/scrollStore";
+import { useUrlStore } from "@/app/provider/UrlStore";
 import Image from "next/image";
 import FilterSidebar from "../FilterSidebar";
 import SortModal from "../SortModal";
@@ -24,7 +25,8 @@ const categories = ["카테고리", "성별", "색상", "가격", "사이즈", "
 
 export default function Product1() {
   const router = useRouter();
-  const searchParams = useSearchParams(); //쿼리 파라미터 가져오기(현재url의 쿼리 파라미터 가져오기)
+  // const searchParams = useSearchParams(); //쿼리 파라미터 가져오기(현재url의 쿼리 파라미터 가져오기)
+  const { searchParams, updateSearchParams, setSearchParams } = useUrlStore(); // 전역 상태 사용
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL; //api 서버 주소
   const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL; //이미지 서버 주소
@@ -37,10 +39,10 @@ export default function Product1() {
   const [productList, setProductList] = useState<Product[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLast, setIsLast] = useState(false);
-  const [filters, setFilters] = useState({
-    keyword: "", categories: "", colorCode: "", productSize: "",
-    brandName: "", priceGoe: "", priceLt: "", excludeSoldOut: "",
-  });
+  // const [filters, setFilters] = useState({
+  //   keyword: "", categories: "", colorCode: "", productSize: "",
+  //   brandName: "", priceGoe: "", priceLt: "", excludeSoldOut: "",
+  // });
   const triggerRef = useRef<HTMLDivElement | null>(null);
   const { page, setPage } = useScrollStore();
 
@@ -166,10 +168,8 @@ export default function Product1() {
   // filters 변경 시 API 요청 실행
   useEffect(() => {
     // return ()=>{fetchProductList(0);}
-    if (!Object.values(filters).some(value => value)) {
-      fetchProductList(0);
-    }
-  }, [filters]);
+    fetchProductList(0);
+  }, [searchParams]);
 
   useEffect(() => {
     const trgRef = triggerRef.current;

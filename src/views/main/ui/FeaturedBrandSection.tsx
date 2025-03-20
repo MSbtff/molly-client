@@ -22,7 +22,6 @@ export default function FeaturedBrandSection() {
   const [brands, setBrands] = useState<Brand[]>([]); // 인기 브랜드 리스트
   const [brandProducts, setBrandProducts] = useState<Product[]>([]); // 특정 브랜드의 상품 리스트
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null); // 선택된 브랜드명
-  // const [ setLoading] = useState(false); // 로딩 상태
   const [imageError, setImageError] = useState<{ [key: number]: boolean }>({}); // 이미지 에러 처리
 
   //인기 브랜드 조회 api 요청
@@ -55,7 +54,6 @@ export default function FeaturedBrandSection() {
 
   //인기 브랜드의 특정 상품 조회 api 요청
   const fetchBrandProducts = async (brandName: string) => {
-    // setLoading(true);
     try {
       // const response = await fetch(`${productApiUrl}?brandName=${encodeURIComponent(brandName)}&orderBy=CREATED_AT&page=0&size=3`);
       const paramsString = `${productApiUrl}?brandName=${encodeURIComponent(
@@ -64,7 +62,6 @@ export default function FeaturedBrandSection() {
       const response = await getProduct(paramsString);
       const data = await response;
       console.log("인기 브랜드의 특정 상품 API 성공:", data);
-
       setBrandProducts(data.data || []);
     } catch (error) {
       console.error("인기 브랜드의 특정 상품 API 요청 실패:", error);
@@ -84,15 +81,13 @@ export default function FeaturedBrandSection() {
   return (
     <section className="px-20 mt-16">
       <h3 className="text-xl font-semibold mb-4">주목할 브랜드</h3>
-
       {/* 메인 배너 */}
       <div className="grid grid-cols-2 gap-2">
         {brands.length > 0 && (
           <div className="relative w-full h-fit">
             <Image
-              // src={`${imageUrl}${brands[0].brandThumbnailUrl}`}
               src={
-                imageError[0] // 첫 번째 브랜드(메인 배너)의 이미지에 에러가 발생했는지 확인
+                imageError[0]
                   ? "/images/noImage.svg"
                   : `${imageUrl}${brands[0].brandThumbnailUrl}`
               }
@@ -104,7 +99,6 @@ export default function FeaturedBrandSection() {
             <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center p-6">
               <div className="text-white">
                 <h4 className="text-2xl font-bold">{`새로워진 ${brands[0].brandName}`}</h4>
-                {/* <p>{`새로워진 ${brands[0].brandName}`}</p> */}
                 <button className="mt-2 px-4 py-2 border border-white text-white text-sm">
                   바로가기
                 </button>
@@ -149,13 +143,11 @@ export default function FeaturedBrandSection() {
           ))}
         </div>
       </div>
-
       {/* 브랜드 상품 리스트 (5개) */}
       <div className="grid grid-cols-4 gap-2 mt-6">
         {brands.slice(1).map((brand, index) => (
           <div key={index} className="flex flex-col items-center">
             <Image
-              // src={`${imageUrl}${brand.brandThumbnailUrl}`}
               src={
                 imageError[index]
                   ? "/images/noImage.svg"
@@ -172,7 +164,6 @@ export default function FeaturedBrandSection() {
           </div>
         ))}
       </div>
-
       {/* "다른 상품 더보기" 버튼 */}
       <div className="flex justify-center mt-8">
         <button className="px-6 py-3 border border-gray-400 text-base font-medium hover:bg-gray-100 transition">
