@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import {useState} from 'react';
-import {PurchasePageProps} from './PurchasePage';
+import Image from "next/image";
+import { useState } from "react";
+import { PurchasePageProps } from "./PurchasePage";
 
-type DeliveryStatus = 'READY' | 'SHIPPING' | 'COMPLETED';
+type DeliveryStatus = "READY" | "SHIPPING" | "COMPLETED";
 
-export const ProductList = ({orders}: PurchasePageProps) => {
+export const ProductList = ({ orders }: PurchasePageProps) => {
   const [selectedOrder, setSelectedOrder] = useState<number | null>(null);
 
   const statusMap = {
-    READY: '배송대기',
-    SHIPPING: '배송중',
-    COMPLETED: '배송완료',
+    READY: "배송대기",
+    SHIPPING: "배송중",
+    COMPLETED: "배송완료",
   };
 
   return (
@@ -30,7 +30,7 @@ export const ProductList = ({orders}: PurchasePageProps) => {
         const day = new Date(order.orderedAt);
         const orderDay = `${day.getMonth() + 1}월 ${day.getDate()}일`;
         const status =
-          statusMap[order.deliveryStatus as DeliveryStatus] || '결제완료';
+          statusMap[order.deliveryStatus as DeliveryStatus] || "결제완료";
 
         // orderDetails가 비어있는지 확인
         const hasOrderDetails =
@@ -40,7 +40,7 @@ export const ProductList = ({orders}: PurchasePageProps) => {
         const otherProducts =
           hasOrderDetails && order.orderDetails.length > 1
             ? ` 외 ${order.orderDetails.length - 1}개`
-            : '';
+            : "";
 
         return (
           <div key={order.tossOrderId}>
@@ -69,7 +69,7 @@ export const ProductList = ({orders}: PurchasePageProps) => {
               <div className="truncate">
                 {mainProduct
                   ? mainProduct.productName + otherProducts
-                  : '상품 정보 없음'}
+                  : "상품 정보 없음"}
               </div>
               <div>{order.orderDetails.length}개</div>
               <div>{orderDay}</div>
@@ -103,11 +103,11 @@ export const ProductList = ({orders}: PurchasePageProps) => {
                         </p>
                       </div>
                     </div>
-                    <div className="font-bold">
-                      총 {order.orderDetails.length}개 상품
-                    </div>
                   </div>
                 ))}
+                <div className="text-[18px] font-bold text-right">
+                  총 {order.orderDetails.length}개 상품
+                </div>
               </div>
             )}
           </div>

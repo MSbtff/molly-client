@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useScrollStore } from "@/app/provider/scrollStore";
 import { useUrlStore } from "@/app/provider/UrlStore";
 import Image from "next/image";
@@ -26,7 +26,7 @@ const categories = ["카테고리", "성별", "색상", "가격", "사이즈", "
 export default function Product1() {
   const router = useRouter();
   // const searchParams = useSearchParams(); //쿼리 파라미터 가져오기(현재url의 쿼리 파라미터 가져오기)
-  const { searchParams, updateSearchParams, setSearchParams } = useUrlStore(); // 전역 상태 사용
+  const { searchParams } = useUrlStore(); // 전역 상태 사용
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL; //api 서버 주소
   const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL; //이미지 서버 주소
@@ -88,7 +88,7 @@ export default function Product1() {
     // setSelectedSort(sortLabel); // 선택된 정렬 상태 업데이트
     setSelectedSort(
       Object.keys(sortOptions).find((key) => sortOptions[key] === orderBy) ||
-      "조회순"
+        "조회순"
     ); // UI에 표시할 한글 값 업데이트
     router.push(`/product?${params.toString()}`); // URL 변경 → useEffect 감지 후 API 요청됨
   };
@@ -235,10 +235,11 @@ export default function Product1() {
             {Object.keys(sortOptions).map((label) => (
               <button
                 key={label}
-                className={`hover:underline hover:text-black ${selectedSort === label
-                  ? "text-black underline"
-                  : "text-gray-500"
-                  }`}
+                className={`hover:underline hover:text-black ${
+                  selectedSort === label
+                    ? "text-black underline"
+                    : "text-gray-500"
+                }`}
                 onClick={() => handleSortChange(label)} // 한글 → API 값 변환 후 요청
               >
                 {label}

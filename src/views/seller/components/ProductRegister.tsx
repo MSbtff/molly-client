@@ -1,27 +1,27 @@
-'use client';
+"use client";
 
-import {useRef, useState} from 'react';
-import {z} from 'zod';
-import registerProduct from '../api/registerProduct';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRef, useState } from "react";
+import { z } from "zod";
+import registerProduct from "../api/registerProduct";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const productType = z.object({
   categories: z.tuple([
-    z.enum(['','남성', '여성', '키즈']),
-    z.enum(['','아우터', '상의', '하의', '액세사리']),
+    z.enum(["", "남성", "여성", "키즈"]),
+    z.enum(["", "아우터", "상의", "하의", "액세사리"]),
   ]),
-  brandName: z.string().min(1, '브랜드명을 입력해주세요'),
-  productName: z.string().min(1, '상품명을 입력해주세요'),
-  price: z.number().min(1, '가격을 입력해주세요'),
-  description: z.string().min(1, '상품 설명을 입력해주세요'),
+  brandName: z.string().min(1, "브랜드명을 입력해주세요"),
+  productName: z.string().min(1, "상품명을 입력해주세요"),
+  price: z.number().min(1, "가격을 입력해주세요"),
+  description: z.string().min(1, "상품 설명을 입력해주세요"),
   thumbnail: z.string(),
   productImages: z.array(z.string()),
   productDescriptionImages: z.array(z.string()),
   items: z.array(
     z.object({
       id: z.nullable(z.number()),
-      color: z.string().min(1, '색상을 입력해주세요'),
+      color: z.string().min(1, "색상을 입력해주세요"),
       colorCode: z.string(),
       size: z.string(),
       quantity: z.number(),
@@ -29,25 +29,41 @@ const productType = z.object({
   ),
 });
 
-type Product = z.infer<typeof productType>;
-type MainCategory = z.infer<typeof productType>['categories'][0];
-type SubCategory = z.infer<typeof productType>['categories'][1];
-
+export type Product = z.infer<typeof productType>;
+type MainCategory = z.infer<typeof productType>["categories"][0];
+type SubCategory = z.infer<typeof productType>["categories"][1];
 
 const COLORS = [
-  { name: '블랙', code: '#000000' },
-  { name: '화이트', code: '#FFFFFF' },
-  { name: '레드', code: '#FF0000' },
-  { name: '블루', code: '#0000FF' },
-  { name: '그린', code: '#008000' },
-  { name: '옐로우', code: '#FFFF00' },
-  { name: '핑크', code: '#FFC0CB' },
-  { name: '그레이', code: '#808080' },
-  { name: '베이지', code: '#F5F5DC' },
-  { name: '퍼플', code: '#800080' }
-]
+  { name: "블랙", code: "#000000" },
+  { name: "화이트", code: "#FFFFFF" },
+  { name: "레드", code: "#FF0000" },
+  { name: "블루", code: "#0000FF" },
+  { name: "그린", code: "#008000" },
+  { name: "옐로우", code: "#FFFF00" },
+  { name: "핑크", code: "#FFC0CB" },
+  { name: "그레이", code: "#808080" },
+  { name: "베이지", code: "#F5F5DC" },
+  { name: "퍼플", code: "#800080" },
+];
 
-const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '28', '29', '30', '31', '32', '33', '34', '35', '36', 'FREE'];
+const SIZES = [
+  "XS",
+  "S",
+  "M",
+  "L",
+  "XL",
+  "XXL",
+  "28",
+  "29",
+  "30",
+  "31",
+  "32",
+  "33",
+  "34",
+  "35",
+  "36",
+  "FREE",
+];
 
 export const ProductRegister = () => {
   const router = useRouter();
@@ -57,25 +73,24 @@ export const ProductRegister = () => {
   const descriptionImagesRef = useRef<HTMLInputElement>(null);
 
   const [product, setProduct] = useState<Product>({
-    categories: ['' as MainCategory, '' as SubCategory ] ,
-    brandName: '',
-    productName: '',
+    categories: ["" as MainCategory, "" as SubCategory],
+    brandName: "",
+    productName: "",
     price: 0,
-    description: '',
-    thumbnail: '',
+    description: "",
+    thumbnail: "",
     productImages: [],
     productDescriptionImages: [],
     items: [
       {
         id: null,
-        color: '',
-        colorCode: '',
-        size: '',
+        color: "",
+        colorCode: "",
+        size: "",
         quantity: 0,
       },
     ],
   });
-  
 
   const handleProductChange = (key: string, value: string | number) => {
     setProduct((state) => ({
@@ -98,7 +113,7 @@ export const ProductRegister = () => {
 
   const handleImageChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: 'thumbnail' | 'productImages' | 'productDescriptionImages'
+    type: "thumbnail" | "productImages" | "productDescriptionImages"
   ) => {
     const files = e.target.files;
     if (!files) return;
@@ -108,15 +123,15 @@ export const ProductRegister = () => {
 
     setProduct((prev) => ({
       ...prev,
-      [type]: type === 'thumbnail' ? fileUrls[0] : [...prev[type], ...fileUrls],
+      [type]: type === "thumbnail" ? fileUrls[0] : [...prev[type], ...fileUrls],
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if(!product.categories[0] || !product.categories[1]){
-      alert('카테고리와 상세 카테고리를 모두 선택해주세요');
+    if (!product.categories[0] || !product.categories[1]) {
+      alert("카테고리와 상세 카테고리를 모두 선택해주세요");
       return;
     }
 
@@ -124,7 +139,7 @@ export const ProductRegister = () => {
       const validationResult = productType.safeParse(product);
       if (!validationResult.success) {
         console.error(
-          '입력 데이터가 유효하지 않습니다:',
+          "입력 데이터가 유효하지 않습니다:",
           validationResult.error.errors
         );
         return;
@@ -140,51 +155,51 @@ export const ProductRegister = () => {
         items: product.items,
       };
 
-      formData.append('product', JSON.stringify(productData));
+      formData.append("product", JSON.stringify(productData));
 
       // 이미지 파일들 추가
       if (thumbnailRef.current?.files?.[0]) {
-        formData.append('thumbnail', thumbnailRef.current.files[0]);
+        formData.append("thumbnail", thumbnailRef.current.files[0]);
       }
 
       if (productImagesRef.current?.files) {
         Array.from(productImagesRef.current.files).forEach((file) => {
-          formData.append('productImages', file);
+          formData.append("productImages", file);
         });
       }
 
       if (descriptionImagesRef.current?.files) {
         Array.from(descriptionImagesRef.current.files).forEach((file) => {
-          formData.append('productDescriptionImages', file);
+          formData.append("productDescriptionImages", file);
         });
       }
 
       // fetch로 formData 전송
       const res = await registerProduct(formData);
       console.log(res);
-      if(res.success) {
-        alert('상품 등록이 완료되었습니다.');
+      if (res.success) {
+        alert("상품 등록이 완료되었습니다.");
         // 성공적으로 등록된 후 초기화
         setProduct({
-          categories: ['' as MainCategory, '' as SubCategory],
-          brandName: '',
-          productName: '',
+          categories: ["" as MainCategory, "" as SubCategory],
+          brandName: "",
+          productName: "",
           price: 0,
-          description: '',
-          thumbnail: '',
+          description: "",
+          thumbnail: "",
           productImages: [],
           productDescriptionImages: [],
           items: [
             {
               id: null,
-              color: '',
-              colorCode: '',
-              size: '',
+              color: "",
+              colorCode: "",
+              size: "",
               quantity: 0,
             },
           ],
         });
-        router.push('/seller')
+        router.push("/seller");
       }
     } catch (error) {
       console.error(error);
@@ -201,9 +216,9 @@ export const ProductRegister = () => {
         ...prev.items,
         {
           id: null,
-          color: '',
-          colorCode: '',
-          size: '',
+          color: "",
+          colorCode: "",
+          size: "",
           quantity: 0,
         },
       ],
@@ -218,7 +233,7 @@ export const ProductRegister = () => {
     setProduct((prev) => ({
       ...prev,
       items: prev.items.map((item, i) =>
-        i === index ? {...item, [key]: value} : item
+        i === index ? { ...item, [key]: value } : item
       ),
     }));
   };
@@ -231,7 +246,7 @@ export const ProductRegister = () => {
   };
 
   const handleRemoveImage = (
-    type: 'productImages' | 'productDescriptionImages',
+    type: "productImages" | "productDescriptionImages",
     index: number
   ) => {
     setProduct((prev) => ({
@@ -241,16 +256,16 @@ export const ProductRegister = () => {
   };
 
   const handleColorSelect = (index: number, colorName: string) => {
-    const selectedColor = COLORS.find(color => color.name === colorName);
+    const selectedColor = COLORS.find((color) => color.name === colorName);
     if (selectedColor) {
       // 색상과 색상코드 함께 업데이트
-      setProduct(prev => ({
+      setProduct((prev) => ({
         ...prev,
-        items: prev.items.map((item, i) => 
-          i === index 
-            ? {...item, color: colorName, colorCode: selectedColor.code} 
+        items: prev.items.map((item, i) =>
+          i === index
+            ? { ...item, color: colorName, colorCode: selectedColor.code }
             : item
-        )
+        ),
       }));
     }
   };
@@ -269,7 +284,7 @@ export const ProductRegister = () => {
                 placeholder="상품명을 입력하세요"
                 ref={ref}
                 onChange={(e) =>
-                  handleProductChange('productName', e.target.value)
+                  handleProductChange("productName", e.target.value)
                 }
               />
             </div>
@@ -281,7 +296,7 @@ export const ProductRegister = () => {
                 placeholder="브랜드명을 입력하세요"
                 ref={ref}
                 onChange={(e) =>
-                  handleProductChange('brandName', e.target.value)
+                  handleProductChange("brandName", e.target.value)
                 }
               />
             </div>
@@ -293,7 +308,7 @@ export const ProductRegister = () => {
                 placeholder="가격을 입력하세요"
                 ref={ref}
                 onChange={(e) =>
-                  handleProductChange('price', Number(e.target.value))
+                  handleProductChange("price", Number(e.target.value))
                 }
               />
             </div>
@@ -325,7 +340,9 @@ export const ProductRegister = () => {
                 }
                 value={product.categories[1]}
               >
-                <option value="" disabled>상세 카테고리 선택</option>
+                <option value="" disabled>
+                  상세 카테고리 선택
+                </option>
                 <option value="아우터">아우터</option>
                 <option value="상의">상의</option>
                 <option value="하의">하의</option>
@@ -344,7 +361,7 @@ export const ProductRegister = () => {
                   accept="image/*"
                   ref={thumbnailRef}
                   className="w-full p-2 border rounded-md"
-                  onChange={(e) => handleImageChange(e, 'thumbnail')}
+                  onChange={(e) => handleImageChange(e, "thumbnail")}
                 />
                 {product.thumbnail && (
                   <div className="mt-2">
@@ -370,7 +387,7 @@ export const ProductRegister = () => {
                   accept="image/*"
                   ref={productImagesRef}
                   className="w-full p-2 border rounded-md"
-                  onChange={(e) => handleImageChange(e, 'productImages')}
+                  onChange={(e) => handleImageChange(e, "productImages")}
                 />
                 <div className="mt-2 grid grid-cols-4 gap-4">
                   {product.productImages.map((url, index) => (
@@ -385,7 +402,7 @@ export const ProductRegister = () => {
                       <button
                         type="button"
                         onClick={() =>
-                          handleRemoveImage('productImages', index)
+                          handleRemoveImage("productImages", index)
                         }
                         className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full"
                       >
@@ -408,7 +425,7 @@ export const ProductRegister = () => {
                   ref={descriptionImagesRef}
                   className="w-full p-2 border rounded-md"
                   onChange={(e) =>
-                    handleImageChange(e, 'productDescriptionImages')
+                    handleImageChange(e, "productDescriptionImages")
                   }
                 />
                 <div className="mt-2 grid grid-cols-4 gap-4">
@@ -424,7 +441,7 @@ export const ProductRegister = () => {
                       <button
                         type="button"
                         onClick={() =>
-                          handleRemoveImage('productDescriptionImages', index)
+                          handleRemoveImage("productDescriptionImages", index)
                         }
                         className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full"
                       >
@@ -447,7 +464,7 @@ export const ProductRegister = () => {
                 value={product.description}
                 ref={ref}
                 onChange={(e) =>
-                  handleProductChange('description', e.target.value)
+                  handleProductChange("description", e.target.value)
                 }
               />
             </div>
@@ -482,57 +499,79 @@ export const ProductRegister = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-1">색상</label>
+                    <label className="block text-sm font-medium mb-1">
+                      색상
+                    </label>
                     <select
                       className="w-full p-2 border rounded-md"
                       value={item.color}
                       onChange={(e) => handleColorSelect(index, e.target.value)}
                     >
-                      <option value="" disabled>색상을 선택하세요</option>
-                      {COLORS.map(color => (
+                      <option value="" disabled>
+                        색상을 선택하세요
+                      </option>
+                      {COLORS.map((color) => (
                         <option key={color.code} value={color.name}>
                           {color.name}
                         </option>
                       ))}
                     </select>
                   </div>
-                  
+
                   <div>
-                    <label className="block text-sm font-medium mb-1">색상코드</label>
+                    <label className="block text-sm font-medium mb-1">
+                      색상코드
+                    </label>
                     <input
                       type="text"
                       className="w-full p-2 border rounded-md bg-gray-100"
                       value={item.colorCode}
                       disabled
                     />
-                    <div 
-                      className="w-6 h-6 rounded-full mt-1 inline-block" 
+                    <div
+                      className="w-6 h-6 rounded-full mt-1 inline-block"
                       style={{ backgroundColor: item.colorCode }}
                     />
                   </div>
-                
+
                   <div>
-                    <label className="block text-sm font-medium mb-1">사이즈</label>
+                    <label className="block text-sm font-medium mb-1">
+                      사이즈
+                    </label>
                     <select
                       className="w-full p-2 border rounded-md"
                       value={item.size}
-                      onChange={(e) => handleItemChange(index, 'size', e.target.value)}
+                      onChange={(e) =>
+                        handleItemChange(index, "size", e.target.value)
+                      }
                     >
-                      <option value="" disabled>사이즈를 선택하세요</option>
-                      {SIZES.map(size => (
-                        <option key={size} value={size}>{size}</option>
+                      <option value="" disabled>
+                        사이즈를 선택하세요
+                      </option>
+                      {SIZES.map((size) => (
+                        <option key={size} value={size}>
+                          {size}
+                        </option>
                       ))}
                     </select>
                   </div>
-                
+
                   <div>
-                    <label className="block text-sm font-medium mb-1">수량</label>
+                    <label className="block text-sm font-medium mb-1">
+                      수량
+                    </label>
                     <input
                       type="number"
                       className="w-full p-2 border rounded-md"
                       placeholder="수량을 입력하세요"
                       value={item.quantity}
-                      onChange={(e) => handleItemChange(index, 'quantity', Number(e.target.value))}
+                      onChange={(e) =>
+                        handleItemChange(
+                          index,
+                          "quantity",
+                          Number(e.target.value)
+                        )
+                      }
                     />
                   </div>
                 </div>
