@@ -1,27 +1,21 @@
-import { decryptToken } from '@/shared/util/lib/encrypteToken';
-import {cookies} from 'next/headers';
+import authTokenValue, {
+  getValidAuthToken,
+} from "@/shared/util/lib/authTokenValue";
 
 export default async function orderRetriever() {
-  const enToken = (await cookies()).get('Authorization')?.value as string;
-  const authToken = await decryptToken(enToken);
-
-  console.log('인증 토큰:', authToken);
-  
-
-  if (!authToken) {
-    throw new Error('인증되지 않은 요청입니다.');
-  }
+  const authToken = await getValidAuthToken();
 
   try {
     const res = await fetch(`${process.env.NEXT_SERVER_URL}/orders/user`, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        Authorization: `${authToken}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken?.slice(6)}`,
+        "Content-Type": "application/json",
       },
     });
-    
-    console.log('응답 상태:', res.status);
+
+    console.log("응답 상태:", res.status);
+    console.log("인증 토큰:", authToken?.slice(6));
 
     if (!res.ok) {
       const errorData = await res.json();
@@ -35,7 +29,7 @@ export default async function orderRetriever() {
     const data = await res.json();
 
     // 응답 데이터 구조 로깅
-    console.log('API 응답 데이터 구조:', JSON.stringify(data, null, 2));
+    console.log("API 응답 데이터 구조:", JSON.stringify(data, null, 2));
 
     // 일단 빈 데이터로 초기화하여 오류 방지
     if (!data.orders) {
@@ -44,8 +38,8 @@ export default async function orderRetriever() {
 
     return data;
   } catch (error) {
-    console.error('주문 정보 가져오기 오류:', error);
+    console.error("주문 정보 가져오기 오류:", error);
     // 에러가 발생해도 빈 객체를 반환하여 화면이 깨지지 않도록 함
-    return {orders: []};
+    return { orders: [] };
   }
 }

@@ -25,14 +25,23 @@ export default function FeaturedBrandSection() {
   // const [ setLoading] = useState(false); // 로딩 상태
   const [imageError, setImageError] = useState<{ [key: number]: boolean }>({}); // 이미지 에러 처리
 
-
   //인기 브랜드 조회 api 요청
   const fetchPopularBrands = async () => {
     try {
       // const response = await fetch(`${brandApiUrl}?page=0&size=5`);
-      const paramsString =`${brandApiUrl}?page=0&size=5`;
-      const response = await getProduct(paramsString);
-      const data = await response;
+      const paramsString = `${brandApiUrl}?page=0&size=5`;
+      // const response = await getProduct(paramsString);
+      // const data = await response;
+
+      // const response = fetch(`${brandApiUrl}?page=0&size=5`).then((res) =>
+      //   res.json()
+      // );
+
+      const response = await (
+        await fetch(`${brandApiUrl}?page=0&size=5`)
+      ).json();
+
+      const data: any = response;
       console.log("인기 브랜드 API 성공:", data);
 
       if (data.data.length > 0) {
@@ -49,7 +58,9 @@ export default function FeaturedBrandSection() {
     // setLoading(true);
     try {
       // const response = await fetch(`${productApiUrl}?brandName=${encodeURIComponent(brandName)}&orderBy=CREATED_AT&page=0&size=3`);
-      const paramsString = `${productApiUrl}?brandName=${encodeURIComponent(brandName)}&orderBy=CREATED_AT&page=0&size=3`;
+      const paramsString = `${productApiUrl}?brandName=${encodeURIComponent(
+        brandName
+      )}&orderBy=CREATED_AT&page=0&size=3`;
       const response = await getProduct(paramsString);
       const data = await response;
       console.log("인기 브랜드의 특정 상품 API 성공:", data);
@@ -85,7 +96,6 @@ export default function FeaturedBrandSection() {
                   ? "/images/noImage.svg"
                   : `${imageUrl}${brands[0].brandThumbnailUrl}`
               }
-          
               alt={brands[0].brandName}
               width={611}
               height={350}
@@ -103,28 +113,34 @@ export default function FeaturedBrandSection() {
           </div>
         )}
 
-
-
         {/* 오른쪽 상품 리스트 (2개) */}
         <div className="grid grid-cols-3">
           {brandProducts.map((product) => (
-            <div key={product.id} className="flex flex-col items-center text-center mt-auto">
-              {imageUrl &&
-              <Image
-                src={
-                  imageError[product.id]
-                    ? "/images/noImage.svg"
-                    : `${imageUrl}${product.thumbnail.path}`
-                }
-                alt={product.brandName}
-                width={170}
-                height={200}
-                className="object-cover mt-4"
-                onError={() => setImageError((prev) => ({ ...prev, [product.id]: true }))}
-              />}
+            <div
+              key={product.id}
+              className="flex flex-col items-center text-center mt-auto"
+            >
+              {imageUrl && (
+                <Image
+                  src={
+                    imageError[product.id]
+                      ? "/images/noImage.svg"
+                      : `${imageUrl}${product.thumbnail.path}`
+                  }
+                  alt={product.brandName}
+                  width={170}
+                  height={200}
+                  className="object-cover mt-4"
+                  onError={() =>
+                    setImageError((prev) => ({ ...prev, [product.id]: true }))
+                  }
+                />
+              )}
               <button className="flex flex-col items-start items-center w-full overflow-hidden mt-2">
                 {/* <span className="text-left text-sm text-gray-700">{product.brandName}</span> */}
-                <span className="text-xs text-gray-500">{product.productName}</span>
+                <span className="text-xs text-gray-500">
+                  {product.productName}
+                </span>
                 <span className="text-black-500 font-semibold text-sm">
                   {product.price.toLocaleString()}원
                 </span>
@@ -132,8 +148,6 @@ export default function FeaturedBrandSection() {
             </div>
           ))}
         </div>
-
-
       </div>
 
       {/* 브랜드 상품 리스트 (5개) */}
@@ -152,7 +166,9 @@ export default function FeaturedBrandSection() {
               height={350}
               className="object-cover rounded"
             />
-            <p className="text-left mt-2 font-semibold text-sm">{brand.brandName}</p>
+            <p className="text-left mt-2 font-semibold text-sm">
+              {brand.brandName}
+            </p>
           </div>
         ))}
       </div>
@@ -163,6 +179,6 @@ export default function FeaturedBrandSection() {
           다른 상품 더보기
         </button>
       </div>
-    </section >
+    </section>
   );
 }

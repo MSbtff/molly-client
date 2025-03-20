@@ -2,7 +2,10 @@
 
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { getValidAuthToken } from "@/shared/util/lib/authTokenValue";
+import authTokenValue, {
+  getValidAuthToken,
+} from "@/shared/util/lib/authTokenValue";
+import { NextResponse } from "next/server";
 interface ReviewApiResponse {
   reviewInfo: {
     reviewId: number;
@@ -95,10 +98,10 @@ export async function buyNow(
 //장바구니 담기
 export async function addToCart(itemId: number, quantity: number) {
   console.log("서버 액션 addToCart 함수 진입");
-  const authToken = await getValidAuthToken();
+  const authToken = await authTokenValue();
 
   if (!authToken) {
-    redirect("/login");
+    return { redirectUrl: "/login" };
   }
 
   try {
