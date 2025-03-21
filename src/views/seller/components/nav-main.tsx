@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import {ChevronRight, type LucideIcon} from 'lucide-react';
+import { ChevronRight, type LucideIcon } from "lucide-react";
 
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '../ui/collapsible';
+} from "../ui/collapsible";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -16,8 +16,8 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from '../ui/sidebar';
-import {useSellerStore} from '../../../app/provider/Sellerstore';
+} from "../ui/sidebar";
+import { useSellerStore } from "../../../app/provider/Sellerstore";
 
 export function NavMain({
   items,
@@ -34,7 +34,7 @@ export function NavMain({
     }[];
   }[];
 }) {
-  const {setCurrentView} = useSellerStore();
+  const { setCurrentView } = useSellerStore();
   return (
     <SidebarGroup>
       <SidebarGroupLabel>상품관리</SidebarGroupLabel>
@@ -60,14 +60,16 @@ export function NavMain({
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton
                         onClick={() => {
-                          if (subItem.title === '상품 등록') {
-                            setCurrentView('상품 등록');
-                          } else if (subItem.title === '상품 조회') {
-                            setCurrentView('상품 조회');
-                          } else if (subItem.title === '상품 삭제') {
-                            setCurrentView('상품 삭제');
-                          } else if (subItem.title === '상품 수정') {
-                            setCurrentView('상품 수정');
+                          if (subItem.title === "상품 등록") {
+                            setCurrentView("상품 등록");
+                          } else if (subItem.title === "상품 조회") {
+                            setCurrentView("상품 조회");
+                          } else if (subItem.title === "상품 삭제") {
+                            setCurrentView("상품 삭제");
+                          } else if (subItem.title === "상품 수정") {
+                            setCurrentView("상품 수정");
+                          } else if (subItem.title === "상품 일괄 등록") {
+                            setCurrentView("상품 일괄 등록");
                           }
                         }}
                       >
