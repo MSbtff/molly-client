@@ -88,7 +88,7 @@ export default function ReviewModal({ review, onClose }: ReviewModalProps) {
         <div className="flex items-center mt-2">
           <Image
             // src={review.user.profileImage}
-            src={"/icons/profile.svg"}
+            src={"/logo.webp"}
             alt="User Profile"
             width={30}
             height={30}

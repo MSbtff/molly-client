@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProfileModal from "./ProfileModal";
 import SearchModal from "./SearchModal";
 import NotificationSidebar from "./NotificationSidebar";
@@ -13,10 +13,19 @@ export default function Navbar({ nickname }: { nickname: string }) {
   const [isProfileOpen, setProfileIsOpen] = useState(false); //프로필 모달
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleCategoryClick = (category: string) => {
     router.push(`/product?categories=${encodeURIComponent(category)}`);
   };
+
+  useEffect(() => {
+    if (nickname) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
 
   return (
     <>
@@ -57,9 +66,6 @@ export default function Navbar({ nickname }: { nickname: string }) {
             <Search size={20} className="text-black" />
             <span className="ml-2 text-[#707072]">검색</span>
           </div>
-          <div>
-            {nickname && <p className="text-sm text-gray-500">{nickname} 님</p>}
-          </div>
           {/* 프로필 */}
           <button
             onClick={() => {
@@ -67,7 +73,11 @@ export default function Navbar({ nickname }: { nickname: string }) {
             }}
             className="relative p-2 rounded-[10px] hover:bg-gray-200 transition flex items-center justify-center"
           >
-            <UserRound size={21} className="rounded-full overflow-hidden" />
+            {nickname ? (
+              <div className="rounded-full overflow-hidden">{nickname} 님</div>
+            ) : (
+              <UserRound size={21} className="rounded-full overflow-hidden" />
+            )}
           </button>
 
           {/* 장바구니 -> 링크? 버튼? */}
@@ -85,6 +95,8 @@ export default function Navbar({ nickname }: { nickname: string }) {
         <ProfileModal
           setIsOpen={setProfileIsOpen}
           setIsNotificationOpen={setIsNotificationOpen}
+          setIsLoggedIn={setIsLoggedIn}
+          isLoggedIn={isLoggedIn}
         />
       )}
       {isSearchOpen && <SearchModal setIsOpen={setIsSearchOpen} />}

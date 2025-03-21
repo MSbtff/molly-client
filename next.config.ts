@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: false,
   productionBrowserSourceMaps: false,
+  unoptimized: true,
 
   async rewrites() {
     return [
@@ -15,7 +16,13 @@ const nextConfig: NextConfig = {
 
   images: {
     formats: ["image/webp"],
-    domains: ["15.165.65.222", "172.16.24.53", "persimmontree.ddns.net"], // API에서 제공하는 이미지 도메인(IP) (외부 이미지 도메인 허용)
+
+    domains: [
+      "15.165.65.222",
+      "172.16.24.53",
+      "persimmontree.ddns.net",
+      "d19usddqdhhab5.cloudfront.net",
+    ], // API에서 제공하는 이미지 도메인(IP) (외부 이미지 도메인 허용)
     remotePatterns: [
       {
         protocol: "http",
