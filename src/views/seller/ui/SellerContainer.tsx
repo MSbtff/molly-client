@@ -1,5 +1,5 @@
-'use client';
-import {AppSidebar} from '../components/app-sidebar';
+"use client";
+import { AppSidebar } from "../components/app-sidebar";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,15 +7,16 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from './breadcrumb';
-import {Separator} from './separator';
-import {SidebarInset, SidebarProvider, SidebarTrigger} from './sidebar';
-import {useSellerStore} from '../../../app/provider/Sellerstore';
-import {ProductRegister} from '../components/ProductRegister';
-import {ProductRetriever} from '../components/ProductRetriever';
-import {ProductModify} from '../components/ProductModify';
-import {ProductDelete} from '../components/ProductDelete';
-import {Pageable, ProductData} from '../../../../app/seller/page';
+} from "./breadcrumb";
+import { Separator } from "./separator";
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "./sidebar";
+import { useSellerStore } from "../../../app/provider/Sellerstore";
+import { ProductRegister } from "../components/ProductRegister";
+import { ProductRetriever } from "../components/ProductRetriever";
+import { ProductModify } from "../components/ProductModify";
+import { ProductDelete } from "../components/ProductDelete";
+import { Pageable, ProductData } from "../../../../app/seller/page";
+import { ProductBatch } from "../components/ProductBatch";
 
 export interface SellerContainerProps {
   productRes: {
@@ -24,14 +25,15 @@ export interface SellerContainerProps {
   };
 }
 
-export default function SellerContainer({productRes}: SellerContainerProps) {
-  const {currentView} = useSellerStore();
+export default function SellerContainer({ productRes }: SellerContainerProps) {
+  const { currentView } = useSellerStore();
 
   const viewComponents = {
-    '상품 삭제': <ProductDelete />,
-    '상품 수정': <ProductModify productRes={productRes} />,
-    '상품 조회': <ProductRetriever productRes={productRes} />,
-    '상품 등록': <ProductRegister />,
+    "상품 삭제": <ProductDelete />,
+    "상품 수정": <ProductModify productRes={productRes} />,
+    "상품 조회": <ProductRetriever productRes={productRes} />,
+    "상품 등록": <ProductRegister />,
+    "상품 일괄 등록": <ProductBatch />,
     // '상품 파일 등록': <뭐어쩌구저꺼구/>,
     기본: <ProductRetriever productRes={productRes} />,
   };
