@@ -1,5 +1,5 @@
-import Image from "next/image";
-import logo from "../../../../public/logo.webp";
+// import Image from "next/image";
+// import logo from "../../../../public/logo.webp";
 
 export interface PointRes {
   point: number;

@@ -75,76 +75,79 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
 
   //필터 적용 로직(쿼리 파라미터로 전환)
   const handleApplyFilters = () => {
-    const queryParams = new URLSearchParams();
 
-    //카테고리(성별 + 옷) 필터 추가
+    // 기존 URL의 검색 파라미터를 가져옴
+    const params = new URLSearchParams(window.location.search);
+
+    // ✅ 카테고리(성별 + 옷) 필터 추가
     const selectedCategories = [
       ...(selectedGender ? [selectedGender] : []),
       ...(selectedCategory ? [selectedCategory] : []),
-    ]; //성별이 앞에 오도록
+    ];
     if (selectedCategories.length > 0) {
-      queryParams.append("categories", selectedCategories.join(","));
+      params.set("categories", selectedCategories.join(","));
+    } else {
+      params.delete("categories");
     }
-    //색상 필터 추가
+
+    // ✅ 색상 필터 추가
     if (selectedColor.length > 0) {
       const colorHexValues = selectedColor.map((name) => {
         const colorObj = colors.find((c) => c.name === name);
-        return colorObj ? colorObj.hex : name; // Hex 코드 변환, 없으면 그대로
+        return colorObj ? colorObj.hex : name;
       });
-      queryParams.append("colorCode", colorHexValues.join(","));
+      params.set("colorCode", colorHexValues.join(","));
+    } else {
+      params.delete("colorCode");
     }
-    //가격 필터 추가 (최소, 최대)
-    // if (selectedPrice.length > 0) {
-    //   // queryParams.append('price', selectedPrice.join(','));
-    //   selectedPrice.forEach((price) => {
-    //     const priceRange = price.replace(/[^0-9~]/g, ''); // 숫자와 '~'만 남김
-    //     const [min, max] = priceRange.split('~').map(Number);
 
-    //     if (!isNaN(min)) {
-    //       queryParams.append('priceGoe', min.toString()); // 최소값 추가
-    //     }
-    //     if (!isNaN(max)) {
-    //       queryParams.append('priceLt', max.toString()); // 최대값 추가
-    //     }
-    //   });
-    // }
-
-    // if (selectedPrice) {
-    //   const priceRange = selectedPrice.match(/\d+/g); // 숫자만 추출하여 배열로 저장
-    //   if (priceRange) {
-    //     const [min, max] = priceRange.map(Number); // 숫자로 변환
-    //     if (!isNaN(min)) queryParams.append("priceGoe", min.toString()); // 최소값 추가
-    //     if (!isNaN(max)) queryParams.append("priceLt", max.toString() ); // 최대값 추가
-    //   }
-    // }
+    // ✅ 가격 필터 추가
     if (selectedPrice) {
-      const priceRange = selectedPrice.replace(/[^0-9~]/g, "");
-      const [min, max] = priceRange.split("~").map(Number);
-      if (!isNaN(min)) queryParams.append("priceGoe", min.toString());
-      if (!isNaN(max)) queryParams.append("priceLt", max.toString());
-      // const priceRange = selectedPrice.match(/\d+/g);
-      // if (priceRange) {
-      //   const [min, max] = priceRange.map(Number);
-      //   if (!isNaN(min)) queryParams.append("priceGoe", min.toString());
-      //   if (!isNaN(max)) queryParams.append("priceLt", max.toString());
-      // }
+      // const priceRange = selectedPrice.replace(/[^0-9~]/g, "");
+      // const [min, max] = priceRange.split("~").map(Number);
+      // if (!isNaN(min)) params.set("priceGoe", min.toString());
+      // else params.delete("priceGoe");
+      // if (!isNaN(max)) params.set("priceLt", max.toString());
+      // else params.delete("priceLt");
+      // 가격 범위에서 숫자만 추출
+      const numbers = selectedPrice.match(/\d{1,3}(,\d{3})*(\.\d+)?/g);
+      if (numbers && numbers.length >= 2) {
+        // 첫 번째 숫자는 최소 가격
+        const min = parseInt(numbers[0].replace(/,/g, ''));
+        // 두 번째 숫자는 최대 가격
+        const max = parseInt(numbers[1].replace(/,/g, ''));
+
+        if (!isNaN(min)) params.set("priceGoe", min.toString());
+        else params.delete("priceGoe");
+
+        if (!isNaN(max)) params.set("priceLt", max.toString());
+        else params.delete("priceLt");
+      } else if (numbers && numbers.length === 1) {
+        // "200,000 원 이상"과 같은 경우
+        const price = parseInt(numbers[0].replace(/,/g, ''));
+        if (selectedPrice.includes("이상")) {
+          params.set("priceGoe", price.toString());
+          params.delete("priceLt");
+        } else {
+          params.set("priceLt", price.toString());
+          params.delete("priceGoe");
+        }
+      }
+    } else {
+      params.delete("priceGoe");
+      params.delete("priceLt");
     }
 
-    //사이즈 필터
+    // ✅ 사이즈 필터 추가
     if (selectedSize.length > 0) {
-      queryParams.append("productSize", selectedSize.join(","));
+      params.set("productSize", selectedSize.join(","));
+    } else {
+      params.delete("productSize");
     }
 
-    router.push(`/product?${queryParams.toString()}`);
-    //선택된 필터가 있을 경우만 url 변경
-    if (
-      selectedCategories.length > 0 ||
-      selectedColor.length > 0 ||
-      selectedPrice ||
-      selectedSize.length > 0
-    ) {
-      router.push(`/product?page=0&size=48&${queryParams.toString()}`);
-    }
+    // 🔹 필터 적용 후 URL 변경
+    // const newSearchParams = params.toString(); // 파라미터를 문자열로 변환
+    router.push(`/product?${params.toString()}`);
   };
 
   return (
@@ -152,17 +155,14 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
       {/* 블러 배경 오버레이 */}
       <div
         className="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-md"
-        onClick={() => setIsOpen(false)}
-      ></div>
+        onClick={() => setIsOpen(false)}>
+      </div>
 
       <div className="fixed top-0 left-0 w-[320px] h-full bg-white shadow-lg z-50 overflow-y-auto">
         {/* 헤더 */}
         <div className="flex items-center justify-between px-4 py-4">
           <h2 className="text-lg font-semibold">필터</h2>
-          <button
-            onClick={() => setIsOpen(false)}
-            className="text-gray-500 text-xl"
-          >
+          <button onClick={() => setIsOpen(false)} className="text-gray-500 text-xl">
             <X />
           </button>
         </div>
@@ -282,64 +282,53 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
           selectedColor.length > 0 ||
           selectedPrice ||
           selectedSize.length > 0) && (
-          <div className="px-4 py-4 border-b">
-            <h3 className="text-sm font-semibold mb-3">선택한 필터</h3>
+            <div className="px-4 py-4 border-b">
+              <h3 className="text-sm font-semibold mb-3">선택한 필터</h3>
 
-            <div className="flex flex-wrap gap-2">
-              {[
-                ...(selectedGender ? [selectedGender] : []),
-                ...(selectedCategory ? [selectedCategory] : []),
-                ...selectedColor,
-                ...(selectedPrice ? [selectedPrice] : []),
-                ...selectedSize,
-              ].map((item) => (
-                <button
-                  key={item}
-                  className="flex items-center gap-2 px-3 py-1 text-sm bg-gray-200 rounded-full"
-                  onClick={() => {
-                    if (selectedGender === item) {
-                      setSelectedGender(null); // 성별 선택 해제
-                    } else if (selectedCategory === item) {
-                      setSelectedCategory(null);
-                    } else if (selectedColor.includes(item)) {
-                      setSelectedColor(selectedColor.filter((i) => i !== item));
-                    } else if (selectedPrice === item) {
-                      // setSelectedPrice(selectedPrice.filter((i) => i !== item));
-                      setSelectedGender(null); // 성별 선택 해제
-                    } else if (selectedSize.includes(item)) {
-                      setSelectedSize(selectedSize.filter((i) => i !== item));
-                    }
-                  }}
-                >
-                  {item} <X size={14} />
-                </button>
-              ))}
+              <div className="flex flex-wrap gap-2">
+                {[
+                  ...(selectedGender ? [selectedGender] : []),
+                  ...(selectedCategory ? [selectedCategory] : []),
+                  ...selectedColor,
+                  ...(selectedPrice ? [selectedPrice] : []),
+                  ...selectedSize,
+                ].map((item) => (
+                  <button
+                    key={item}
+                    className="flex items-center gap-2 px-3 py-1 text-sm bg-gray-200 rounded-full"
+                    onClick={() => {
+                      if (selectedGender === item) {
+                        setSelectedGender(null); // 성별 선택 해제
+                      } else if (selectedCategory === item) {
+                        setSelectedCategory(null);
+                      } else if (selectedColor.includes(item)) {
+                        setSelectedColor(selectedColor.filter((i) => i !== item));
+                      } else if (selectedPrice === item) {
+                        // setSelectedPrice(selectedPrice.filter((i) => i !== item));
+                        setSelectedGender(null); // 성별 선택 해제
+                      } else if (selectedSize.includes(item)) {
+                        setSelectedSize(selectedSize.filter((i) => i !== item));
+                      }
+                    }}
+                  >
+                    {item} <X size={14} />
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
         {/* 버튼 */}
         <div className="flex items-center justify-between p-4">
           <button
             className="border border-gray-500 px-10 py-2 rounded-md text-sm"
-            onClick={() => {
-              setSelectedCategory(null);
-              setSelectedColor([]);
-              setSelectedPrice(null);
-              setSelectedSize([]);
-              setSelectedGender(null);
-            }}
-          >
-            초기화
+            onClick={() => { setSelectedCategory(null); setSelectedColor([]);
+              setSelectedPrice(null); setSelectedSize([]); setSelectedGender(null);
+            }}> 초기화 
           </button>
           <button
             className="bg-black text-white px-10 py-2 rounded-md text-sm"
-            onClick={() => {
-              handleApplyFilters();
-              setIsOpen(false);
-            }}
-          >
-            상품 보기
+            onClick={() => { handleApplyFilters(); setIsOpen(false); }} > 상품 보기
           </button>
         </div>
       </div>
