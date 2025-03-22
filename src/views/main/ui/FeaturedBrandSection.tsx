@@ -109,13 +109,16 @@ export default function FeaturedBrandSection() {
       {/* 메인 배너 */}
       <div className="grid grid-cols-2 gap-2">
         {brands.length > 0 && (
-          <div className="relative w-full h-fit">
+          // <div className="relative w-full h-[450px]">
+          // <div className="relative w-full aspect-[3/2]">
+          <div className="relative w-full aspect-[3/2] col-span-1"> 
             <Image
               src={imageError[0] ? "/images/noImage.svg" : `${imageUrl}${brands[0].brandThumbnailUrl}`}
               alt={brands[0].brandName}
-              width={611}
+              width={450}
               height={350}
-              className="object-cover w-full h-auto rounded"
+              // className="object-cover w-full h-full rounded"
+              className="object-contain rounded"
             />
             <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center p-6">
               <div className="text-white">
@@ -128,23 +131,26 @@ export default function FeaturedBrandSection() {
             </div>
           </div>
         )}
-
         {/* 오른쪽 상품 리스트 (2개) */}
-        <div className="grid grid-cols-3">
+        {/* <div className="grid grid-cols-3"> */}
+        <div className="col-span-2 grid grid-cols-3 gap-4 items-center"> 
           {brandProducts.map((product) => (
             <div key={product.id} className="flex flex-col items-center text-center mt-auto">
+            {/* <div key={product.id} className="flex flex-col justify-between h-[200px] p-2"> */}
               {imageUrl && (
                 <Image
                   src={imageError[product.id] ? "/images/noImage.svg" : `${imageUrl}${product.thumbnail.path}`}
                   alt={product.brandName}
-                  width={170}
-                  height={200}
-                  className="object-cover mt-4 cursor-pointer"
+                  width={150}
+                  height={300}
+                  // className="object-cover mt-4 cursor-pointer"
+                  className="object-cover w-full rounded"
                   onError={() => setImageError((prev) => ({ ...prev, [product.id]: true }))}
                   onClick={() => handleProductClick(product.id)}
                 />
               )}
-              <button className="flex flex-col items-start w-full overflow-hidden">
+              {/* <button className="flex flex-col items-start w-full overflow-hidden"> */}
+              <button className="flex flex-col items-start w-full mt-2 space-y-1">
                 <span className="text-left text-sm text-gray-500 truncate w-full">{product.productName}</span>
                 <span className="text-left text-black-500 font-semibold">{product.price.toLocaleString()}원</span>
               </button>
@@ -152,8 +158,9 @@ export default function FeaturedBrandSection() {
           ))}
         </div>
       </div>
+
       {/* 브랜드 상품 리스트 (5개) */}
-      <div className="grid grid-cols-4 gap-2 mt-6">
+      <div className="grid grid-cols-4 gap-2 mt-10">
         {brands.slice(1).map((brand, index) => (
           <div key={index} className="flex flex-col items-center">
             <Image
@@ -169,12 +176,7 @@ export default function FeaturedBrandSection() {
           </div>
         ))}
       </div>
-      {/* "다른 상품 더보기" 버튼 */}
-      <div className="flex justify-center mt-8">
-        <button className="px-6 py-3 border border-gray-400 text-base font-medium hover:bg-gray-100 transition ">
-          다른 상품 더보기
-        </button>
-      </div>
+
     </section>
   );
 }

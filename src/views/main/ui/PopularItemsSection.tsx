@@ -34,9 +34,7 @@ export default function PopularItemsSection() {
   const swiperRef = useRef<SwiperType | null>(null);
 
   const [selectedCategory, setSelectedCategory] = useState("아우터"); //현재 선택된 카테고리
-  // const [products, setProducts] = useState<Product[]>([]); //api로 가져온 상품 리스트
   const [allProducts, setAllProducts] = useState<Product[]>([]); // API로 가져온 36개 상품 전체
-  // const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 (0, 1, 2)
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   // const [loading, setLoading] = useState(false);///데이터 로딩 상태
   const [imageError, setImageError] = useState(false);
@@ -45,7 +43,7 @@ export default function PopularItemsSection() {
     // setLoading(true);
     try {
       // const response = await fetch(`${productApiUrl}?categories=${encodeURIComponent(category)}&orderBy=CREATED_AT&page=0&size=12`);
-      const paramsString = `${productApiUrl}?categories=${encodeURIComponent(category)}&orderBy=CREATED_AT&page=0&size=36`;
+      const paramsString = `${productApiUrl}?categories=${encodeURIComponent(category)}&orderBy=VIEW_COUNT&page=0&size=36`;
       const response = await getProduct(paramsString);
       const data = await response;
       console.log("지금 인기있는 상품 api 성공", data);
@@ -55,9 +53,7 @@ export default function PopularItemsSection() {
       }
     } catch (error) {
       console.error("지금 인기있는 상품 api 요청 실패:", error);
-    } finally {
-      // setLoading(false);
-    }
+    } 
   };
 
   //초기 데이터 불러오기 -캐싱처리 필요
@@ -73,8 +69,6 @@ export default function PopularItemsSection() {
 
   // "다른 추천 상품 보기" 버튼 클릭 핸들러
   const handleNextPage = () => {
-    // 페이지 순환 (0→1→2→0→1→...)
-    // setCurrentPage((prev) => (prev + 1) % 3);
     if (swiperRef.current) {
       swiperRef.current.slideNext();
     }
@@ -82,10 +76,6 @@ export default function PopularItemsSection() {
 
   // 현재 페이지에 표시할 상품 계산
   const getProductGroups = () => {
-  // const getCurrentPageProducts = () => {
-    // const startIndex = currentPage * 12;
-    // const endIndex = startIndex + 12;
-    // return allProducts.slice(startIndex, endIndex);
     const groups = [];
     for (let i = 0; i < 3; i++) {
       const startIndex = i * 12;
@@ -119,29 +109,6 @@ export default function PopularItemsSection() {
       </div>
 
       {/* 상품 리스트 */}
-      {/* <div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-2 sm:grid-cols-2  gap-2 mt-1">
-        {getCurrentPageProducts().map((product) => (
-          <div key={product.id} className="flex flex-col items-center mt-10">
-            {imageUrl && (
-              <Image
-                src={ imageError ? "/images/noImage.svg" : `${imageUrl}${product.thumbnail.path}`}
-                alt={product.brandName}
-                width={200}
-                height={250}
-                className="w-full h-auto object-contain cursor-pointer"
-                onError={() => setImageError(true)}
-                onClick={() => handleProductClick(product.id)}
-              />
-            )}
-            <button className="flex flex-col items-start w-full overflow-hidden"
-                    onClick={() => handleProductClick(product.id)}>
-              <span className="text-left mt-1 text-sm font-semibold"> {product.brandName}</span>
-              <span className="text-left text-sm text-gray-500 truncate w-full"> {product.productName}</span>
-              <span className="text-left text-black-500 font-semibold"> {product.price.toLocaleString()}원</span>
-            </button>
-          </div>
-        ))}
-      </div> */}
       <Swiper
         onSwiper={(swiper) => { swiperRef.current = swiper; }}
         modules={[Autoplay, Navigation]}
@@ -162,7 +129,6 @@ export default function PopularItemsSection() {
                       width={200}
                       height={250}
                       className="w-full h-auto object-contain cursor-pointer"
-                      // onError={() => handleImageError(product.id)}
                       onClick={() => handleProductClick(product.id)}
                     />
                   )}
@@ -180,7 +146,6 @@ export default function PopularItemsSection() {
           </SwiperSlide>
         ))}
       </Swiper>
-
 
       {/* "다른 추천 상품 보기" 버튼 */}
       <div className="flex justify-center mt-8">

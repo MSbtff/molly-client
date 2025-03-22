@@ -77,7 +77,6 @@ import RecommendedItemsSection from './RecommendedItemsSection';
 
 export default function   Main() {
 
-
   return (
     <div className="space-y-16">
       {/* 배너 */}
@@ -98,7 +97,7 @@ export default function   Main() {
       {/* 주목할 브랜드 */}
       <FeaturedBrandSection/>
 
-      {/* 고객님이 좋아할 만한 상품 */}
+      {/* 랭킹 상품 */}
       <RecommendedItemsSection/>
     </div>
 
