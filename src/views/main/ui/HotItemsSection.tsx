@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { useState, useEffect } from 'react';
+import { useRouter } from "next/navigation";
+import getProduct from "@/shared/api/getProduct";
 interface Thumbnail {
   path: string;
   filename: string;
@@ -14,9 +16,11 @@ interface Product {
 }
 
 export default function HotItemsSection() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL; //api 서버 주소
-  const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL; //이미지 서버 주소
-  const productApiUrl = `${baseUrl}/product`; //API 엔드포인트
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL; 
+  const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL; 
+  const productApiUrl = `${baseUrl}/product`; 
+
+  const router = useRouter();
 
   const [products, setProducts] = useState<Product[]>([]); // 상품 데이터
   // const [loading, setLoading] = useState(false); // 로딩 상태
@@ -26,8 +30,10 @@ export default function HotItemsSection() {
   const fetchProducts = async () => {
     // setLoading(true);
     try {
-      const response = await fetch(`${productApiUrl}?orderBy=CREATED_AT&page=0&size=8`);
-      const data = await response.json();
+      // const response = await fetch(`${productApiUrl}?orderBy=CREATED_AT&page=0&size=8`);
+      const paramsString = `${productApiUrl}?orderBy=CREATED_AT&page=0&size=8`;
+      const response = await getProduct(paramsString);
+      const data = await response;
       console.log("지금 핫한 신상템 API 성공", data);
       setProducts(data.data || []);
     } catch (error) {
@@ -45,6 +51,15 @@ export default function HotItemsSection() {
     fetchProducts();
   }, []);
 
+  const handleOtherProductClick = () => {
+    router.push(`/product?orderBy=CREATED_AT`);
+  };
+
+  //특정 상품 클릭 시 url 변경
+  const handleProductClick = (id: number) => {
+    router.push(`/detail/${id}`);
+  };
+
   return (
     <section className="px-20">
       <h3 className="text-xl font-semibold mb-4">지금 핫한 신상템</h3>
@@ -55,11 +70,7 @@ export default function HotItemsSection() {
           <div key={product.id} className="relative w-full h-auto">
             {imageUrl &&
               <Image
-                src={
-                  imageError[product.id]
-                    ? "/images/noImage.svg"
-                    : `${imageUrl}${product.thumbnail.path}`
-                }
+                src={imageError[product.id] ? "/images/noImage.svg" : `${imageUrl}${product.thumbnail.path}`}
                 alt={product.brandName}
                 width={611}
                 height={350}
@@ -71,8 +82,8 @@ export default function HotItemsSection() {
               <div className="text-white">
                 <h4 className="text-2xl font-bold">{product.brandName}</h4>
                 <p>{product.productName}</p>
-                <button className="mt-2 px-4 py-2 border border-white text-white text-sm">
-                  바로가기
+                <button className="mt-2 px-4 py-2 border border-white text-white text-sm"
+                        onClick={() => handleProductClick(product.id)}> 바로가기 
                 </button>
               </div>
             </div>
@@ -80,35 +91,31 @@ export default function HotItemsSection() {
         ))}
       </div>
       {/* 신상템 상품 리스트 */}
-      <div className="grid grid-cols-6 lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 gap-2 mt-4">
+      <div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-2 sm:grid-cols-2  gap-2 mt-1">
         {products.slice(2).map((product) => (
-          <div key={product.id} className="flex flex-col w-full overflow-hidden">
+          <div key={product.id} className="flex flex-col items-center mt-10">
             <Image
-              src={
-                imageError[product.id]
-                  ? "/images/noImage.svg"
-                  : `${imageUrl}${product.thumbnail.path}`
-              }
+              src={ imageError[product.id] ? "/images/noImage.svg" : `${imageUrl}${product.thumbnail.path}`}
               alt={product.brandName}
               width={200}
               height={250}
+              className="w-full h-auto object-contain cursor-pointer"
               onError={() => handleImageError(product.id)}
+              onClick={() => handleProductClick(product.id)}
             />
-            <button className="flex flex-col items-start w-full overflow-hidden">
-              <span className="text-sm mt-1 font-semibold">{product.brandName}</span>
-              <span className="text-left text-sm text-gray-500 truncate w-full">
-                {product.productName}
-              </span>
-              <span className="text-left text-black-500 font-semibold">
-                {product.price.toLocaleString()}원
-              </span>
+            <button className="flex flex-col items-start w-full overflow-hidden"
+                    onClick={() => handleProductClick(product.id)}>
+              <span className="text-left mt-1 text-sm font-semibold">{product.brandName}</span>
+              <span className="text-left text-sm text-gray-500 truncate w-full">{product.productName} </span>
+              <span className="text-left text-black-500 font-semibold">{product.price.toLocaleString()}원 </span>
             </button>
           </div>
         ))}
       </div>
       {/* "다른 상품 더보기" 버튼 */}
       <div className="flex justify-center mt-8">
-        <button className="px-6 py-3 border border-gray-400 hover:bg-gray-100 transition">
+        <button className="px-6 py-3 border border-gray-400 hover:bg-gray-100 transition"
+                onClick={()=>{handleOtherProductClick()}}>
           다른 상품 더보기
         </button>
       </div>

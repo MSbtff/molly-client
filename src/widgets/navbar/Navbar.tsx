@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProfileModal from "./ProfileModal";
 import SearchModal from "./SearchModal";
 import NotificationSidebar from "./NotificationSidebar";
@@ -13,10 +13,20 @@ export default function Navbar({ nickname }: { nickname: string }) {
   const [isProfileOpen, setProfileIsOpen] = useState(false); //프로필 모달
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleCategoryClick = (category: string) => {
-    router.push(`/product?categories=${encodeURIComponent(category)}`);
+    const newSearchParams = `categories=${encodeURIComponent(category)}`;
+    router.push(`/product?${newSearchParams}`);
   };
+
+  useEffect(() => {
+    if (nickname) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
 
   return (
     <>
@@ -28,7 +38,6 @@ export default function Navbar({ nickname }: { nickname: string }) {
 
         {/* 메인 메뉴 */}
         <div className="flex gap-6">
-          {/* <Link href="/product/men" className="hover:text-gray-600">남성</Link> */}
           <button
             onClick={() => handleCategoryClick("남성")}
             className="hover:text-gray-600"
@@ -48,17 +57,12 @@ export default function Navbar({ nickname }: { nickname: string }) {
           {/* 검색 */}
           <div
             className="flex items-center w-[150px] bg-[#F5F5F5] rounded-full px-3 py-1 border-none hover:bg-gray-200 mr-1"
-            // onClick={() => setIsSearchOpen(true)}
             onClick={() => {
               setIsSearchOpen(true);
-              // setIsExiting(false); // 모달을 다시 열 수 있도록 초기화
             }}
           >
             <Search size={20} className="text-black" />
             <span className="ml-2 text-[#707072]">검색</span>
-          </div>
-          <div>
-            {nickname && <p className="text-sm text-gray-500">{nickname} 님</p>}
           </div>
           {/* 프로필 */}
           <button
@@ -67,7 +71,11 @@ export default function Navbar({ nickname }: { nickname: string }) {
             }}
             className="relative p-2 rounded-[10px] hover:bg-gray-200 transition flex items-center justify-center"
           >
-            <UserRound size={21} className="rounded-full overflow-hidden" />
+            {nickname ? (
+              <div className="rounded-full overflow-hidden">{nickname} 님</div>
+            ) : (
+              <UserRound size={21} className="rounded-full overflow-hidden" />
+            )}
           </button>
 
           {/* 장바구니 -> 링크? 버튼? */}
@@ -85,6 +93,8 @@ export default function Navbar({ nickname }: { nickname: string }) {
         <ProfileModal
           setIsOpen={setProfileIsOpen}
           setIsNotificationOpen={setIsNotificationOpen}
+          setIsLoggedIn={setIsLoggedIn}
+          isLoggedIn={isLoggedIn}
         />
       )}
       {isSearchOpen && <SearchModal setIsOpen={setIsSearchOpen} />}

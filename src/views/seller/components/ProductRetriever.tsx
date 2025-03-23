@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from "react";
 
 import {
   Table,
@@ -10,9 +10,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from './table';
+} from "./table";
 
-import Image from 'next/image';
+import Image from "next/image";
 
 export interface ProductData {
   id: number;
@@ -39,9 +39,9 @@ export interface SellerContainerProps {
   };
 }
 
-export const ProductRetriever = ({productRes}: SellerContainerProps) => {
+export const ProductRetriever = ({ productRes }: SellerContainerProps) => {
   const [products, setProducts] = useState<ProductData[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
   console.log(productRes);
 
@@ -57,7 +57,7 @@ export const ProductRetriever = ({productRes}: SellerContainerProps) => {
     setLoading(true);
     try {
     } catch (error) {
-      console.error('상품 조회 중 오류 발생:', error);
+      console.error("상품 조회 중 오류 발생:", error);
     } finally {
       setLoading(false);
     }
@@ -71,7 +71,6 @@ export const ProductRetriever = ({productRes}: SellerContainerProps) => {
 
     return () => clearTimeout(debounceTimer);
   }, [searchTerm]);
-
 
   return (
     <div className="space-y-4">
@@ -126,7 +125,7 @@ export const ProductRetriever = ({productRes}: SellerContainerProps) => {
                   <TableCell>
                     <Image
                       src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${product.thumbnail?.path}`}
-                      alt={product.description}
+                      alt={product.productName}
                       width={50}
                       height={50}
                     />
@@ -134,7 +133,6 @@ export const ProductRetriever = ({productRes}: SellerContainerProps) => {
                   </TableCell>
                   <TableCell>{product.brandName}</TableCell>
                   <TableCell>{product.categories[1]}</TableCell>
-                  <TableCell>{product.description}</TableCell>
                   <TableCell>{product.price.toLocaleString()}원</TableCell>
                 </TableRow>
               ))

@@ -1,18 +1,25 @@
-import {useRouter} from 'next/navigation';
-import {Bell, Heart, UserRound, LogOut, LogIn} from 'lucide-react';
-import {useEffect, useState} from 'react';
+import { useRouter } from "next/navigation";
+import { Bell, Heart, UserRound, LogOut, LogIn } from "lucide-react";
+import { useEffect, useState } from "react";
+import { loginStatus } from "@/features/login/api/loginStatus";
+import { logout } from "@/features/login/api/logout";
 
 interface ProfileModalProps {
   setIsOpen: (value: boolean) => void;
   setIsNotificationOpen: (value: boolean) => void;
+  isLoggedIn: boolean;
+  setIsLoggedIn: (value: boolean) => void;
 }
 
 export default function ProfileModal({
   setIsOpen,
   setIsNotificationOpen,
+  isLoggedIn,
+  setIsLoggedIn,
 }: ProfileModalProps) {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     handleLoginCheck();
@@ -20,15 +27,11 @@ export default function ProfileModal({
 
   const handleLogout = async () => {
     try {
-      const res = await fetch(`/api/logout`, {
-        method: 'POST',
-        credentials: 'include',
-      });
-
-      if (res.ok) {
+      const res = await logout();
+      if (res.status === 200) {
         setIsLoggedIn(false);
-        alert('로그아웃 되었습니다.');
-        router.push('/');
+        alert("로그아웃 되었습니다.");
+        router.push("/");
       }
     } catch (error) {
       console.error(error);
@@ -37,26 +40,21 @@ export default function ProfileModal({
 
   const handleLoginCheck = async () => {
     try {
-      const res = await fetch(`/api/loginStatus`, {
-        method: 'GET',
-        credentials: 'include',
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setIsLoggedIn(data.isLoggedIn || false);
-        console.log('로그인 상태:', data.isLoggedIn);
-      } else {
-        console.log('로그인 상태 확인 실패:', res.statusText);
-      }
+      setIsLoading(true);
+      const res = await loginStatus();
+      setIsLoggedIn(res.isLoggedIn || false);
+      console.log("로그인 상태:", res.isLoggedIn);
     } catch (error) {
-      console.error('로그인 상태 확인 실패:', error);
+      console.error("로그인 상태 확인 실패:", error);
       setIsLoggedIn(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleLoginClick = () => {
     setIsOpen(false);
-    router.push('/login');
+    router.push("/login");
   };
 
   return (
@@ -73,14 +71,19 @@ export default function ProfileModal({
         onClick={(e) => e.stopPropagation()} // 내부 클릭 시 닫히지 않도록 막음
       >
         {/* 메뉴 리스트 */}
-        <div className="mt-2 mb-2 px-1 space-y-6 text-gray-700">
+        {/* <div className="mt-2 mb-2 px-1 space-y-6 text-gray-700"> */}
+        <div
+          className={`mt-2 mb-2 px-1 space-y-6 text-gray-700 transition-opacity duration-300 ${
+            isLoading ? "opacity-0" : "opacity-100"
+          }`}
+        >
           {isLoggedIn ? (
             <>
               <button
                 className="flex items-center w-full text-left hover:bg-gray-200 transition rounded-lg px-6"
                 onClick={() => {
                   setIsOpen(false);
-                  router.push('/mypage');
+                  router.push("/mypage");
                 }}
               >
                 <UserRound size={24} className="rounded-full" />

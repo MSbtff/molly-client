@@ -1,21 +1,21 @@
-'use server';
+"use server";
 
-import { decryptToken } from '@/shared/util/lib/encrypteToken';
-import {cookies} from 'next/headers';
+import { decryptToken } from "@/shared/util/lib/encrypteToken";
+import { cookies } from "next/headers";
 
 export default async function retrieverProduct() {
-  const enToken = (await cookies()).get('Authorization')?.value as string;
+  const enToken = (await cookies()).get("Authorization")?.value as string;
   const authToken = await decryptToken(enToken);
 
   if (!authToken) {
-    throw new Error('인증되지 않은 요청입니다.');
+    throw new Error("인증되지 않은 요청입니다.");
   }
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_SERVER_URL}/product/seller?page=0&size=5`,
+      `${process.env.NEXT_SERVER_URL}/product/seller?page=0&size=100`,
       {
-        method: 'GET',
+        method: "GET",
         headers: {
           Authorization: authToken,
         },
@@ -23,16 +23,16 @@ export default async function retrieverProduct() {
     );
 
     if (response.status === 204) {
-      console.log('성공적으로 처리됨 (반환 데이터 없음)');
+      console.log("성공적으로 처리됨 (반환 데이터 없음)");
       return null;
     }
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error('상품 조회 실패:', errorData);
+      console.error("상품 조회 실패:", errorData);
       return {
         success: false,
-        message: errorData.message || '상품 조회에 실패했습니다.',
+        message: errorData.message || "상품 조회에 실패했습니다.",
       };
     }
     console.log(response.status);
