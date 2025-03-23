@@ -8,12 +8,7 @@ interface SortModalProps {
   selectedSort: string;
 }
 
-const SortModal: React.FC<SortModalProps> = ({
-  isOpen,
-  onClose,
-  onSortSelect,
-  selectedSort,
-}) => {
+const SortModal: React.FC<SortModalProps> = ({ isOpen, onClose, onSortSelect, selectedSort,}) => {
   if (!isOpen) return null;
 
   // 정렬 옵션 매핑 (한글 → API 값)
@@ -26,24 +21,14 @@ const SortModal: React.FC<SortModalProps> = ({
   };
 
   return (
-    <div
-      onClick={onClose}
-      className="fixed inset-0 flex items-end bg-black bg-opacity-50 backdrop-blur-md z-50"
-    >
+    <div onClick={onClose}
+      className="fixed inset-0 flex items-end bg-black bg-opacity-50 backdrop-blur-md z-50" >
       <div className="w-full bg-white rounded-t-lg p-4">
         <ul className="mt-2">
           {Object.keys(sortOptions).map((label) => (
-            <li
-              key={label}
-              className={`p-2 hover:bg-gray-200 cursor-pointer text-gray-400 ${
-                label === selectedSort ? "font-bold text-black" : ""
-              }`}
-              onClick={() => {
-                onSortSelect(label);
-                onClose();
-              }}
-            >
-              {label}
+            <li key={label}
+              className={`p-2 hover:bg-gray-200 cursor-pointer text-gray-400 ${label === selectedSort ? "font-bold text-black-400" : "text-gray-400" }`}
+              onClick={() => { onSortSelect(label); onClose();}} > {label}
             </li>
           ))}
         </ul>

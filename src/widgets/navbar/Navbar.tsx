@@ -16,7 +16,8 @@ export default function Navbar({ nickname }: { nickname: string }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleCategoryClick = (category: string) => {
-    router.push(`/product?categories=${encodeURIComponent(category)}`);
+    const newSearchParams = `categories=${encodeURIComponent(category)}`;
+    router.push(`/product?${newSearchParams}`);
   };
 
   useEffect(() => {
@@ -37,7 +38,6 @@ export default function Navbar({ nickname }: { nickname: string }) {
 
         {/* 메인 메뉴 */}
         <div className="flex gap-6">
-          {/* <Link href="/product/men" className="hover:text-gray-600">남성</Link> */}
           <button
             onClick={() => handleCategoryClick("남성")}
             className="hover:text-gray-600"
@@ -57,10 +57,8 @@ export default function Navbar({ nickname }: { nickname: string }) {
           {/* 검색 */}
           <div
             className="flex items-center w-[150px] bg-[#F5F5F5] rounded-full px-3 py-1 border-none hover:bg-gray-200 mr-1"
-            // onClick={() => setIsSearchOpen(true)}
             onClick={() => {
               setIsSearchOpen(true);
-              // setIsExiting(false); // 모달을 다시 열 수 있도록 초기화
             }}
           >
             <Search size={20} className="text-black" />

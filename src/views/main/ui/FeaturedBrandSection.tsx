@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import getProduct from "@/shared/api/getProduct";
 interface Brand {
   brandThumbnailUrl: string;
@@ -14,10 +15,12 @@ interface Product {
 }
 
 export default function FeaturedBrandSection() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL; //api 서버 주소
-  const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL; //이미지 서버 주소
-  const brandApiUrl = `${baseUrl}/product/popular-brand`; //API 엔드포인트
-  const productApiUrl = `${baseUrl}/product`; //API 엔드포인트
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL;
+  const brandApiUrl = `${baseUrl}/product/popular-brand`;
+  const productApiUrl = `${baseUrl}/product`;
+
+  const router = useRouter();
 
   const [brands, setBrands] = useState<Brand[]>([]); // 인기 브랜드 리스트
   const [brandProducts, setBrandProducts] = useState<Product[]>([]); // 특정 브랜드의 상품 리스트
@@ -26,47 +29,58 @@ export default function FeaturedBrandSection() {
 
   //인기 브랜드 조회 api 요청
   const fetchPopularBrands = async () => {
-    try {
-      // const response = await fetch(`${brandApiUrl}?page=0&size=5`);
-      //const paramsString = `${brandApiUrl}?page=0&size=5`;
-      // const response = await getProduct(paramsString);
-      // const data = await response;
+    // try {
+    // const paramsString = `${brandApiUrl}?page=0&size=5`;
+    //   const response = await getProduct(paramsString);
+    //   const data = await response;
 
-      // const response = fetch(`${brandApiUrl}?page=0&size=5`).then((res) =>
-      //   res.json()
-      // );
+    //   console.log("인기 브랜드 API 성공:", data);
 
-      const response = await (
-        await fetch(`${brandApiUrl}?page=0&size=5`)
-      ).json();
+    //   if (data.data.length > 0) {
+    //     setBrands(data.data);
+    //     setSelectedBrand(data.data[0].brandName); // 첫 번째 브랜드 선택
+    //   }
+    // } catch (error) {
+    //   console.error("인기 브랜드 API 요청 실패:", error);
+    // }
 
-      const data = response;
+    const paramsString = `${brandApiUrl}?page=0&size=5`;
 
-      console.log("인기 브랜드 API 성공:", data);
+    getProduct(paramsString)
+      .then((response) => {
+        console.log("인기 브랜드 API 성공:", response);
 
-      if (data.data.length > 0) {
-        setBrands(data.data);
-        setSelectedBrand(data.data[0].brandName); // 첫 번째 브랜드 선택
-      }
-    } catch (error) {
-      console.error("인기 브랜드 API 요청 실패:", error);
-    }
+        if (response.data.length > 0) {
+          setBrands(response.data);
+          setSelectedBrand(response.data[0].brandName); // 첫 번째 브랜드 선택
+        }
+      })
+      .catch((error) => {
+        console.error("인기 브랜드 API 요청 실패:", error);
+      });
   };
 
   //인기 브랜드의 특정 상품 조회 api 요청
   const fetchBrandProducts = async (brandName: string) => {
-    try {
-      // const response = await fetch(`${productApiUrl}?brandName=${encodeURIComponent(brandName)}&orderBy=CREATED_AT&page=0&size=3`);
-      const paramsString = `${productApiUrl}?brandName=${encodeURIComponent(
-        brandName
-      )}&orderBy=CREATED_AT&page=0&size=3`;
-      const response = await getProduct(paramsString);
-      const data = await response;
-      console.log("인기 브랜드의 특정 상품 API 성공:", data);
-      setBrandProducts(data.data || []);
-    } catch (error) {
-      console.error("인기 브랜드의 특정 상품 API 요청 실패:", error);
-    }
+    // try {
+    //   const paramsString = `${productApiUrl}?brandName=${encodeURIComponent(brandName)}&orderBy=CREATED_AT&page=0&size=3`;
+    //   const response = await getProduct(paramsString);
+    //   const data = await response;
+    //   console.log("인기 브랜드의 특정 상품 API 성공:", data);
+    //   setBrandProducts(data.data || []);
+    // } catch (error) {
+    //   console.error("인기 브랜드의 특정 상품 API 요청 실패:", error);
+    // }
+    const paramsString = `${productApiUrl}?brandName=${encodeURIComponent(brandName)}&orderBy=CREATED_AT&page=0&size=3`;
+
+    getProduct(paramsString)
+      .then((response) => {
+        console.log("인기 브랜드의 특정 상품 API 성공:", response);
+        setBrandProducts(response.data || []);
+      })
+      .catch((error) => {
+        console.error("인기 브랜드의 특정 상품 API 요청 실패:", error);
+      });
   };
 
   useEffect(() => {
@@ -79,6 +93,16 @@ export default function FeaturedBrandSection() {
     }
   }, [selectedBrand]);
 
+  //메인 배너 클릭 시 url 변경
+  const handleBrandClick = (barndName: string) => {
+    router.push(`/product?brandName=${barndName}`);
+  };
+
+  //특정 상품 클릭 시 url 변경
+  const handleProductClick = (id: number) => {
+    router.push(`/detail/${id}`);
+  };
+
   return (
     <section className="px-20 mt-16">
       <h3 className="text-xl font-semibold mb-4">주목할 브랜드</h3>
@@ -87,11 +111,7 @@ export default function FeaturedBrandSection() {
         {brands.length > 0 && (
           <div className="relative w-full h-fit">
             <Image
-              src={
-                imageError[0]
-                  ? "/images/noImage.svg"
-                  : `${imageUrl}${brands[0].brandThumbnailUrl}`
-              }
+              src={imageError[0] ? "/images/noImage.svg" : `${imageUrl}${brands[0].brandThumbnailUrl}`}
               alt={brands[0].brandName}
               width={611}
               height={350}
@@ -100,7 +120,8 @@ export default function FeaturedBrandSection() {
             <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center p-6">
               <div className="text-white">
                 <h4 className="text-2xl font-bold">{`새로워진 ${brands[0].brandName}`}</h4>
-                <button className="mt-2 px-4 py-2 border border-white text-white text-sm">
+                <button className="mt-2 px-4 py-2 border border-white text-white text-sm"
+                  onClick={() => { handleBrandClick(brands[0].brandName) }}>
                   바로가기
                 </button>
               </div>
@@ -111,34 +132,21 @@ export default function FeaturedBrandSection() {
         {/* 오른쪽 상품 리스트 (2개) */}
         <div className="grid grid-cols-3">
           {brandProducts.map((product) => (
-            <div
-              key={product.id}
-              className="flex flex-col items-center text-center mt-auto"
-            >
+            <div key={product.id} className="flex flex-col items-center text-center mt-auto">
               {imageUrl && (
                 <Image
-                  src={
-                    imageError[product.id]
-                      ? "/images/noImage.svg"
-                      : `${imageUrl}${product.thumbnail.path}`
-                  }
+                  src={imageError[product.id] ? "/images/noImage.svg" : `${imageUrl}${product.thumbnail.path}`}
                   alt={product.brandName}
                   width={170}
                   height={200}
-                  className="object-cover mt-4"
-                  onError={() =>
-                    setImageError((prev) => ({ ...prev, [product.id]: true }))
-                  }
+                  className="object-cover mt-4 cursor-pointer"
+                  onError={() => setImageError((prev) => ({ ...prev, [product.id]: true }))}
+                  onClick={() => handleProductClick(product.id)}
                 />
               )}
-              <button className="flex flex-col items-start w-full overflow-hidden mt-2">
-                {/* <span className="text-left text-sm text-gray-700">{product.brandName}</span> */}
-                <span className="text-xs text-gray-500">
-                  {product.productName}
-                </span>
-                <span className="text-black-500 font-semibold text-sm">
-                  {product.price.toLocaleString()}원
-                </span>
+              <button className="flex flex-col items-start w-full overflow-hidden">
+                <span className="text-left text-sm text-gray-500 truncate w-full">{product.productName}</span>
+                <span className="text-left text-black-500 font-semibold">{product.price.toLocaleString()}원</span>
               </button>
             </div>
           ))}
@@ -149,25 +157,21 @@ export default function FeaturedBrandSection() {
         {brands.slice(1).map((brand, index) => (
           <div key={index} className="flex flex-col items-center">
             <Image
-              src={
-                imageError[index]
-                  ? "/images/noImage.svg"
-                  : `${imageUrl}${brand.brandThumbnailUrl}`
-              }
+              src={imageError[index] ? "/images/noImage.svg" : `${imageUrl}${brand.brandThumbnailUrl}`}
               alt={brand.brandName}
               width={300}
               height={350}
-              className="object-cover rounded"
+              className="object-cover rounded cursor-pointer"
+              onClick={() => handleBrandClick(brand.brandName)}
             />
-            <p className="text-left mt-2 font-semibold text-sm">
-              {brand.brandName}
-            </p>
+            <p className="text-left mt-2 font-semibold text-sm cursor-pointer"
+              onClick={() => handleBrandClick(brand.brandName)}> {brand.brandName} </p>
           </div>
         ))}
       </div>
       {/* "다른 상품 더보기" 버튼 */}
       <div className="flex justify-center mt-8">
-        <button className="px-6 py-3 border border-gray-400 text-base font-medium hover:bg-gray-100 transition">
+        <button className="px-6 py-3 border border-gray-400 text-base font-medium hover:bg-gray-100 transition ">
           다른 상품 더보기
         </button>
       </div>
