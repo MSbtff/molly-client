@@ -15,7 +15,7 @@ import { useCartStore } from "@/app/provider/CartStore";
 import { OrderItem } from "@/app/provider/OrderStore";
 import { useEncryptStore } from "@/app/provider/EncryptStore";
 import { CartSkelton } from "./CartSkelton";
-import { useCartOptions } from "../hooks/useCartOptions";
+import { useCartOptions } from "@/features/cart/hooks/useCartOptions";
 
 export const CartComponent = () => {
   const router = useRouter();
