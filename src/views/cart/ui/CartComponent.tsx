@@ -15,18 +15,43 @@ import { useCartStore } from "@/app/provider/CartStore";
 import { OrderItem } from "@/app/provider/OrderStore";
 import { useEncryptStore } from "@/app/provider/EncryptStore";
 import { CartSkelton } from "./CartSkelton";
+import { useCartOptions } from "../hooks/useCartOptions";
 
 export const CartComponent = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
-  const [selectedCartItem, setSelectedCartItem] = useState<CartItem | null>(
-    null
-  );
   const { orders, setOrders } = useEncryptStore();
   const { setCartState } = useCartStore();
+
+  // refreshCartItems 함수를 먼저 정의
+  const refreshCartItems = async () => {
+    try {
+      const data = await cartRead();
+      console.log("새로운 데이터:", data);
+      if (data) {
+        setCartItems(data);
+      }
+    } catch (error) {
+      console.error("카트 데이터 조회 중 오류", error);
+    }
+  };
+
+  // 옵션 관련 커스텀 훅 사용 (refreshCartItems가 정의된 후)
+  const {
+    isModalOpen,
+    selectedCartItem,
+    showDuplicateWarning,
+    openOptionModal,
+    closeOptionModal,
+    tryUpdateOption,
+    handleDuplicateConfirm,
+    cancelDuplicateWarning,
+  } = useCartOptions({
+    cartItems,
+    refreshCartItems,
+  });
 
   const selectedItemsInfo = useMemo(() => {
     const selectedItemsList = cartItems.filter((item) =>
@@ -69,18 +94,6 @@ export const CartComponent = () => {
   useEffect(() => {
     console.log("cartItems 상태 업데이트 됨:", cartItems);
   }, [cartItems]);
-
-  const refreshCartItems = async () => {
-    try {
-      const data = await cartRead();
-      console.log("새로운 데이터:", data);
-      if (data) {
-        setCartItems(data);
-      }
-    } catch (error) {
-      console.error("카트 데이터 조회 중 오류", error);
-    }
-  };
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
@@ -173,11 +186,16 @@ export const CartComponent = () => {
 
   return (
     <>
-      {isOpen && selectedCartItem && (
-        <OptionModal
-          onClose={() => setIsOpen(false)}
+      {isModalOpen && selectedCartItem && (
+        <OptionModal.Root
+          onClose={closeOptionModal}
           cartItem={selectedCartItem}
           onUpdate={refreshCartItems}
+          allCartItems={cartItems}
+          showDuplicateWarning={showDuplicateWarning}
+          onDuplicateConfirm={handleDuplicateConfirm}
+          onDuplicateCancel={cancelDuplicateWarning}
+          tryUpdateOption={tryUpdateOption}
         />
       )}
       <div className={`w-screen flex flex-col justify-center`}>
@@ -254,8 +272,7 @@ export const CartComponent = () => {
                       className="hover:text-slate-400"
                       onClick={(e: React.MouseEvent) => {
                         e.preventDefault();
-                        setIsOpen(true);
-                        setSelectedCartItem(item);
+                        openOptionModal(item);
                       }}
                     >
                       옵션 변경
