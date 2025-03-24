@@ -67,13 +67,15 @@ export default function HotItemsSection() {
       {/* 메인 배너 map으로 돌릴거임*/}
       <div className="grid grid-cols-2 gap-2">
         {products.slice(0, 2).map((product) => (
-          <div key={product.id} className="relative w-full h-auto">
+          // <div key={product.id} className="relative w-full h-auto">
+          <div key={product.id} className="relative w-full aspect-[3/2]">
             {imageUrl &&
               <Image
                 src={imageError[product.id] ? "/images/noImage.svg" : `${imageUrl}${product.thumbnail.path}`}
                 alt={product.brandName}
-                width={611}
-                height={350}
+                // width={611}
+                // height={350}
+                fill
                 className="object-cover w-full h-auto rounded"
                 onError={() => handleImageError(product.id)}
               />

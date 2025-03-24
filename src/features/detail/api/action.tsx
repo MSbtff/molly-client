@@ -53,11 +53,13 @@ export async function buyNow(
   try {
     // 요청할 바디 데이터
     const bodyData = JSON.stringify({
-      cartOrderRequests: [], // 장바구니 주문이 아니라면 빈 배열
-      directOrderRequest: {
-        itemId,
-        quantity,
-      },
+      // cartOrderRequests: [], // 장바구니 주문이 아니라면 빈 배열
+      orderRequests: [
+        {
+          itemId,
+          quantity,
+        },
+      ],
     });
 
     console.log("바로 구매 주문 요청 본문:", bodyData);
@@ -101,7 +103,8 @@ export async function addToCart(itemId: number, quantity: number) {
   const authToken = await authTokenValue();
 
   if (!authToken) {
-    return { redirectUrl: "/login" };
+    // return { redirectUrl: "/login" };
+    throw new Error("로그인이 필요합니다.");
   }
 
   try {

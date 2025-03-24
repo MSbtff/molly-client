@@ -77,7 +77,9 @@ export default function FilterSidebar({ setIsOpen }: FilterSidebarProps) {
   const handleApplyFilters = () => {
 
     // 기존 URL의 검색 파라미터를 가져옴
-    const params = new URLSearchParams(window.location.search);
+    // const params = new URLSearchParams(window.location.search);
+    // URL 파라미터를 빈 상태로 초기화
+    const params = new URLSearchParams();
 
     // ✅ 카테고리(성별 + 옷) 필터 추가
     const selectedCategories = [
