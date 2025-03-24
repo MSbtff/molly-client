@@ -161,8 +161,7 @@ export default function ProductDetail({
 
         // 구매 성공 후 모달 띄우기 
         setShowToast(true);
-        // router.push("/cart");
-        // alert(message);
+        
       } catch (error) {
         console.error("장바구니 api 오류 발생:", error);
         router.push("/login");

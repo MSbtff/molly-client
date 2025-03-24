@@ -103,7 +103,8 @@ export async function addToCart(itemId: number, quantity: number) {
   const authToken = await authTokenValue();
 
   if (!authToken) {
-    return { redirectUrl: "/login" };
+    // return { redirectUrl: "/login" };
+    throw new Error("로그인이 필요합니다.");
   }
 
   try {

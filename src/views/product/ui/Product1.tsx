@@ -25,16 +25,15 @@ const categories = ["카테고리", "성별", "색상", "가격", "사이즈", "
 
 export default function Product1() {
   const router = useRouter();
-  const searchParams = useSearchParams(); //쿼리 파라미터 가져오기(현재url의 쿼리 파라미터 가져오기)
+  const searchParams = useSearchParams(); 
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL; //api 서버 주소
-  const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL; //이미지 서버 주소
-  const productApiUrl = `${baseUrl}/product`; // 상품 목록 API 엔드포인트
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL; 
+  const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL; 
+  const productApiUrl = `${baseUrl}/product`; 
 
-  const [selectedSort, setSelectedSort] = useState(""); //현재 선택된 정렬 기준
-  const [isSortModalOpen, setIsSortModalOpen] = useState(false); //정렬 모달창 열림 상태(반응형)
-  const [isFilterOpen, setIsFilterOpen] = useState(false); //필터 모달창 열림 상태
-
+  const [selectedSort, setSelectedSort] = useState("신상품순"); 
+  const [isSortModalOpen, setIsSortModalOpen] = useState(false); 
+  const [isFilterOpen, setIsFilterOpen] = useState(false); 
   const { page, setPage } = useScrollStore();
   const [isLast, setIsLast] = useState(false);
   const [productList, setProductList] = useState<Product[] | null>(null);
@@ -54,13 +53,12 @@ export default function Product1() {
     const params = new URLSearchParams(window.location.search); // 현재 URL 파라미터 가져오기
     if (checked) {
       params.set("excludeSoldOut", "true");
-      // updateSearchParams("excludeSoldOut", "true");
     } else {
       params.delete("excludeSoldOut");
-      // updateSearchParams("excludeSoldOut", null);
     }
     router.push(`/product?${params.toString()}`); // URL 변경
   };
+
   // 정렬 버튼 클릭 핸들러
   const handleSortChange = (sortLabel: string) => {
     const orderBy = sortOptions[sortLabel]; // 한글 → API 값 변환
@@ -69,28 +67,20 @@ export default function Product1() {
       console.log("정렬 값이 한글로 변환되지 않았음");
       return;
     }
-
     const params = new URLSearchParams(window.location.search);
     params.set("orderBy", orderBy); // orderBy 값을 params 객체에 추가 혹은 업데이트
     setSelectedSort( Object.keys(sortOptions).find((key) => sortOptions[key] === orderBy) || "" ); // UI에 표시할 한글 값 업데이트
     router.push(`/product?${params.toString()}`);
   };
+
   //특정 상품 클릭 시 url 변경
   const handleProductClick = (id: number) => {
     router.push(`/detail/${id}`);
   };
 
   const fetchProductList = async (page: number) => {
-    // if (isLast) return;
     setIsLoading(true);
     try {
-      //전역 상태 가져옴
-      //전역 상태에 현재 page와 size=48을 더한다. 이건 새로운 변수에 저장(전역 상태 업데이트 x)
-      //새로운 변수로 api 요청
-      // const currentParams = new URLSearchParams(searchParams);//전역 상태를 URLSearchParams 객체로 변환
-      // currentParams.set("page", page.toString());
-      // currentParams.set("size", "48");//page, size 추가. 전역 상태 업데이트 x
-
       const params = new URLSearchParams(window.location.search);
       params.append("page", page.toString());
       console.log("api 호출 시 현재 페이지:", page);
@@ -113,20 +103,8 @@ export default function Product1() {
         price: item.price,
       }));
 
-      // setProductList((prev) => (page === 0 ? formattedData : [...(prev ?? []), ...formattedData]));
-
-      //마냥 이전 상태와 새로운 데이터를 비교하여 중복을 제거하면 마지막 페이지에서 데이터가 렌더링이 안된다.
-      // setProductList((prev) => [
-      //   ...(prev ?? []),
-      //   ...formattedData.filter(
-      //     (newItem: Product) =>
-      //       !(prev ?? []).some((item) => item.id === newItem.id)
-      //   ),
-      // ]);
       if (page === 0) {
-        // 정렬/필터 변경 시 초기화
         setProductList(formattedData);
-        // setPage(1); // 페이지 초기화 (0 -> 1로)
       } else {
         setProductList((prev) => [
           ...(prev ?? []),
