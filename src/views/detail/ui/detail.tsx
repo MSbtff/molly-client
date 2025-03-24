@@ -4,12 +4,12 @@ import { useState, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Heart, Share2 } from "lucide-react";
-// import ReviewModal from '../../public/images/review.jpg';
 import { buyNow, addToCart } from "@/features/detail/api/action";
 import ReviewModal from "@/views/detail/ui/ReviewModal";
 import { useEncryptStore } from "@/app/provider/EncryptStore";
 import { OrderItem } from "@/app/provider/OrderStore";
 import getProduct from "@/shared/api/getProduct";
+import CartToast from "./CartToast";
 interface Product {
   id: number;
   categories: string[];
@@ -67,6 +67,8 @@ export default function ProductDetail({
   const [reviewExpanded, setreviewExpanded] = useState(false); // 리뷰 펼침 여부
   const [selectedReview, setSelectedReview] = useState<Review | null>(null); // 선택한 리뷰 정보 저장
   const [isreviewModalOpen, setIsreviewModalOpen] = useState(false); // 모달 열림 상태
+
+  const [showToast, setShowToast] = useState(false);
 
   const [isPending, startTransition] = useTransition();
 
@@ -136,7 +138,7 @@ export default function ProductDetail({
         router.push("/buy");
       } catch (error) {
         console.error("order api 요청 중 오류 발생:", error);
-        // router.push("/login");
+        router.push("/login");
       }
     });
   };
@@ -157,14 +159,18 @@ export default function ProductDetail({
         const message = await addToCart(selectedOption.id, quantity);
         console.log("api 응답:", message); //응답 값 확인
 
-        // 구매 성공 후 /buy 페이지로 이동
-        router.push("/cart");
-        // alert(message);
+        // 구매 성공 후 모달 띄우기 
+        setShowToast(true);
+        
       } catch (error) {
         console.error("장바구니 api 오류 발생:", error);
-        // router.push("/login");
+        router.push("/login");
       }
     });
+  };
+
+  const handleToastClose = () => {
+    setShowToast(false);
   };
 
   //api 요청
@@ -400,18 +406,12 @@ export default function ProductDetail({
           <div className="flex gap-4 mt-4">
             <button
               className="w-1/2 bg-black text-white py-3 text-lg font-semibold hover:bg-orange-600"
-              onClick={handleBuyNow}
-            >
-              {" "}
-              바로 구매
+              onClick={handleBuyNow} >{" "} 바로 구매
             </button>
             <button
               className="w-1/2 border border-black py-3 text-lg font-semibold"
               onClick={handleCartButton}
-              disabled={isPending}
-            >
-              {" "}
-              장바구니 담기
+              disabled={isPending}> {" "} 장바구니 담기
             </button>
           </div>
         </div>
@@ -659,7 +659,6 @@ export default function ProductDetail({
             </li>
           </ul>
         </div>
-
         {/* 교환, 환불, A/S 안내 */}
         <div className="border-t pt-8 mt-8">
           <h3 className="text-2xl font-semibold mb-4">교환, 환불, A/S 안내</h3>
@@ -701,6 +700,8 @@ export default function ProductDetail({
       {isreviewModalOpen && selectedReview && (
         <ReviewModal review={selectedReview} onClose={reviewCloseModal} />
       )}
+
+      {showToast && <CartToast productImage={`${imageUrl}${product.thumbnail.path}`} onClose={handleToastClose}/>}
 
       {/* 이 브랜드의 다른 상품 섹션 */}
     </>

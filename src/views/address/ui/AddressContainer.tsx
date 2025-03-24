@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import {useState, useEffect} from 'react';
-import {AddressModal} from './AddressModal';
-import addressDelete from '@/features/address/api/addressDelete';
-import addressDefault from '@/features/address/api/addressDefault';
+import { useState, useEffect } from "react";
+import { AddressModal } from "./AddressModal";
+import addressDelete from "@/features/address/api/addressDelete";
+import addressDefault from "@/features/address/api/addressDefault";
 
 export interface Address {
   addressId: number;
@@ -31,7 +31,7 @@ export default function AddressContainer({
     setAddresses(addressRes);
   }, [addressRes]);
 
-  const handleAddAddress = (newAddress: Omit<Address, 'addressId'>) => {
+  const handleAddAddress = (newAddress: Omit<Address, "addressId">) => {
     const newId =
       addresses.length > 0
         ? Math.max(...addresses.map((a) => a.addressId)) + 1
@@ -51,7 +51,7 @@ export default function AddressContainer({
       ...newAddress,
       addressId: newId,
       userId: addresses[0]?.userId || 0, // 기존 주소가 있다면 그 userId 사용
-      userName: addresses[0]?.userName || '', // 기존 주소가 있다면 그 userName 사용
+      userName: addresses[0]?.userName || "", // 기존 주소가 있다면 그 userName 사용
     };
 
     setAddresses((prev) => [...prev, fullNewAddress]);
@@ -91,7 +91,7 @@ export default function AddressContainer({
   };
 
   const handleSubmit = async (
-    addressData: Omit<Address, 'addressId' | 'userId' | 'userName'>
+    addressData: Omit<Address, "addressId" | "userId" | "userName">
   ) => {
     if (editAddress) {
       // 수정 모드
@@ -105,16 +105,16 @@ export default function AddressContainer({
             : address
         )
       );
-      console.log('주소 수정 완료');
+      console.log("주소 수정 완료");
       setEditAddress(null);
       setIsModalOpen(false); // 모달 닫기
-      alert('수정되었습니다.');
+      alert("수정되었습니다.");
     } else {
       // 새로운 주소 추가
       handleAddAddress({
         ...addressData,
         userId: addresses[0]?.userId || 0,
-        userName: addresses[0]?.userName || '',
+        userName: addresses[0]?.userName || "",
       });
       setIsModalOpen(false); // 모달 닫기
     }

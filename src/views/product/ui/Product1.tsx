@@ -24,23 +24,16 @@ interface Product {
 const categories = ["카테고리", "성별", "색상", "가격", "사이즈", "브랜드"];
 
 export default function Product1() {
-  // console.log(window.location.search);
   const router = useRouter();
-  const searchParams = useSearchParams(); //쿼리 파라미터 가져오기(현재url의 쿼리 파라미터 가져오기)
+  const searchParams = useSearchParams();
 
-  // const urlParams = useSearchParams();
-  // const { searchParams, updateSearchParams } = useUrlStore(); // 전역 상태 사용
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL;
+  const productApiUrl = `${baseUrl}/product`;
 
-  // console.log("페이지 진입 시 searchParams",searchParams);
-
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL; //api 서버 주소
-  const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL; //이미지 서버 주소
-  const productApiUrl = `${baseUrl}/product`; // 상품 목록 API 엔드포인트
-
-  const [selectedSort, setSelectedSort] = useState(""); //현재 선택된 정렬 기준
-  const [isSortModalOpen, setIsSortModalOpen] = useState(false); //정렬 모달창 열림 상태(반응형)
-  const [isFilterOpen, setIsFilterOpen] = useState(false); //필터 모달창 열림 상태
-
+  const [selectedSort, setSelectedSort] = useState("신상품순");
+  const [isSortModalOpen, setIsSortModalOpen] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const { page, setPage } = useScrollStore();
   const [isLast, setIsLast] = useState(false);
   const [productList, setProductList] = useState<Product[] | null>(null);
@@ -64,13 +57,12 @@ export default function Product1() {
     const params = new URLSearchParams(window.location.search); // 현재 URL 파라미터 가져오기
     if (checked) {
       params.set("excludeSoldOut", "true");
-      // updateSearchParams("excludeSoldOut", "true");
     } else {
       params.delete("excludeSoldOut");
-      // updateSearchParams("excludeSoldOut", null);
     }
     router.push(`/product?${params.toString()}`); // URL 변경
   };
+
   // 정렬 버튼 클릭 핸들러
   const handleSortChange = (sortLabel: string) => {
     const orderBy = sortOptions[sortLabel]; // 한글 → API 값 변환
@@ -79,41 +71,39 @@ export default function Product1() {
       console.log("정렬 값이 한글로 변환되지 않았음");
       return;
     }
-
     const params = new URLSearchParams(window.location.search);
     params.set("orderBy", orderBy); // orderBy 값을 params 객체에 추가 혹은 업데이트
-    setSelectedSort( Object.keys(sortOptions).find((key) => sortOptions[key] === orderBy) || "" ); // UI에 표시할 한글 값 업데이트
+    setSelectedSort(
+      Object.keys(sortOptions).find((key) => sortOptions[key] === orderBy) || ""
+    ); // UI에 표시할 한글 값 업데이트
     router.push(`/product?${params.toString()}`);
   };
+
   //특정 상품 클릭 시 url 변경
   const handleProductClick = (id: number) => {
     router.push(`/detail/${id}`);
   };
 
   const fetchProductList = async (page: number) => {
-    // if (isLast) return;
     setIsLoading(true);
     try {
-      //전역 상태 가져옴
-      //전역 상태에 현재 page와 size=48을 더한다. 이건 새로운 변수에 저장(전역 상태 업데이트 x)
-      //새로운 변수로 api 요청
-      // const currentParams = new URLSearchParams(searchParams);//전역 상태를 URLSearchParams 객체로 변환
-      // currentParams.set("page", page.toString());
-      // currentParams.set("size", "48");//page, size 추가. 전역 상태 업데이트 x
-
       const params = new URLSearchParams(window.location.search);
       params.append("page", page.toString());
       console.log("api 호출 시 현재 페이지:", page);
       params.append("size", "48");
 
       const paramsString = `${productApiUrl}?${params.toString()}`;
-      console.log("api 요청 url:",paramsString);
+      console.log("api 요청 url:", paramsString);
       const response = await getProduct(paramsString);
 
       if (!response) throw new Error("상품 목록 API 요청 실패");
 
       const data = await response;
-      console.log("상품 목록 api 응답 성공:", data, new Date().toLocaleString());
+      console.log(
+        "상품 목록 api 응답 성공:",
+        data,
+        new Date().toLocaleString()
+      );
 
       const formattedData = data.data.map((item: Product) => ({
         id: item.id,
@@ -123,55 +113,57 @@ export default function Product1() {
         price: item.price,
       }));
 
-      // setProductList((prev) => (page === 0 ? formattedData : [...(prev ?? []), ...formattedData]));
+      if (page === 0) {
+        setProductList(formattedData);
+      } else {
+        setProductList((prev) => [
+          ...(prev ?? []),
+          ...formattedData.filter(
+            (newItem: Product) =>
+              !(prev ?? []).some((item) => item.id === newItem.id)
+          ),
+        ]);
+      }
 
-      //마냥 이전 상태와 새로운 데이터를 비교하여 중복을 제거하면 마지막 페이지에서 데이터가 렌더링이 안된다.
-      // setProductList((prev) => [
-      //   ...(prev ?? []),
-      //   ...formattedData.filter(
-      //     (newItem: Product) =>
-      //       !(prev ?? []).some((item) => item.id === newItem.id)
-      //   ),
-      // ]);
-      setProductList([...formattedData]);
       setIsLast(data.pageable.isLast);
       setIsLoading(false);
     } catch (error) {
       console.error("상품 목록 API 요청 에러:", error);
-    } 
+    }
   };
 
   //파마리터가 바뀌면 api 호출
-  useEffect(()=>{
+  useEffect(() => {
     console.log("searchParams 변경 시 api 호출");
     fetchProductList(0);
-  }, [searchParams]) //window.local.search
+  }, [searchParams]); //window.local.search
 
   //무한스크롤 감지 시 api 호출 : isLast, isLoading, trgRef를 모두 검사함
   useEffect(() => {
     const trgRef = triggerRef.current;
     if (!trgRef || isLast || isLoading) return; //로딩 중일 때 중복 호출 방지
 
-    const observer = new IntersectionObserver( //새로운 IntersectionObserver 객체 생성: 특정 요소(triggerRef.current)가 뷰토트에 진입했는지 감지하기 위해 사용
+    const observer = new IntersectionObserver( //새로운 IntersectionObserver 객체 생성
+      //특정 요소가 뷰토프 안에 보일 때 콜백을 실행한다
       (entries) => {
-        //감지된 요소임. 하나의 triggerRef만 감지
         if (entries[0].isIntersecting && !isLoading) {
+          //감지 대상(triggerRef)가 화면에 보이면 true
           fetchProductList(page);
           console.log("페이지 증가 전", page);
           setPage(page + 1); //페이지 증가
           console.log("무한스크롤로 상품 목록 api 요청");
         }
       },
-      { threshold: 1.0 } //감지된 요소가 100% 화면에 나타날 때만 실행
+      { threshold: 1.0 } //요소가 100퍼 화면에 보여야 감지됨
     );
-    observer.observe(trgRef); //감지 대상 등록
+    observer.observe(trgRef); //트리거 요소를 관찰
 
     return () => {
-      if (trgRef) observer.unobserve(trgRef);//useEffect 클린업 함수. 언마운트될때 실행됨
+      if (trgRef) observer.unobserve(trgRef); //컴포넌트 언마운트 시 관찰 중단
     };
   }, [page, isLoading, isLast]); //isLoading, fetchproductList, isLast를 넣으라는데
   //왜 의존성 배열에 page, isLoading, isLast 넣어야 무한스크롤 트리거 되는지 모르겠음.
- 
+
   return (
     <>
       <div className="px-20 mt-10">
@@ -180,9 +172,13 @@ export default function Product1() {
           {categories.map((category) => (
             <button
               key={category}
-              className={ "px-4 py-2 rounded-full text-sm bg-gray-100 hover:bg-gray-300 flex-shrink-0"}
+              className={
+                "px-4 py-2 rounded-full text-sm bg-gray-100 hover:bg-gray-300 flex-shrink-0"
+              }
               onClick={() => setIsFilterOpen(true)}
-            > {category}
+            >
+              {" "}
+              {category}
             </button>
           ))}
         </div>
@@ -191,7 +187,10 @@ export default function Product1() {
         <div className="flex items-center justify-between mt-6">
           <div className="flex itmes-center gap-2">
             <label className="flex items-center gap-2 text-sm text-gray-700">
-              <input type="checkbox" id="exclude-sold-out" className="w-4 h-4"
+              <input
+                type="checkbox"
+                id="exclude-sold-out"
+                className="w-4 h-4"
                 onChange={handleExcludeSoldOutChange}
                 checked={!!searchParams.get("excludeSoldOut")} // URL의 파라미터 값에 따라 체크 여부 결정
               />{" "}
@@ -204,8 +203,14 @@ export default function Product1() {
             {Object.keys(sortOptions).map((label) => (
               <button
                 key={label}
-                className={`hover:underline hover:text-black ${ selectedSort === label ? "text-black underline" : "text-gray-500" }`}
-                onClick={() => handleSortChange(label)} >
+                className={`hover:underline hover:text-black ${
+                  selectedSort === label
+                    ? "text-black underline"
+                    : "text-gray-500"
+                }`}
+                onClick={() => handleSortChange(label)}
+              >
+                {" "}
                 {label}
               </button>
             ))}
@@ -222,15 +227,25 @@ export default function Product1() {
         {/* 상품 리스트 */}
         <div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-2 sm:grid-cols-2 gap-2 mt-1">
           {productList && productList.length === 0 && !isLoading ? (
-            <p className="text-center text-gray-500 mt-10"> 검색된 상품이 없습니다.
+            <p className="text-center text-gray-500 mt-10">
+              {" "}
+              검색된 상품이 없습니다.{" "}
             </p>
           ) : (
             <>
               {/* 기존 상품 UI */}
-              {productList && productList.map((item) => (
-                  <div key={item.id} className="flex flex-col items-center mt-10" >
+              {productList &&
+                productList.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex flex-col items-center mt-10"
+                  >
                     <Image
-                      src={ item.url ? `${imageUrl}${item.url}` : "/images/noImage.svg" }
+                      src={
+                        item.url
+                          ? `${imageUrl}${item.url}`
+                          : "/images/noImage.svg"
+                      }
                       alt={item.productName}
                       width={250}
                       height={300}
@@ -239,11 +254,22 @@ export default function Product1() {
                       className="w-full h-auto object-contain cursor-pointer"
                       onClick={() => handleProductClick(item.id)}
                     />
-                    <button className="flex flex-col items-start w-full overflow-hidden"
-                            onClick={() => handleProductClick(item.id)}>
-                      <p className="text-left mt-1 text-sm font-semibold"> {item.brandName} </p>
-                      <p className="text-left text-sm text-gray-500 truncate w-full"> {item.productName}  </p>
-                      <p className="text-left text-black-500 font-semibold"> {item.price.toLocaleString()}원</p>
+                    <button
+                      className="flex flex-col items-start w-full overflow-hidden"
+                      onClick={() => handleProductClick(item.id)}
+                    >
+                      <p className="text-left mt-1 text-sm font-semibold">
+                        {" "}
+                        {item.brandName}{" "}
+                      </p>
+                      <p className="text-left text-sm text-gray-500 truncate w-full">
+                        {" "}
+                        {item.productName}{" "}
+                      </p>
+                      <p className="text-left text-black-500 font-semibold">
+                        {" "}
+                        {item.price.toLocaleString()}원
+                      </p>
                     </button>
                   </div>
                 ))}
@@ -254,7 +280,10 @@ export default function Product1() {
               {/* 추가 로딩 중인 경우: 기존 UI는 그대로 유지하면서 하단에 스켈레톤 UI 추가 */}
               {isLoading &&
                 Array.from({ length: 48 }).map((_, index) => (
-                  <div key={index} className="flex flex-col items-left mt-10 animate-pulse" >
+                  <div
+                    key={index}
+                    className="flex flex-col items-left mt-10 animate-pulse"
+                  >
                     <div className="w-full aspect-[5/6] bg-gray-300 animate-pulse" />
                     <div className="w-32 h-4 bg-gray-300 mt-2" />
                     <div className="w-28 h-4 bg-gray-200 mt-1" />
@@ -266,8 +295,12 @@ export default function Product1() {
         </div>
 
         {isFilterOpen && <FilterSidebar setIsOpen={setIsFilterOpen} />}
-        <SortModal isOpen={isSortModalOpen} onClose={() => setIsSortModalOpen(false)}
-          onSortSelect={(sort) => handleSortChange(sort)} selectedSort={selectedSort}/>
+        <SortModal
+          isOpen={isSortModalOpen}
+          onClose={() => setIsSortModalOpen(false)}
+          onSortSelect={(sort) => handleSortChange(sort)}
+          selectedSort={selectedSort}
+        />
       </div>
     </>
   );
