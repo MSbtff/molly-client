@@ -24,14 +24,8 @@ interface Product {
 const categories = ["카테고리", "성별", "색상", "가격", "사이즈", "브랜드"];
 
 export default function Product1() {
-  // console.log(window.location.search);
   const router = useRouter();
   const searchParams = useSearchParams(); //쿼리 파라미터 가져오기(현재url의 쿼리 파라미터 가져오기)
-
-  // const urlParams = useSearchParams();
-  // const { searchParams, updateSearchParams } = useUrlStore(); // 전역 상태 사용
-
-  // console.log("페이지 진입 시 searchParams",searchParams);
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL; //api 서버 주소
   const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL; //이미지 서버 주소
@@ -50,11 +44,7 @@ export default function Product1() {
 
   // 정렬 옵션 매핑 (한글 → API 값)
   const sortOptions: Record<string, string> = {
-    조회순: "VIEW_COUNT",
-    신상품순: "CREATED_AT",
-    판매순: "PURCHASE_COUNT",
-    높은가격순: "PRICE_DESC",
-    낮은가격순: "PRICE_ASC",
+    조회순: "VIEW_COUNT", 신상품순: "CREATED_AT", 판매순: "PURCHASE_COUNT", 높은가격순: "PRICE_DESC", 낮은가격순: "PRICE_ASC",
   };
   //품절 제외 체크박스 클릭 핸들러
   const handleExcludeSoldOutChange = (
@@ -133,7 +123,20 @@ export default function Product1() {
       //       !(prev ?? []).some((item) => item.id === newItem.id)
       //   ),
       // ]);
-      setProductList([...formattedData]);
+      if (page === 0) {
+        // 정렬/필터 변경 시 초기화
+        setProductList(formattedData);
+        // setPage(1); // 페이지 초기화 (0 -> 1로)
+      } else {
+        setProductList((prev) => [
+          ...(prev ?? []),
+          ...formattedData.filter(
+            (newItem: Product) =>
+              !(prev ?? []).some((item) => item.id === newItem.id)
+          ),
+        ]);
+      }
+
       setIsLast(data.pageable.isLast);
       setIsLoading(false);
     } catch (error) {
@@ -152,22 +155,22 @@ export default function Product1() {
     const trgRef = triggerRef.current;
     if (!trgRef || isLast || isLoading) return; //로딩 중일 때 중복 호출 방지
 
-    const observer = new IntersectionObserver( //새로운 IntersectionObserver 객체 생성: 특정 요소(triggerRef.current)가 뷰토트에 진입했는지 감지하기 위해 사용
+    const observer = new IntersectionObserver( //새로운 IntersectionObserver 객체 생성
+                                          //특정 요소가 뷰토프 안에 보일 때 콜백을 실행한다
       (entries) => {
-        //감지된 요소임. 하나의 triggerRef만 감지
-        if (entries[0].isIntersecting && !isLoading) {
+        if (entries[0].isIntersecting && !isLoading) { //감지 대상(triggerRef)가 화면에 보이면 true
           fetchProductList(page);
           console.log("페이지 증가 전", page);
           setPage(page + 1); //페이지 증가
           console.log("무한스크롤로 상품 목록 api 요청");
         }
       },
-      { threshold: 1.0 } //감지된 요소가 100% 화면에 나타날 때만 실행
+      { threshold: 1.0 } //요소가 100퍼 화면에 보여야 감지됨
     );
-    observer.observe(trgRef); //감지 대상 등록
+    observer.observe(trgRef); //트리거 요소를 관찰
 
     return () => {
-      if (trgRef) observer.unobserve(trgRef);//useEffect 클린업 함수. 언마운트될때 실행됨
+      if (trgRef) observer.unobserve(trgRef);//컴포넌트 언마운트 시 관찰 중단
     };
   }, [page, isLoading, isLast]); //isLoading, fetchproductList, isLast를 넣으라는데
   //왜 의존성 배열에 page, isLoading, isLast 넣어야 무한스크롤 트리거 되는지 모르겠음.
@@ -194,27 +197,21 @@ export default function Product1() {
               <input type="checkbox" id="exclude-sold-out" className="w-4 h-4"
                 onChange={handleExcludeSoldOutChange}
                 checked={!!searchParams.get("excludeSoldOut")} // URL의 파라미터 값에 따라 체크 여부 결정
-              />{" "}
-              품절 제외
+              />{" "} 품절 제외
             </label>
           </div>
 
           {/* 정렬 : 큰 화면에서 정렬 버튼 전체 표시 */}
           <div className="hidden md:flex gap-4">
             {Object.keys(sortOptions).map((label) => (
-              <button
-                key={label}
+              <button key={label}
                 className={`hover:underline hover:text-black ${ selectedSort === label ? "text-black underline" : "text-gray-500" }`}
-                onClick={() => handleSortChange(label)} >
-                {label}
+                onClick={() => handleSortChange(label)} > {label}
               </button>
             ))}
           </div>
           {/* 정렬 : 작은 화면에서는 단일 버튼으로 변경 */}
-          <button
-            className="md:hidden hover:underline"
-            onClick={() => setIsSortModalOpen(true)}
-          >
+          <button className="md:hidden hover:underline" onClick={() => setIsSortModalOpen(true)}>
             {selectedSort || "조회순"}
           </button>
         </div>
@@ -222,8 +219,7 @@ export default function Product1() {
         {/* 상품 리스트 */}
         <div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-2 sm:grid-cols-2 gap-2 mt-1">
           {productList && productList.length === 0 && !isLoading ? (
-            <p className="text-center text-gray-500 mt-10"> 검색된 상품이 없습니다.
-            </p>
+            <p className="text-center text-gray-500 mt-10"> 검색된 상품이 없습니다. </p>
           ) : (
             <>
               {/* 기존 상품 UI */}

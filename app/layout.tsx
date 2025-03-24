@@ -73,10 +73,12 @@ export default async function RootLayout({
 
   return (
     <html lang="ko">
+      <head>
       <meta
         httpEquiv="Content-Security-Policy"
         content="upgrade-insecure-requests"
       ></meta>
+      </head>
       <body className="min-h-screen">
         <Navbar nickname={nickname} />
         <main>{children}</main>
