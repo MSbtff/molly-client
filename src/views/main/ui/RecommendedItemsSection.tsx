@@ -35,10 +35,31 @@ export default function RecommendedItemsSection() {
       <h3 className="text-xl font-semibold mb-4">랭킹</h3>
       {/* 상품 리스트 (2줄, 5개씩) */}
       <div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-2 sm:grid-cols-2  gap-2 mt-1">
-        {dummyProducts.map((item) => (
+        {/* {dummyProducts.map((item) => (
           <div key={item.id} className="flex flex-col items-center mt-10">
             <Image
               src={item.image || noImage} // 이미지가 없으면 기본 이미지 사용
+              alt={item.name}
+              width={250}
+              height={250}
+              className="w-full h-auto object-contain cursor-pointer"
+            />
+            <button className="flex flex-col items-start w-full overflow-hidden">
+              <span className="text-left mt-1 text-sm font-semibold">{item.brand}</span>
+              <span className="text-left text-sm text-gray-500 truncate w-full">{item.name}</span>
+              <span className="text-left text-black-500 font-semibold">{item.price}</span>
+            </button>
+          </div>
+        ))} */}
+        {dummyProducts.map((item, index) => (
+          <div key={item.id} className="relative flex flex-col items-center mt-10">
+            {/* 숫자 배지 */}
+            <span className="absolute top-0 left-0 bg-black text-white text-sm px-2 py-1 w-[30px] text-center z-10">
+              {index + 1}
+            </span>
+
+            <Image
+              src={item.image || noImage}
               alt={item.name}
               width={250}
               height={250}

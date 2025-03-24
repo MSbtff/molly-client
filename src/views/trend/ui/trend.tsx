@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import getProduct from "@/shared/api/getProduct";
-import { Heart, MessageCircle } from "lucide-react"; // 아이콘 라이브러리 사용
 interface TrendReview {
     images: string[];
     reviewResDto: {
@@ -37,14 +36,6 @@ export default function Trend() {
         id: number; image: string;
         nickname: string; content: string; product?: Product
     }[]>([]);
-
-    // 좋아요 상태 관리 (각 아이템마다 저장)
-    const [likedItems, setLikedItems] = useState<{ [key: number]: boolean }>({});
-
-    // 좋아요 버튼 핸들러
-    const toggleLike = (id: number) => {
-        setLikedItems((prev) => ({ ...prev, [id]: !prev[id] }));
-    };
 
     const fetchTrendingReviews = async () => {
         try {

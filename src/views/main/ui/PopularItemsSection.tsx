@@ -35,9 +35,9 @@ export default function PopularItemsSection() {
 
   const [selectedCategory, setSelectedCategory] = useState("아우터"); //현재 선택된 카테고리
   const [allProducts, setAllProducts] = useState<Product[]>([]); // API로 가져온 36개 상품 전체
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  // const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   // const [loading, setLoading] = useState(false);///데이터 로딩 상태
-  const [imageError, setImageError] = useState(false);
+  // const [imageError, setImageError] = useState(false);
 
   const fetchProducts = async (category: string) => {
     // setLoading(true);
@@ -114,7 +114,7 @@ export default function PopularItemsSection() {
         modules={[Autoplay, Navigation]}
         autoplay={{ delay: 3000, disableOnInteraction: false }}
         loop={true}
-        onSlideChange={(swiper) => setCurrentSlideIndex(swiper.realIndex)}
+        // onSlideChange={(swiper) => setCurrentSlideIndex(swiper.realIndex)}
         className="w-full"
       >
         {getProductGroups().map((group, groupIndex) => (
@@ -124,7 +124,7 @@ export default function PopularItemsSection() {
                 <div key={product.id} className="flex flex-col items-center mt-10">
                   {imageUrl && (
                     <Image
-                      src={imageError ? "/images/noImage.svg" : `${imageUrl}${product.thumbnail.path}`}
+                      src={!product.thumbnail.path ? "/images/noImage.svg" : `${imageUrl}${product.thumbnail.path}`}
                       alt={product.brandName}
                       width={200}
                       height={250}
