@@ -1,10 +1,11 @@
-'use server'
+"use server";
 
 export default async function Footer() {
   return (
-    <footer className="min-h-48 bg-white border-t border-gray-300 py-10 px-6 text-gray-700 mt-16 sticky" style={
-      {contain: 'layout paint style', contentVisibility: 'auto'}
-    }>
+    <footer
+      className="min-h-48 bg-white border-t border-gray-300 py-10 px-6 text-gray-700 mt-16 sticky"
+      style={{ contain: "layout paint style", contentVisibility: "auto" }}
+    >
       {/* 상단 정보 */}
       <div className="max-w-screen-lg mx-auto grid grid-cols-4 gap-8 text-center md:text-left">
         <div>
@@ -57,15 +58,15 @@ export default async function Footer() {
           등록번호 123-45-6789
         </p>
         <p className="mt-2">
-          사업자 정보 확인 | 고객센터 전화 문의{' '}
+          사업자 정보 확인 | 고객센터 전화 문의{" "}
           <span className="font-medium">080-1234-5678</span> | FAX 01-2345-6789
-          | 이메일{' '}
+          | 이메일{" "}
           <a
             href="mailto:service@nike.co.kr"
             className="text-blue-500 underline"
           >
             service@molly.co.kr
-          </a>{' '}
+          </a>{" "}
           | 호스팅서비스사업자 (유)몰리
         </p>
       </div>
