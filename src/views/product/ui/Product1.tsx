@@ -253,6 +253,7 @@ export default function Product1() {
                       priority={true}
                       className="w-full h-auto object-contain cursor-pointer"
                       onClick={() => handleProductClick(item.id)}
+                      unoptimized={true}
                     />
                     <button
                       className="flex flex-col items-start w-full overflow-hidden"

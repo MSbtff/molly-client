@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Image from "next/image";
-import {ChevronLeft, ChevronRight}  from 'lucide-react';
+import { ChevronLeft, ChevronRight } from "lucide-react";
 interface ReviewModalProps {
   review: {
     images: string[];
@@ -14,7 +14,6 @@ interface ReviewModalProps {
 const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL;
 
 export default function ReviewModal({ review, onClose }: ReviewModalProps) {
-
   const [currentIndex, setCurrentIndex] = useState(0); // 현재 이미지 슬라이드 인덱스
   // 이전 이미지 보기
   const prevImage = () => {
@@ -31,23 +30,25 @@ export default function ReviewModal({ review, onClose }: ReviewModalProps) {
 
   if (!review) return null;
 
-  console.log("받은 리뷰 데이터:",review);
+  console.log("받은 리뷰 데이터:", review);
 
   console.log("imageUrl", imageUrl);
   console.log("review.images", review.images);
   console.log("currentIndex", currentIndex);
   console.log("review.images?.[currentIndex]", review.images?.[currentIndex]);
 
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       {/* 모달 박스 */}
       <div className="bg-white shadow-lg max-w-sm w-full p-4 relative z-50">
         {/* 닫기 버튼 */}
-        <button className="absolute top-4 right-4 text-gray-500 text-xl z-50" onClick={onClose}>
+        <button
+          className="absolute top-4 right-4 text-gray-500 text-xl z-50"
+          onClick={onClose}
+        >
           ✕
         </button>
-        
+
         {/* 리뷰 이미지 캐러셀 */}
         <div className="relative">
           {/* 이전 버튼 (이미지가 하나 이상일 때만 표시) */}
@@ -56,7 +57,7 @@ export default function ReviewModal({ review, onClose }: ReviewModalProps) {
               className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white rounded-full p-2 opacity-70 hover:opacity-100 transition"
               onClick={prevImage}
             >
-              <ChevronLeft/>
+              <ChevronLeft />
             </button>
           )}
 
@@ -67,6 +68,7 @@ export default function ReviewModal({ review, onClose }: ReviewModalProps) {
               width={500}
               height={500}
               className="w-full h-auto object-cover"
+              unoptimized={true}
             />
           </div>
 
@@ -76,7 +78,7 @@ export default function ReviewModal({ review, onClose }: ReviewModalProps) {
               className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white rounded-full p-2 opacity-70 hover:opacity-100 transition"
               onClick={nextImage}
             >
-              <ChevronRight/>
+              <ChevronRight />
             </button>
           )}
         </div>
@@ -93,6 +95,7 @@ export default function ReviewModal({ review, onClose }: ReviewModalProps) {
             width={30}
             height={30}
             className="rounded-full"
+            unoptimized={true}
           />
           <span className="ml-2 font-semibold">{review.user.name}</span>
         </div>

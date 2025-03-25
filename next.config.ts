@@ -3,7 +3,6 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: false,
   productionBrowserSourceMaps: false,
-  unoptimized: false,
 
   async rewrites() {
     return [
@@ -16,7 +15,7 @@ const nextConfig: NextConfig = {
 
   images: {
     formats: ["image/webp"],
-
+    unoptimized: false,
     domains: [
       "15.165.65.222",
       "172.16.24.53",
@@ -48,6 +47,11 @@ const nextConfig: NextConfig = {
         hostname: "persimmontree.ddns.net",
         port: "8000",
         pathname: "/images/**",
+      },
+      {
+        protocol: "https",
+        hostname: "d19usddqdhhab5.cloudfront.net",
+        pathname: "/**",
       },
     ],
   },

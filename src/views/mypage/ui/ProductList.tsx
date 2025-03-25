@@ -59,6 +59,7 @@ export const ProductList = ({ orders }: PurchasePageProps) => {
                     height={80}
                     className="object-cover rounded-md"
                     loading="eager"
+                    unoptimized={true}
                   />
                 ) : (
                   <div className="w-full h-full bg-gray-200 rounded-md flex items-center justify-center">
@@ -91,6 +92,7 @@ export const ProductList = ({ orders }: PurchasePageProps) => {
                         width={80}
                         height={80}
                         loading="eager"
+                        unoptimized={true}
                       />
                       <div className="flex flex-col">
                         <strong>{detail.productName}</strong>
