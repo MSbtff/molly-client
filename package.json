@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest"
+    "test": "jest",
+    "test:browser": "K6_BROWSER_ENABLED=true k6 run ./browser-test.js"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.3",

@@ -22,6 +22,7 @@ const nextConfig: NextConfig = {
       "172.16.24.53",
       "persimmontree.ddns.net",
       "d19usddqdhhab5.cloudfront.net",
+      "172.16.24.72",
     ], // API에서 제공하는 이미지 도메인(IP) (외부 이미지 도메인 허용)
     remotePatterns: [
       {
