@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import {useState} from 'react';
-import {PurchasePageProps} from './PurchasePage';
+import Image from "next/image";
+import { useState } from "react";
+import { PurchasePageProps } from "./PurchasePage";
 
-type DeliveryStatus = 'READY' | 'SHIPPING' | 'COMPLETED';
+type DeliveryStatus = "READY" | "SHIPPING" | "COMPLETED";
 
-export const ProductList = ({orders}: PurchasePageProps) => {
+export const ProductList = ({ orders }: PurchasePageProps) => {
   const [selectedOrder, setSelectedOrder] = useState<number | null>(null);
 
   const statusMap = {
-    READY: '배송대기',
-    SHIPPING: '배송중',
-    COMPLETED: '배송완료',
+    READY: "배송대기",
+    SHIPPING: "배송중",
+    COMPLETED: "배송완료",
   };
 
   return (
@@ -21,7 +21,7 @@ export const ProductList = ({orders}: PurchasePageProps) => {
         const day = new Date(order.orderedAt);
         const orderDay = `${day.getMonth() + 1}월 ${day.getDate()}일`;
         const status =
-          statusMap[order.deliveryStatus as DeliveryStatus] || '결제완료';
+          statusMap[order.deliveryStatus as DeliveryStatus] || "결제완료";
 
         return (
           <div key={order.tossOrderId}>
@@ -46,6 +46,7 @@ export const ProductList = ({orders}: PurchasePageProps) => {
                     width={80}
                     height={80}
                     loading="eager"
+                    unoptimized={true}
                   />
                   <div className="flex flex-col">
                     <strong>{detail.productName}</strong>

@@ -85,7 +85,7 @@ export default function ProductDetail({
 
     try {
       // const response = await fetch(`${productApiUrl}?brand=${product.brandName}&page=0&size=12`);
-      const paramsString = `${productApiUrl}?brand=${product.brandName}&page=0&size=12`; 
+      const paramsString = `${productApiUrl}?brand=${product.brandName}&page=0&size=12`;
       const response = await getProduct(paramsString);
 
       const data = await response;
@@ -159,9 +159,8 @@ export default function ProductDetail({
         const message = await addToCart(selectedOption.id, quantity);
         console.log("api 응답:", message); //응답 값 확인
 
-        // 구매 성공 후 모달 띄우기 
+        // 구매 성공 후 모달 띄우기
         setShowToast(true);
-        
       } catch (error) {
         console.error("장바구니 api 오류 발생:", error);
         router.push("/login");
@@ -188,7 +187,7 @@ export default function ProductDetail({
       // const response = await fetch(`${baseUrl}/product/${productId}`);
       const paramsString = `${baseUrl}/product/${productId}`;
       const response = await getProduct(paramsString);
-      
+
       const data = await response;
 
       // 이미지 서버 연결 안될 때 기본 이미지로 대체(504 떠도 페이지 렌더링하기)
@@ -267,6 +266,7 @@ export default function ProductDetail({
             alt={product?.productName || "상품 이미지"}
             width={600}
             height={600}
+            unoptimized={true}
           />
         </div>
 
@@ -406,12 +406,18 @@ export default function ProductDetail({
           <div className="flex gap-4 mt-4">
             <button
               className="w-1/2 bg-black text-white py-3 text-lg font-semibold hover:bg-orange-600"
-              onClick={handleBuyNow} >{" "} 바로 구매
+              onClick={handleBuyNow}
+            >
+              {" "}
+              바로 구매
             </button>
             <button
               className="w-1/2 border border-black py-3 text-lg font-semibold"
               onClick={handleCartButton}
-              disabled={isPending}> {" "} 장바구니 담기
+              disabled={isPending}
+            >
+              {" "}
+              장바구니 담기
             </button>
           </div>
         </div>
@@ -507,6 +513,7 @@ export default function ProductDetail({
                     height={240}
                     className="object-contain"
                     onClick={() => router.push(`/detail/${item.id}`)}
+                    unoptimized={true}
                   />
                 </div>
 
@@ -569,6 +576,7 @@ export default function ProductDetail({
                       height={300}
                       className="rounded-lg w-full h-full object-cover"
                       onClick={() => reviewOopenModal(review)}
+                      unoptimized={true}
                       // onClick={() => setSelectedReview(review)} ??
                       //   onError={(e) => (e.currentTarget.src = "/images/noImage.svg")} // 이미지 로드 실패 시 기본 이미지 사용
                     />
@@ -701,7 +709,12 @@ export default function ProductDetail({
         <ReviewModal review={selectedReview} onClose={reviewCloseModal} />
       )}
 
-      {showToast && <CartToast productImage={`${imageUrl}${product.thumbnail.path}`} onClose={handleToastClose}/>}
+      {showToast && (
+        <CartToast
+          productImage={`${imageUrl}${product.thumbnail.path}`}
+          onClose={handleToastClose}
+        />
+      )}
 
       {/* 이 브랜드의 다른 상품 섹션 */}
     </>

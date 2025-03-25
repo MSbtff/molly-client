@@ -371,6 +371,7 @@ export const ProductRegister = () => {
                       width={50}
                       height={50}
                       className="w-32 h-32 object-cover rounded-md"
+                      unoptimized={true}
                     />
                   </div>
                 )}
