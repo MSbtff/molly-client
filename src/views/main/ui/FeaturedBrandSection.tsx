@@ -53,10 +53,15 @@ export default function FeaturedBrandSection() {
         {brands.slice(0, 2).map((brand, index) => (
           <div key={index} className="relative w-full aspect-[3/2]">
             <Image
-              src={!brand.brandThumbnailUrl ? "/images/noImage.svg" : `${imageUrl}${brand.brandThumbnailUrl}`}
+              src={
+                !brand.brandThumbnailUrl
+                  ? "/images/noImage.svg"
+                  : `${imageUrl}${brand.brandThumbnailUrl}`
+              }
               alt={brand.brandName}
               fill
               className="object-cover rounded"
+              unoptimized={true}
             />
             <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center p-6">
               <div className="text-white">
@@ -78,19 +83,28 @@ export default function FeaturedBrandSection() {
         {brands.slice(2).map((brand, index) => (
           <div key={index} className="flex flex-col items-center">
             <Image
-              src={!brand.brandThumbnailUrl ? "/images/noImage.svg" : `${imageUrl}${brand.brandThumbnailUrl}`}
+              src={
+                !brand.brandThumbnailUrl
+                  ? "/images/noImage.svg"
+                  : `${imageUrl}${brand.brandThumbnailUrl}`
+              }
               alt={brand.brandName}
               width={300}
               height={350}
               className="object-cover rounded cursor-pointer"
               onClick={() => handleBrandClick(brand.brandName)}
+              unoptimized={true}
             />
-            <p className="text-left mt-2 font-semibold text-sm cursor-pointer"
-              onClick={() => handleBrandClick(brand.brandName)}> {brand.brandName} </p>
+            <p
+              className="text-left mt-2 font-semibold text-sm cursor-pointer"
+              onClick={() => handleBrandClick(brand.brandName)}
+            >
+              {" "}
+              {brand.brandName}{" "}
+            </p>
           </div>
         ))}
       </div>
-
     </section>
   );
 }

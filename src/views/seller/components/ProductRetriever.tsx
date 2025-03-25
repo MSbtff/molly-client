@@ -128,6 +128,7 @@ export const ProductRetriever = ({ productRes }: SellerContainerProps) => {
                       alt={product.productName}
                       width={50}
                       height={50}
+                      unoptimized={true}
                     />
                     {product.productName}
                   </TableCell>

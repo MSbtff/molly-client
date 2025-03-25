@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 interface CartToastProps {
-    productImage: string;
-    onClose: () => void; // 모달 닫기 함수 추가
-  }
+  productImage: string;
+  onClose: () => void; // 모달 닫기 함수 추가
+}
 
 export default function CartToast({ productImage, onClose }: CartToastProps) {
   const [isVisible, setIsVisible] = useState(true);
@@ -32,6 +32,7 @@ export default function CartToast({ productImage, onClose }: CartToastProps) {
           width={30}
           height={30}
           className="rounded-md"
+          unoptimized={true}
         />
       </div>
 

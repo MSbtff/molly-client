@@ -14,20 +14,91 @@ import image11 from "../../../../public/images/suggestion/추천11.jpg";
 import image12 from "../../../../public/images/suggestion/추천12.jpg";
 
 const dummyProducts = [
-  { id: 1, brand: "지비에이치 어패럴", name: "HIGH-NECK TOGGLE COAT_CHARCOAL", price: "35% 48,655원", image: image1 },
-  { id: 2, brand: "더니트컴퍼니", name: "TURTLE NECK KNIT", price: "25% 32,000원", image: image2 },
-  { id: 3, brand: "아더에러", name: "OVERSIZED HOODIE", price: "30% 78,900원", image: image3 },
-  { id: 4, brand: "커버낫", name: "DOWN PUFFER JACKET", price: "20% 105,000원", image: image4 },
-  { id: 5, brand: "디스이즈네버댓", name: "LOGO SWEATSHIRT", price: "40% 49,000원", image: image5 },
-  { id: 6, brand: "마뗑킴", name: "CROSSBODY BAG", price: "15% 89,000원", image: image6 },
-  { id: 7, brand: "스투시", name: "GRAPHIC PRINT TEE", price: "10% 39,000원", image: image7 },
-  { id: 8, brand: "뉴발란스", name: "574 SNEAKERS", price: "30% 78,000원", image: image8 },
-  { id: 9, brand: "나이키", name: "AIR MAX 270", price: "25% 129,000원", image: image9 },
-  { id: 10, brand: "아디다스", name: "ULTRABOOST 21", price: "35% 99,000원", image: image10 },
-  { id: 11, brand: "챔피온", name: "REVERSE WEAVE HOODIE", price: "30% 79,000원", image: image11 },
-  { id: 12, brand: "칼하트", name: "WORK JACKET", price: "20% 149,000원", image: image12 },
+  {
+    id: 1,
+    brand: "지비에이치 어패럴",
+    name: "HIGH-NECK TOGGLE COAT_CHARCOAL",
+    price: "35% 48,655원",
+    image: image1,
+  },
+  {
+    id: 2,
+    brand: "더니트컴퍼니",
+    name: "TURTLE NECK KNIT",
+    price: "25% 32,000원",
+    image: image2,
+  },
+  {
+    id: 3,
+    brand: "아더에러",
+    name: "OVERSIZED HOODIE",
+    price: "30% 78,900원",
+    image: image3,
+  },
+  {
+    id: 4,
+    brand: "커버낫",
+    name: "DOWN PUFFER JACKET",
+    price: "20% 105,000원",
+    image: image4,
+  },
+  {
+    id: 5,
+    brand: "디스이즈네버댓",
+    name: "LOGO SWEATSHIRT",
+    price: "40% 49,000원",
+    image: image5,
+  },
+  {
+    id: 6,
+    brand: "마뗑킴",
+    name: "CROSSBODY BAG",
+    price: "15% 89,000원",
+    image: image6,
+  },
+  {
+    id: 7,
+    brand: "스투시",
+    name: "GRAPHIC PRINT TEE",
+    price: "10% 39,000원",
+    image: image7,
+  },
+  {
+    id: 8,
+    brand: "뉴발란스",
+    name: "574 SNEAKERS",
+    price: "30% 78,000원",
+    image: image8,
+  },
+  {
+    id: 9,
+    brand: "나이키",
+    name: "AIR MAX 270",
+    price: "25% 129,000원",
+    image: image9,
+  },
+  {
+    id: 10,
+    brand: "아디다스",
+    name: "ULTRABOOST 21",
+    price: "35% 99,000원",
+    image: image10,
+  },
+  {
+    id: 11,
+    brand: "챔피온",
+    name: "REVERSE WEAVE HOODIE",
+    price: "30% 79,000원",
+    image: image11,
+  },
+  {
+    id: 12,
+    brand: "칼하트",
+    name: "WORK JACKET",
+    price: "20% 149,000원",
+    image: image12,
+  },
 ];
-
 
 export default function RecommendedItemsSection() {
   return (
@@ -52,7 +123,10 @@ export default function RecommendedItemsSection() {
           </div>
         ))} */}
         {dummyProducts.map((item, index) => (
-          <div key={item.id} className="relative flex flex-col items-center mt-10">
+          <div
+            key={item.id}
+            className="relative flex flex-col items-center mt-10"
+          >
             {/* 숫자 배지 */}
             <span className="absolute top-0 left-0 bg-black text-white text-sm px-2 py-1 w-[30px] text-center z-10">
               {index + 1}
@@ -64,11 +138,18 @@ export default function RecommendedItemsSection() {
               width={250}
               height={250}
               className="w-full h-auto object-contain cursor-pointer"
+              unoptimized={true}
             />
             <button className="flex flex-col items-start w-full overflow-hidden">
-              <span className="text-left mt-1 text-sm font-semibold">{item.brand}</span>
-              <span className="text-left text-sm text-gray-500 truncate w-full">{item.name}</span>
-              <span className="text-left text-black-500 font-semibold">{item.price}</span>
+              <span className="text-left mt-1 text-sm font-semibold">
+                {item.brand}
+              </span>
+              <span className="text-left text-sm text-gray-500 truncate w-full">
+                {item.name}
+              </span>
+              <span className="text-left text-black-500 font-semibold">
+                {item.price}
+              </span>
             </button>
           </div>
         ))}

@@ -23,13 +23,19 @@ interface Product {
   thumbnail: Thumbnail;
 }
 
-const popularCategories = [ "아우터","상의","바지","원피스/스커트","패션소품",];
+const popularCategories = [
+  "아우터",
+  "상의",
+  "바지",
+  "원피스/스커트",
+  "패션소품",
+];
 
 export default function PopularItemsSection() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL; 
-  const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL; 
-  const productApiUrl = `${baseUrl}/product`; 
-  
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL;
+  const productApiUrl = `${baseUrl}/product`;
+
   const router = useRouter();
   const swiperRef = useRef<SwiperType | null>(null);
 
@@ -43,7 +49,9 @@ export default function PopularItemsSection() {
     // setLoading(true);
     try {
       // const response = await fetch(`${productApiUrl}?categories=${encodeURIComponent(category)}&orderBy=CREATED_AT&page=0&size=12`);
-      const paramsString = `${productApiUrl}?categories=${encodeURIComponent(category)}&orderBy=VIEW_COUNT&page=0&size=36`;
+      const paramsString = `${productApiUrl}?categories=${encodeURIComponent(
+        category
+      )}&orderBy=VIEW_COUNT&page=0&size=36`;
       const response = await getProduct(paramsString);
       const data = await response;
       console.log("지금 인기있는 상품 api 성공", data);
@@ -53,7 +61,7 @@ export default function PopularItemsSection() {
       }
     } catch (error) {
       console.error("지금 인기있는 상품 api 요청 실패:", error);
-    } 
+    }
   };
 
   //초기 데이터 불러오기 -캐싱처리 필요
@@ -100,17 +108,24 @@ export default function PopularItemsSection() {
       {/* 카테고리 버튼 */}
       <div className="flex gap-4 mb-4">
         {popularCategories.map((category, index) => (
-          <button key={index}
-            className={`px-4 py-2 rounded-full border border-gray-600 ${selectedCategory === category ? "bg-black text-white" : "bg-gray"}`}
+          <button
+            key={index}
+            className={`px-4 py-2 rounded-full border border-gray-600 ${
+              selectedCategory === category ? "bg-black text-white" : "bg-gray"
+            }`}
             onClick={() => handleCategoryChange(category)}
-          > {category}
+          >
+            {" "}
+            {category}
           </button>
         ))}
       </div>
 
       {/* 상품 리스트 */}
       <Swiper
-        onSwiper={(swiper) => { swiperRef.current = swiper; }}
+        onSwiper={(swiper) => {
+          swiperRef.current = swiper;
+        }}
         modules={[Autoplay, Navigation]}
         autoplay={{ delay: 3000, disableOnInteraction: false }}
         loop={true}
@@ -121,24 +136,38 @@ export default function PopularItemsSection() {
           <SwiperSlide key={groupIndex}>
             <div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-2 sm:grid-cols-2 gap-2 mt-1">
               {group.map((product) => (
-                <div key={product.id} className="flex flex-col items-center mt-10">
+                <div
+                  key={product.id}
+                  className="flex flex-col items-center mt-10"
+                >
                   {imageUrl && (
                     <Image
-                      src={!product.thumbnail.path ? "/images/noImage.svg" : `${imageUrl}${product.thumbnail.path}`}
+                      src={
+                        !product.thumbnail.path
+                          ? "/images/noImage.svg"
+                          : `${imageUrl}${product.thumbnail.path}`
+                      }
                       alt={product.brandName}
                       width={200}
                       height={250}
                       className="w-full h-auto object-contain cursor-pointer"
                       onClick={() => handleProductClick(product.id)}
+                      unoptimized={true}
                     />
                   )}
                   <button
                     className="flex flex-col items-start w-full overflow-hidden"
                     onClick={() => handleProductClick(product.id)}
                   >
-                    <span className="text-left mt-1 text-sm font-semibold">{product.brandName}</span>
-                    <span className="text-left text-sm text-gray-500 truncate w-full">{product.productName}</span>
-                    <span className="text-left text-black-500 font-semibold">{product.price.toLocaleString()}원</span>
+                    <span className="text-left mt-1 text-sm font-semibold">
+                      {product.brandName}
+                    </span>
+                    <span className="text-left text-sm text-gray-500 truncate w-full">
+                      {product.productName}
+                    </span>
+                    <span className="text-left text-black-500 font-semibold">
+                      {product.price.toLocaleString()}원
+                    </span>
                   </button>
                 </div>
               ))}
@@ -149,9 +178,11 @@ export default function PopularItemsSection() {
 
       {/* "다른 추천 상품 보기" 버튼 */}
       <div className="flex justify-center mt-8">
-        <button className="flex items-center gap-2 px-6 py-3 border border-gray-400 text-base font-medium hover:bg-gray-100 transition"
-                onClick={handleNextPage}
-                disabled={allProducts.length <= 12}>
+        <button
+          className="flex items-center gap-2 px-6 py-3 border border-gray-400 text-base font-medium hover:bg-gray-100 transition"
+          onClick={handleNextPage}
+          disabled={allProducts.length <= 12}
+        >
           <RotateCcw size={20} /> 다른 추천 상품 보기
         </button>
       </div>

@@ -228,6 +228,7 @@ const OptionModal = {
           width={80}
           height={80}
           loading="eager"
+          unoptimized={true}
         />
         <div className="flex flex-col">
           <strong>{cartItem.cartInfoDto.productName}</strong>

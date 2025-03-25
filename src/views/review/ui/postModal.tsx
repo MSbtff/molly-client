@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import {useState, DragEvent, useTransition} from 'react';
-import {submitReview} from '@/features/review/serverAction';
-import Image from 'next/image';
+import { useState, DragEvent, useTransition } from "react";
+import { submitReview } from "@/features/review/serverAction";
+import Image from "next/image";
 
 interface PostModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export default function PostModal({isOpen, onClose}: PostModalProps) {
+export default function PostModal({ isOpen, onClose }: PostModalProps) {
   // const baseUrl = process.env.NEXT_PUBLIC_BASE_URL; //api 서버 주소
-  const [reviewText, setReviewText] = useState(''); //리뷰 텍스트
+  const [reviewText, setReviewText] = useState(""); //리뷰 텍스트
   const [imagePreviews, setImagePreviews] = useState<string[]>([]); // 여러 개의 이미지 미리보기 상태
   const [imageFiles, setImageFiles] = useState<File[]>([]); // 실제 파일 데이터 저장
   const [isPending, startTransition] = useTransition(); // 비동기 요청 상태 관리
@@ -128,21 +128,21 @@ export default function PostModal({isOpen, onClose}: PostModalProps) {
     };
 
     formData.append(
-      'review',
-      new Blob([JSON.stringify(reviewData)], {type: 'application/json'})
+      "review",
+      new Blob([JSON.stringify(reviewData)], { type: "application/json" })
     );
     imageFiles.forEach((file) => {
-      formData.append('reviewImages', file);
+      formData.append("reviewImages", file);
     });
 
     startTransition(async () => {
       try {
         await submitReview(formData);
-        console.log('리뷰 올리기 성공');
+        console.log("리뷰 올리기 성공");
         onClose();
       } catch (error) {
-        console.error('리뷰 업로드 오류:', error);
-        alert(error instanceof Error ? error.message : '리뷰 업로드 실패');
+        console.error("리뷰 업로드 오류:", error);
+        alert(error instanceof Error ? error.message : "리뷰 업로드 실패");
       }
     });
   };
@@ -184,6 +184,7 @@ export default function PostModal({isOpen, onClose}: PostModalProps) {
                   src={src}
                   alt={`미리보기-${index}`}
                   className="w-full h-full object-cover rounded-md"
+                  unoptimized={true}
                 />
                 <button
                   className="absolute top-0 right-0 bg-red-500 text-white text-xs p-1 rounded-full"
