@@ -28,6 +28,7 @@ export function ProductImage({
         priority={priority}
         quality={80}
         fetchPriority="high"
+        unoptimized={true}
       />
     </div>
   );
