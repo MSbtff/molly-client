@@ -29,7 +29,9 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/buy/page.tsx",
-    "jest.setup.ts"
-, "jest.config.ts"  ],
+    "jest.setup.ts",
+    "jest.config.ts",
+    "browser-test.js"
+  ],
   "exclude": ["node_modules"]
 }

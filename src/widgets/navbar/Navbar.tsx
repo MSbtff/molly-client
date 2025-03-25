@@ -48,17 +48,20 @@ export default function Navbar({ nickname }: { nickname: string }) {
 
   return (
     <>
-      <nav className="flex items-center justify-between px-24 py-5 ">
+      <nav className="w-dvw flex justify-between px-8 py-5 items-center">
         {/* <nav className="flex flex-col px-24 py-5"> */}
 
         {/* 로고 */}
-        <Link href="/" className="text-xl">
+        <Link href="/">
           {/* <h1 className="text-3xl font-bold italic ml-8">MOLLY</h1> */}
-          <h1 className="text-3xl font-bold italic">MOLLY</h1>
+          <h1 className="min-w-60 text-3xl font-bold italic">MOLLY</h1>
         </Link>
 
+        {/* ${
+            isLoggedIn ? "translate-x-36" : "translate-x-[4rem]"
+          } */}
         {/* 여성 남성 랭킹 */}
-        <div className="flex gap-6 translate-x-16">
+        <div className={`flex gap-6 `}>
           {["남성", "여성", "랭킹"].map((category) => (
             <button
               key={category}
@@ -74,7 +77,7 @@ export default function Navbar({ nickname }: { nickname: string }) {
         </div>
 
         {/* 우측 아이콘들 */}
-        <div className="flex items-center gap-1">
+        <div className={`max-w-65 flex items-center`}>
           {/* 검색 */}
           <div
             className="flex items-center w-[150px] bg-[#F5F5F5] rounded-full px-3 py-1 border-none hover:bg-gray-200 mr-1"
