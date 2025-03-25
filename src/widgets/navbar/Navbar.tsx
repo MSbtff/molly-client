@@ -63,9 +63,8 @@ export default function Navbar({ nickname }: { nickname: string }) {
             <button
               key={category}
               onClick={() => handleCategoryClick(category)}
-              className={`hover:text-gray-600 ${
-                selectedCategory === category ? "font-bold underline" : ""
-              }`}
+              className={`hover:text-gray-600 ${selectedCategory === category ? "font-bold underline" : ""
+                }`}
             >
               {" "}
               {category}
@@ -87,6 +86,7 @@ export default function Navbar({ nickname }: { nickname: string }) {
           </div>
           {/* 프로필 */}
           <button
+            aria-label="사용자 페이지 열기"
             onClick={() => {
               setProfileIsOpen(!isProfileOpen);
             }}
@@ -102,6 +102,7 @@ export default function Navbar({ nickname }: { nickname: string }) {
           <Link
             href="/cart"
             className="p-2 rounded-[10px] hover:bg-gray-200 transition flex items-center justify-center"
+            aria-label="장바구니 페이지로 이동"
           >
             <ShoppingCart size={21} />
           </Link>

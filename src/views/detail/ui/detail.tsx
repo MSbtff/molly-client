@@ -181,11 +181,8 @@ export default function ProductDetail({
 
   //상품 상세 api 요청
   const fetchProduct = async () => {
-    // setLoading(true);
-    // setError(null);
 
     try {
-      // const response = await fetch(`${baseUrl}/product/${productId}`);
       const paramsString = `${baseUrl}/product/${productId}`;
       const response = await getProduct(paramsString);
       
@@ -203,7 +200,6 @@ export default function ProductDetail({
       console.log("첫번째 상품의 url:", data.thumbnail.path);
       setProduct(data);
     } catch (error) {
-      // setError(error instanceof Error ? error.message : "알 수 없는 에러 발생");
       console.error("API 요청 에러:", error);
     } finally {
       setIsLoading(false); // API 응답 완료 후 isLoading = false
@@ -221,7 +217,7 @@ export default function ProductDetail({
   // product가 null이면 오류 메시지 표시
   if (!product) {
     return (
-      <p className="text-center text-gray-500">
+      <p className="text-center text-gray-600">
         상품 정보를 불러오지 못했습니다.
       </p>
     );
@@ -263,7 +259,6 @@ export default function ProductDetail({
         <div className="w-1/2 px-8">
           <Image
             src={`${imageUrl}${product.thumbnail.path}`}
-            // src={"/images/noImage.svg"}
             alt={product?.productName || "상품 이미지"}
             width={600}
             height={600}
@@ -280,26 +275,26 @@ export default function ProductDetail({
             {/* 아이콘 컨테이너 */}
             <div className="flex items-center gap-4">
               {/* 찜하기 아이콘 (하트) */}
-              <button className="text-gray-500 hover:text-red-500">
+              <button aria-label="찜하기" className="text-gray-600 hover:text-red-600">
                 <Heart className="w-6 h-6" fill="none" />
               </button>
               {/* 공유 아이콘 */}
-              <button className="text-gray-500 hover:text-gray-700">
+              <button aria-label="공유하기" className="text-gray-600 hover:text-gray-700">
                 <Share2 className="w-6 h-6" />
               </button>
             </div>
           </div>
-          <p className="text-gray-500">{product.productName}</p>
+          <p className="text-gray-600">{product.productName}</p>
           {/* 가격 정보 */}
           <div className="text-lg">
-            <span className="text-gray-400 line-through block">
+            <span className="text-gray-600 line-through block">
               {product.price.toLocaleString()}원
             </span>
             <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-red-500 font-bold text-2xl">
+              <span className="text-red-600 font-bold text-2xl">
                 {product.price.toLocaleString()}원
               </span>
-              <span className="text-red-500 text-lg">30%</span>
+              <span className="text-red-600 text-lg">30%</span>
               {/* <span className="text-black-500 font-bold text-2xl">
                 {product.price}원
               </span> */}
@@ -319,7 +314,7 @@ export default function ProductDetail({
               <div className="text-sm ml-4">
                 최대 7개월 무이자 할부 시 월 19,420원 결제
                 <br />
-                <span className="text-blue-500 underline cursor-pointer">
+                <span className="text-blue-700 underline cursor-pointer">
                   카드사별 할부 혜택 안내
                 </span>
               </div>
@@ -335,11 +330,11 @@ export default function ProductDetail({
               <div className="text-sm ml-4">
                 <span className="">3,000원</span>
                 <br />
-                <span className="text-gray-500">
+                <span className="text-gray-600">
                   70,000원 이상 구매 시 무료배송
                 </span>
                 <br />
-                <span className="text-gray-500">
+                <span className="text-gray-600">
                   제주/도서산간 3,000원 추가
                 </span>
               </div>
@@ -396,7 +391,7 @@ export default function ProductDetail({
                   </button>
                 </div>
 
-                <p className="text-red-500 font-semibold">
+                <p className="text-red-600 font-semibold">
                   {(product.price * quantity).toLocaleString()} 원
                 </p>
               </div>
@@ -442,11 +437,9 @@ export default function ProductDetail({
             {product?.productDescriptionImages.map((img, index) => (
               <Image
                 key={index}
-                // src={`${imageUrl}${img.path}`}
                 src={
                   img.path ? `${imageUrl}${img.path}` : "/images/noImage.svg"
                 }
-                // src={"/images/noImage.svg"}
                 alt={`Product Description Image ${index + 1}`}
                 width={800}
                 height={600}
@@ -488,7 +481,7 @@ export default function ProductDetail({
 
       {/* 추천 상품 섹션 */}
       <section className="max-w-screen-lg mx-auto mt-40 px-4">
-        <h3 className="text-2xl font-semibold mb-3">추천 상품</h3>
+        <p className="text-2xl font-semibold mb-3">추천 상품</p>
 
         {/* 가로 스크롤 가능한 상품 리스트 */}
         <div className="flex overflow-x-auto space-x-6 scrollbar-hide">
@@ -521,7 +514,7 @@ export default function ProductDetail({
                   </p>
 
                   {/* 상품명 (최대 2줄) */}
-                  <p className="text-left text-sm text-gray-500 truncate w-full line-clamp-2">
+                  <p className="text-left text-sm text-gray-600 truncate w-full line-clamp-2">
                     {item.productName}
                   </p>
 
@@ -533,7 +526,7 @@ export default function ProductDetail({
               </div>
             ))
           ) : (
-            <p className="text-gray-500">추천 상품이 없습니다.</p>
+            <p className="text-gray-600">추천 상품이 없습니다.</p>
           )}
         </div>
       </section>
@@ -541,11 +534,11 @@ export default function ProductDetail({
       {/* 리뷰 섹션 */}
       <section className="max-w-screen-lg mx-auto mt-32 px-4">
         {/* 리뷰 헤더 */}
-        <h3 className="text-2xl font-semibold mb-7">리뷰 {reviews.length}</h3>
+        <p className="text-2xl font-semibold mb-7">리뷰 {reviews.length}</p>
 
         {/* 리뷰 리스트 */}
         {reviews.length === 0 ? (
-          <p className="text-center text-gray-500">작성된 리뷰가 없습니다.</p>
+          <p className="text-center text-gray-600">작성된 리뷰가 없습니다.</p>
         ) : (
           <>
             <div
@@ -569,13 +562,8 @@ export default function ProductDetail({
                       height={300}
                       className="rounded-lg w-full h-full object-cover"
                       onClick={() => reviewOopenModal(review)}
-                      // onClick={() => setSelectedReview(review)} ??
-                      //   onError={(e) => (e.currentTarget.src = "/images/noImage.svg")} // 이미지 로드 실패 시 기본 이미지 사용
                     />
                   )}
-
-                  {/* 날짜 표시 */}
-                  {/* <span className="text-xs text-gray-500">{review.date}</span> */}
 
                   {/* 사용자 정보 및 좋아요 버튼 */}
                   <div className="flex justify-between items-center w-full mt-2 text-sm text-gray-700">
@@ -594,7 +582,7 @@ export default function ProductDetail({
                         {review.user.name}
                       </span>
                     </div>
-                    <button className="text-gray-500 hover:bg-gray-200 rounded-full transition px-1 py-1">
+                    <button aria-label="좋아요" className="text-gray-600 hover:bg-gray-200 rounded-full transition px-1 py-1">
                       <Heart
                         className="w-5 h-5"
                         fill={review.isLike ? "red" : "none"}
@@ -634,7 +622,7 @@ export default function ProductDetail({
       <section className="max-w-screen-lg mx-auto mt-32 px-4">
         {/* 배송정보 */}
         <div className="border-t pt-8">
-          <h3 className="text-2xl font-semibold mb-4">배송정보</h3>
+          <p className="text-2xl font-semibold mb-4">배송정보</p>
           <ul className="text-gray-700 space-y-2">
             <li>
               • Delivery 브랜드 업체발송은 상품설명에 별도로 기입된 브랜드 알림
@@ -661,7 +649,7 @@ export default function ProductDetail({
         </div>
         {/* 교환, 환불, A/S 안내 */}
         <div className="border-t pt-8 mt-8">
-          <h3 className="text-2xl font-semibold mb-4">교환, 환불, A/S 안내</h3>
+          <p className="text-2xl font-semibold mb-4">교환, 환불, A/S 안내</p>
           <ul className="text-gray-700 space-y-2">
             <li>• 상품 수령일로부터 7일 이내 반품 / 환불 가능합니다.</li>
             <li>

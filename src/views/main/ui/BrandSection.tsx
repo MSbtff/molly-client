@@ -22,7 +22,7 @@ export default function BrandSection() {
   };
 
   return (
-    <section className="px-20 mt-10" role="region">
+    <section className="px-20 mt-10" role="region" aria-label="브랜드 섹션">
       {/* <h3 className="text-xl font-semibold mb-4">인기 탑 브랜드</h3> */}
       <div className="grid grid-cols-5 gap-1">
         {categories.map((category) => (

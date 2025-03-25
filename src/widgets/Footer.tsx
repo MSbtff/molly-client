@@ -2,13 +2,13 @@
 
 export default async function Footer() {
   return (
-    <footer className="min-h-48 bg-white border-t border-gray-300 py-10 px-6 text-gray-700 mt-16 sticky" style={
+    <footer className="min-h-48 bg-gray-200 border-t border-gray-300 py-10 px-6 text-black mt-16 sticky" style={
       {contain: 'layout paint style', contentVisibility: 'auto'}
     }>
       {/* 상단 정보 */}
       <div className="max-w-screen-lg mx-auto grid grid-cols-4 gap-8 text-center md:text-left">
         <div>
-          <h3 className="font-semibold mb-2">안내</h3>
+          <p className="text-lg font-semibold mb-2">안내</p>
           <ul className="space-y-1">
             <li>멤버가입</li>
             <li>매장찾기</li>
@@ -17,7 +17,7 @@ export default async function Footer() {
         </div>
 
         <div>
-          <h3 className="font-semibold mb-2">멤버 혜택</h3>
+          <p className="text-lg font-semibold mb-2">멤버 혜택</p>
           <ul className="space-y-1">
             <li>웰컴 쿠폰</li>
             <li>생일 쿠폰</li>
@@ -26,7 +26,7 @@ export default async function Footer() {
         </div>
 
         <div>
-          <h3 className="font-semibold mb-2">고객센터</h3>
+          <p className="text-lg font-semibold mb-2">고객센터</p>
           <ul className="space-y-1">
             <li>주문배송조회</li>
             <li>반품 정책</li>
@@ -36,7 +36,7 @@ export default async function Footer() {
         </div>
 
         <div>
-          <h3 className="font-semibold mb-2">회사소개</h3>
+          <p className="text-lg font-semibold mb-2">회사소개</p>
           <ul className="space-y-1">
             <li>About Molly</li>
             <li>소식</li>
@@ -50,7 +50,7 @@ export default async function Footer() {
       <hr className="my-6 border-gray-300" />
 
       {/* 하단 정보 */}
-      <div className="max-w-screen-lg mx-auto text-center md:text-left text-sm text-gray-500">
+      <div className="max-w-screen-lg mx-auto text-center md:text-left text-sm text-gray-700">
         <p>
           (유)몰리 대표 CuteSeeun Choi Young & Rich, 큐트세은 최 영 앤리치 |
           경기도 성남시 분당구 판교로 242 | 통신판매업신고번호 2025-성남-01234 |
@@ -62,7 +62,7 @@ export default async function Footer() {
           | 이메일{' '}
           <a
             href="mailto:service@nike.co.kr"
-            className="text-blue-500 underline"
+            className="text-blue-700 underline"
           >
             service@molly.co.kr
           </a>{' '}

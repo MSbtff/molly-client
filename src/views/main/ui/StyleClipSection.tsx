@@ -60,7 +60,7 @@ export default function StyleClipSection() {
     });
 
     return (
-        <section className="relative bg-black bg-opacity-90 text-white py-12 px-6 flex flex-col items-center" role="region">
+        <section className="relative bg-black bg-opacity-90 text-white py-12 px-6 flex flex-col items-center" role="region" aria-label="스타일 클립">
             <div className="w-full flex justify-between items-center mt-5">
                 <h2 className="text-left text-xl font-semibold ml-12">스타일클립</h2>
                 <button className="text-gray-400 text-sm hover:text-white mr-10"
