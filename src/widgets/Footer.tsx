@@ -3,7 +3,7 @@
 export default async function Footer() {
   return (
     <footer
-      className="min-h-48 bg-white border-t border-gray-300 py-10 px-6 text-gray-700 mt-16"
+      className="min-h-48 bg-white border-t border-gray-300 py-10 px-6 text-gray-700 mt-16 sticky"
       style={{ contain: "layout paint style", contentVisibility: "auto" }}
     >
       {/* 상단 정보 */}
