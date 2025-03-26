@@ -22,7 +22,6 @@ interface Product {
   price: number;
   thumbnail: Thumbnail;
 }
-
 const popularCategories = [
   "아우터",
   "상의",
@@ -145,7 +144,7 @@ export default function PopularItemsSection() {
                       src={
                         !product.thumbnail.path
                           ? "/images/noImage.svg"
-                          : `${imageUrl}${product.thumbnail.path}`
+                          : `${imageUrl}${product.thumbnail.path}?w=200&h=250`
                       }
                       alt={product.brandName}
                       width={200}

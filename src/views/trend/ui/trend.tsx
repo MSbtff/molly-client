@@ -29,7 +29,6 @@ export default function Trend() {
 
   const searchParams = useSearchParams();
   const scrollToId = searchParams.get("id");
-  console.log("클릭한 상품의 Id?",scrollToId);
 
   const [reviews, setReviews] = useState<
     {
@@ -38,8 +37,7 @@ export default function Trend() {
       nickname: string;
       content: string;
       product?: Product;
-    }[]
-  >([]);
+    }[] >([]);
 
   const fetchTrendingReviews = async () => {
     try {
@@ -117,7 +115,7 @@ export default function Trend() {
               alt="리뷰 이미지"
               width={400}
               height={500}
-              className="w-full h-auto rounded-lg object-cover"
+              className="w-full h-auto object-cover"
               unoptimized={true}
             />
             {/* 상품 정보 */}
