@@ -288,7 +288,7 @@ export default function ProductDetail({productId,initialReviews}: ProductDetailP
         <div className="w-1/2 px-8">
           <Image
             priority={true}
-            src={`${imageUrl}${product.thumbnail.path}`}
+            src={`${imageUrl}${product.thumbnail.path}?w=600&h=600`}
             alt={product?.productName || "상품 이미지"}
             width={600}
             height={600}
@@ -546,3 +546,4 @@ export default function ProductDetail({productId,initialReviews}: ProductDetailP
     </>
   );
 }
+

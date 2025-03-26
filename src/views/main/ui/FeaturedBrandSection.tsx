@@ -13,11 +13,7 @@ export default function FeaturedBrandSection() {
   const brandApiUrl = `${baseUrl}/product/popular-brand`;
 
   const router = useRouter();
-
   const [brands, setBrands] = useState<Brand[]>([]); // 인기 브랜드 리스트
-  // const [brandProducts, setBrandProducts] = useState<Product[]>([]); // 특정 브랜드의 상품 리스트
-  // const [selectedBrand, setSelectedBrand] = useState<string | null>(null); // 선택된 브랜드명
-  // const [imageError, setImageError] = useState<{ [key: number]: boolean }>({}); // 이미지 에러 처리
 
   //인기 브랜드 조회 api 요청
   const fetchPopularBrands = async () => {
@@ -53,11 +49,7 @@ export default function FeaturedBrandSection() {
         {brands.slice(0, 2).map((brand, index) => (
           <div key={index} className="relative w-full aspect-[3/2]">
             <Image
-              src={
-                !brand.brandThumbnailUrl
-                  ? "/images/noImage.svg"
-                  : `${imageUrl}${brand.brandThumbnailUrl}`
-              }
+              src={ !brand.brandThumbnailUrl  ? "/images/noImage.svg": `${imageUrl}${brand.brandThumbnailUrl}`}
               alt={brand.brandName}
               fill
               className="object-cover rounded"
@@ -83,11 +75,7 @@ export default function FeaturedBrandSection() {
         {brands.slice(2).map((brand, index) => (
           <div key={index} className="flex flex-col items-center">
             <Image
-              src={
-                !brand.brandThumbnailUrl
-                  ? "/images/noImage.svg"
-                  : `${imageUrl}${brand.brandThumbnailUrl}`
-              }
+              src={!brand.brandThumbnailUrl ? "/images/noImage.svg" : `${imageUrl}${brand.brandThumbnailUrl}?w=300&h=350`}
               alt={brand.brandName}
               width={300}
               height={350}

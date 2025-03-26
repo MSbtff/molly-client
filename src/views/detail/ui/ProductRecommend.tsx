@@ -22,7 +22,7 @@ export default function ProductRecommend({ products }: ProductRecommendProps) {
                     {/* 이미지 고정 크기 지정 */}
                     <div className="w-[200px] h-[240px] flex items-center justify-center overflow-hidden">
                       <Image
-                        src={`${imageUrl}${item.thumbnail.path}`}
+                        src={`${imageUrl}${item.thumbnail.path}?w=200&h=240`}
                         alt={item.productName}
                         width={200}
                         height={240}

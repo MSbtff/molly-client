@@ -63,7 +63,7 @@ export default function ReviewModal({ review, onClose }: ReviewModalProps) {
 
           <div className=" overflow-hidden">
             <Image
-              src={`${imageUrl}${review.images[currentIndex]}`} // 현재 인덱스의 이미지 표시
+              src={`${imageUrl}${review.images[currentIndex]}?w=500&h=500`} // 현재 인덱스의 이미지 표시
               alt="리뷰 이미지"
               width={500}
               height={500}

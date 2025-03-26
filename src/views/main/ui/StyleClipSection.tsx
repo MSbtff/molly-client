@@ -50,7 +50,6 @@ export default function StyleClipSection() {
   }, []);
 
   const handleTrend = (id?: number) => {
-    // router.push(`/trend`);
     if (id) {
       router.push(`/trend?id=${id}`);
     } else {
@@ -109,7 +108,7 @@ export default function StyleClipSection() {
                   }}
                 >
                   <Image
-                    src={`${imageUrl}${item.image}`}
+                    src={`${imageUrl}${item.image}?`}
                     alt={item.nickname}
                     layout="fill" //부모 div 크기에 맞게 조정
                     objectFit="cover" //비율을 유지하면서 채우기

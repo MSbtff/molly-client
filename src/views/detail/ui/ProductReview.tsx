@@ -39,7 +39,7 @@ export default function ProductReview({ reviews, reviewExpanded, visibleReviews,
                       {review.images.length > 0 && (
                         <Image
                           // src={review.images[0]} // images 배열의 첫 번째 이미지 사용
-                          src={ review.images[0] ? `${imageUrl}${review.images[0]}` : "/images/noImage.svg"}
+                          src={ review.images[0] ? `${imageUrl}${review.images[0]}?w=300&h=300` : "/images/noImage.svg"}
                           // src={"/images/noImage.svg"}
                           alt={`리뷰 이미지 ${index + 1}`}
                           width={300}
@@ -54,7 +54,7 @@ export default function ProductReview({ reviews, reviewExpanded, visibleReviews,
                       <div className="flex justify-between items-center w-full mt-2 text-sm text-gray-700">
                         <div  className="flex items-center" onClick={() => reviewOpenModal(review)}>
                           <Image
-                            src={"/icons/profile.svg"}
+                            src={"/logo.webp"}
                             alt="User Profile"
                             width={24}
                             height={24}

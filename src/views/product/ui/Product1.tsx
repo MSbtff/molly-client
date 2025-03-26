@@ -236,7 +236,7 @@ export default function Product1() {
               {productList && productList.map((item) => (
                 <div key={item.id} className="flex flex-col items-center mt-10">
                   <Image
-                    src={item.url ? `${imageUrl}${item.url}` : "/images/noImage.svg"}
+                    src={item.url ? `${imageUrl}${item.url}?&w=250&h=300` : "/images/noImage.svg"}
                     alt={item.productName}
                     width={250}
                     height={300}
