@@ -53,7 +53,7 @@ export const ProductList = ({ orders }: PurchasePageProps) => {
               <div className="w-16 h-16 relative">
                 {mainProduct ? (
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${mainProduct.image}`}
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${mainProduct.image}?w=80&h=80&r=false`}
                     alt={mainProduct.productName}
                     width={80}
                     height={80}
@@ -87,7 +87,7 @@ export const ProductList = ({ orders }: PurchasePageProps) => {
                   >
                     <div className="flex items-center gap-4">
                       <Image
-                        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${detail.image}`}
+                        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${detail.image}?w=80&h=80&r=false`}
                         alt={detail.productName}
                         width={80}
                         height={80}
