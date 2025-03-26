@@ -13,24 +13,6 @@ import { OrderItem } from "@/app/provider/OrderStore";
 import getProduct from "@/shared/api/getProduct";
 import CartToast from "./CartToast";
 import {DetailProduct} from "@/shared/types/product";
-// interface Product {
-//   id: number;
-//   categories: string[];
-//   brandName: string;
-//   productName: string;
-//   price: number;
-//   description: string;
-//   thumbnail: { path: string; filename: string };
-//   productImages: { path: string; filename: string }[];
-//   productDescriptionImages: { path: string; filename: string }[];
-//   items: {
-//     id: number;
-//     color: string;
-//     colorCode: string;
-//     size: string;
-//     quantity: number;
-//   }[];
-// }
 //응답 데이터 매핑
 interface Review {
   reviewId: number;
@@ -50,7 +32,7 @@ interface ProductDetailProps {
 
 const ProductDescription = dynamic(() => import("@/views/detail/ui/ProductDescription"), {
   ssr: false,
-  loading: () => <p className="mb=20"></p>,
+  loading: () => <p className="mb=50"></p>,
 });
 const ProductRecommend = dynamic(() => import("@/views/detail/ui/ProductRecommend"), {
   ssr: false,
@@ -92,7 +74,6 @@ export default function ProductDetail({productId,initialReviews}: ProductDetailP
 
   useEffect(() => {
     console.log("동적 임포트 useEffect 시작");
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -124,11 +105,7 @@ export default function ProductDetail({productId,initialReviews}: ProductDetailP
     }
     if (recommendedRef.current) observer.observe(recommendedRef.current);
     if (reviewRef.current) observer.observe(reviewRef.current);
-    // console.log("",descriptionRef.current);
-    // console.log("",recommendedRef.current);
-    // console.log("",reviewRef.current);
 
-  
     return () => {
       observer.disconnect(); // 클린업
     };
@@ -221,12 +198,12 @@ export default function ProductDetail({productId,initialReviews}: ProductDetailP
     setShowToast(false);
   };
 
-  //api 요청
+  //상품 id 바뀌면 api 요청
   useEffect(() => {
     if (!productId) return;
     fetchProduct();
   }, [productId]);
-
+  //추천 상품 api 요청
   useEffect(() => {
     if (product) fetchRecommendedProducts();
   }, [product]);
@@ -473,206 +450,24 @@ export default function ProductDetail({productId,initialReviews}: ProductDetailP
       </div>
 
       {/* 상세 섹션 */}
-      {/* <section className="max-w-screen-lg mx-auto mt-16 px-4 border-t">
-        <div className="mt-12">
-          {product?.description && (
-            <div className="max-w-screen-lg mx-auto text-center mt-8 px-4">
-              {product.description.split("\n").map((line, index) => (
-                <p key={index} className="mb-4">
-                  {line}
-                </p>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className={`${showDetails ? "h-auto" : "h-[3300px] overflow-hidden"} relative`}>
-          <div className="flex flex-col gap-6">
-            {product?.productDescriptionImages.map((img, index) => (
-              <Image
-                key={index}
-                src={
-                  img.path ? `${imageUrl}${img.path}` : "/images/noImage.svg"
-                }
-                alt={`Product Description Image ${index + 1}`}
-                width={800}
-                height={600}
-                className="w-full object-cover"
-                unoptimized={true}
-              />
-            ))}
-          </div>
-
-          
-          {!showDetails && (
-            <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white to-transparent"></div>
-          )}
-        </div>
-
-        {!showDetails && (
-          <div className="text-center mt-8 relative z-10">
-            <button
-              className="px-6 py-3 border border-gray-400 text-lg font-medium hover:bg-gray-100 transition"
-              onClick={() => setShowDetails(true)}
-            >
-              상품 정보 더보기
-            </button>
-          </div>
-        )}
-
-        {showDetails && (
-          <div className="text-center mt-6">
-            <button
-              className="px-6 py-3 border border-gray-400 text-lg font-medium hover:bg-gray-100 transition"
-              onClick={() => setShowDetails(false)}
-            >
-              접기
-            </button>
-          </div>
-        )}
-      </section> */}
       <div ref={descriptionRef}>
-        {showDescription && (
-          <ProductDescription images={product.productDescriptionImages} 
+        {showDescription && ( <ProductDescription images={product.productDescriptionImages} 
                               description={product.description}
                               showDetails={showDetails}
                               setShowDetails={setShowDetails}/>)}
       </div>
 
       {/* 추천 상품 섹션 */}
-      {/* <section className="max-w-screen-lg mx-auto mt-40 px-4">
-        <p className="text-2xl font-semibold mb-3">추천 상품</p>
-
-        <div className="flex overflow-x-auto space-x-6 scrollbar-hide">
-          {recommendedProducts.length > 0 ? (
-            recommendedProducts.map((item) => (
-              <div key={item.id} className="w-[200px] flex flex-col items-center">
-                <div className="w-[200px] h-[240px] flex items-center justify-center overflow-hidden">
-                  <Image
-                    src={`${imageUrl}${item.thumbnail.path}`}
-                    alt={item.productName}
-                    width={200}
-                    height={240}
-                    className="object-contain"
-                    onClick={() => router.push(`/detail/${item.id}`)}
-                    unoptimized={true}/>
-                </div>
-
-                <button
-                  className="flex flex-col items-start w-full overflow-hidden "
-                  onClick={() => router.push(`/product/${item.id}`)}
-                >
-                  <p className="text-left text-sm font-semibold truncate w-full">
-                    {item.brandName}
-                  </p>
-
-                  <p className="text-left text-sm text-gray-600 truncate w-full line-clamp-2">
-                    {item.productName}
-                  </p>
-
-                  <p className="text-left text-black font-semibold">
-                    {item.price.toLocaleString()}원
-                  </p>
-                </button>
-              </div>
-            ))
-          ) : (
-            <p className="text-gray-600">추천 상품이 없습니다.</p>
-          )}
-        </div>
-      </section> */}
       <div ref={recommendedRef}>
-        {showRecommended && (
-          <ProductRecommend products={recommendedProducts} />
-        )}
+        {showRecommended && (<ProductRecommend products={recommendedProducts} />)}
       </div>
 
       {/* 리뷰 섹션 */}
-      {/* <section className="max-w-screen-lg mx-auto mt-32 px-4">
-        <p className="text-2xl font-semibold mb-7">리뷰 {reviews.length}</p>
-
-        {reviews.length === 0 ? (
-          <p className="text-center text-gray-600">작성된 리뷰가 없습니다.</p>
-        ) : (
-          <>
-            <div
-              className={`${reviewExpanded ? "h-auto" : "h-[600px] overflow-hidden relative"
-                } grid grid-cols-3 gap-6`}
-            >
-              {reviews.slice(0, visibleReviews).map((review, index) => (
-                <div key={index} className="flex flex-col items-center">
-                  {review.images.length > 0 && (
-                    <Image
-                      src={
-                        review.images[0]
-                          ? `${imageUrl}${review.images[0]}`
-                          : "/images/noImage.svg"
-                      }
-                      alt={`리뷰 이미지 ${index + 1}`}
-                      width={300}
-                      height={300}
-                      className="rounded-lg w-full h-full object-cover"
-                      onClick={() => reviewOopenModal(review)}
-                      unoptimized={true}
-                    />
-                  )}
-
-                  <div className="flex justify-between items-center w-full mt-2 text-sm text-gray-700">
-                    <div
-                      className="flex items-center"
-                      onClick={() => reviewOopenModal(review)}
-                    >
-                      <Image
-                        src={"/icons/profile.svg"}
-                        alt="User Profile"
-                        width={24}
-                        height={24}
-                        className="rounded-full"
-                        unoptimized={true}
-                      />
-                      <span className="ml-2 font-semibold">
-                        {review.user.name}
-                      </span>
-                    </div>
-                    <button aria-label="좋아요" className="text-gray-600 hover:bg-gray-200 rounded-full transition px-1 py-1">
-                      <Heart
-                        className="w-5 h-5"
-                        fill={review.isLike ? "red" : "none"}
-                      />
-                    </button>
-                  </div>
-
-                  <span
-                    className="text-gray-600 mt-1 text-left w-full"
-                    onClick={() => reviewOopenModal(review)}
-                  >
-                    {review.comment}
-                  </span>
-                </div>
-              ))}
-              {!reviewExpanded && (
-                <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white to-transparent"></div>
-              )}
-            </div>
-
-            <div className="text-center mt-8">
-              <button
-                className="px-6 py-3 border border-gray-400 text-lg font-medium hover:bg-gray-100 transition"
-                onClick={toggleReviews}
-              >
-                {reviewExpanded ? "접기" : "리뷰 더보기"}
-              </button>
-            </div>
-          </>
-        )}
-      </section> */}
       <div ref={reviewRef}>
-        {showReview && (
-          <ProductReview reviews={reviews} reviewExpanded={reviewExpanded}
+        {showReview && ( <ProductReview reviews={reviews} reviewExpanded={reviewExpanded}
                          visibleReviews={visibleReviews} 
                          toggleReviews={toggleReviews}
-                         reviewOpenModal={reviewOpenModal}/>
-        )}
+                         reviewOpenModal={reviewOpenModal}/>)}
       </div>
 
       {/* 배송정보 및 교환/환불 안내 섹션 */}
@@ -746,14 +541,8 @@ export default function ProductDetail({productId,initialReviews}: ProductDetailP
         <ReviewModal review={selectedReview} onClose={reviewCloseModal} />
       )}
 
-      {showToast && (
-        <CartToast
-          productImage={`${imageUrl}${product.thumbnail.path}`}
-          onClose={handleToastClose}
-        />
+      {showToast && (  <CartToast productImage={`${imageUrl}${product.thumbnail.path}`} onClose={handleToastClose}/>
       )}
-
-      {/* 이 브랜드의 다른 상품 섹션 */}
     </>
   );
 }
