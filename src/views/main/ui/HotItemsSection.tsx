@@ -30,7 +30,6 @@ export default function HotItemsSection() {
   const fetchProducts = async () => {
     // setLoading(true);
     try {
-      // const response = await fetch(`${productApiUrl}?orderBy=CREATED_AT&page=0&size=8`);
       const paramsString = `${productApiUrl}?orderBy=CREATED_AT&offsetId=0&size=8`;
       const response = await getProduct(paramsString);
       const data = await response;
@@ -38,8 +37,6 @@ export default function HotItemsSection() {
       setProducts(data.data || []);
     } catch (error) {
       console.error("지금 핫한 신상템 API 요청 실패:", error);
-    } finally {
-      // setLoading(false);
     }
   };
   // 이미지 로딩 실패 시 기본 이미지로 대체
@@ -71,11 +68,7 @@ export default function HotItemsSection() {
           <div key={product.id} className="relative w-full aspect-[3/2]">
             {imageUrl && (
               <Image
-                src={
-                  imageError[product.id]
-                    ? "/images/noImage.svg"
-                    : `${imageUrl}${product.thumbnail.path}`
-                }
+                src={imageError[product.id] ? "/images/noImage.svg" : `${imageUrl}${product.thumbnail.path}` }
                 alt={product.brandName}
                 // width={611}
                 // height={350}
@@ -107,9 +100,7 @@ export default function HotItemsSection() {
           <div key={product.id} className="flex flex-col items-center mt-10">
             <Image
               src={
-                imageError[product.id]
-                  ? "/images/noImage.svg"
-                  : `${imageUrl}${product.thumbnail.path}`
+                imageError[product.id] ? "/images/noImage.svg" : `${imageUrl}${product.thumbnail.path}?w=200&h=250`
               }
               alt={product.brandName}
               width={200}
