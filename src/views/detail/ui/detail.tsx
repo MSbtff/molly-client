@@ -287,7 +287,7 @@ export default function ProductDetail({productId,initialReviews}: ProductDetailP
         {/* 썸네일 이미지 */}
         <div className="w-1/2 px-8">
           <Image
-            priority
+            priority={true}
             src={`${imageUrl}${product.thumbnail.path}`}
             alt={product?.productName || "상품 이미지"}
             width={600}

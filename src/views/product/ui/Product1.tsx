@@ -270,7 +270,7 @@ export default function Product1() {
                 ))}
 
               {/* 무한스크롤 트리거 */}
-              {<div ref={triggerRef} className="h-20 w-full bg-red-200"></div>}
+              {isLast && <div ref={triggerRef} className="h-20 w-full bg-red-200"></div>}
 
             </>
           )}
