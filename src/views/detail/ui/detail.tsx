@@ -457,6 +457,7 @@ export default function ProductDetail({
                 width={800}
                 height={600}
                 className="w-full object-cover"
+                unoptimized={true}
               />
             ))}
           </div>
@@ -597,6 +598,7 @@ export default function ProductDetail({
                         width={24}
                         height={24}
                         className="rounded-full"
+                        unoptimized={true}
                       />
                       <span className="ml-2 font-semibold">
                         {review.user.name}
