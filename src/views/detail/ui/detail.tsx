@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useEffect, useTransition } from "react";
+import { useState, useEffect, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+
 import { Heart, Share2 } from "lucide-react";
 import { buyNow, addToCart } from "@/features/detail/api/action";
 import ReviewModal from "@/views/detail/ui/ReviewModal";
@@ -10,24 +12,25 @@ import { useEncryptStore } from "@/app/provider/EncryptStore";
 import { OrderItem } from "@/app/provider/OrderStore";
 import getProduct from "@/shared/api/getProduct";
 import CartToast from "./CartToast";
-interface Product {
-  id: number;
-  categories: string[];
-  brandName: string;
-  productName: string;
-  price: number;
-  description: string;
-  thumbnail: { path: string; filename: string };
-  productImages: { path: string; filename: string }[];
-  productDescriptionImages: { path: string; filename: string }[];
-  items: {
-    id: number;
-    color: string;
-    colorCode: string;
-    size: string;
-    quantity: number;
-  }[];
-}
+import {DetailProduct} from "@/shared/types/product";
+// interface Product {
+//   id: number;
+//   categories: string[];
+//   brandName: string;
+//   productName: string;
+//   price: number;
+//   description: string;
+//   thumbnail: { path: string; filename: string };
+//   productImages: { path: string; filename: string }[];
+//   productDescriptionImages: { path: string; filename: string }[];
+//   items: {
+//     id: number;
+//     color: string;
+//     colorCode: string;
+//     size: string;
+//     quantity: number;
+//   }[];
+// }
 //응답 데이터 매핑
 interface Review {
   reviewId: number;
@@ -45,20 +48,26 @@ interface ProductDetailProps {
   initialReviews: Review[]; // 서버에서 받은 초기 데이터
 }
 
+const ProductDescription = dynamic(() => import("@/views/detail/ui/ProductDescription"), {
+  ssr: false,
+  loading: () => <p className="mb=20"></p>,
+});
+const ProductRecommend = dynamic(() => import("@/views/detail/ui/ProductRecommend"), {
+  ssr: false,
+});
+const ProductReview = dynamic(() => import("@/views/detail/ui/ProductReview"), {
+  ssr: false,
+});
+
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL;
 const productApiUrl = `${baseUrl}/product`;
 
-export default function ProductDetail({
-  productId,
-  initialReviews,
-}: ProductDetailProps) {
+export default function ProductDetail({productId,initialReviews}: ProductDetailProps) {
   const router = useRouter();
-  const [product, setProduct] = useState<Product | null>(null);
+  const [product, setProduct] = useState<DetailProduct | null>(null);
   const [isLoading, setIsLoading] = useState(true); // 초기값을 true로 설정 (초기 렌더링 시 무조건 로딩 UI 보장)
-  const [selectedOption, setSelectedOption] = useState<
-    Product["items"][0] | null
-  >(null);
+  const [selectedOption, setSelectedOption] = useState<DetailProduct["items"][0] | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const [quantity, setQuantity] = useState(1);
@@ -67,38 +76,80 @@ export default function ProductDetail({
   const [reviewExpanded, setreviewExpanded] = useState(false); // 리뷰 펼침 여부
   const [selectedReview, setSelectedReview] = useState<Review | null>(null); // 선택한 리뷰 정보 저장
   const [isreviewModalOpen, setIsreviewModalOpen] = useState(false); // 모달 열림 상태
-
   const [showToast, setShowToast] = useState(false);
-
   const [isPending, startTransition] = useTransition();
 
-  // 초기값을 initialReview로 설정(서버에서 받은 데이터)
-  const [reviews] = useState<Review[]>(initialReviews || []);
-  //바로 구매 api 성공 응답을 주스탠드 스토어에 저장
-  const { setOrders } = useEncryptStore();
-  //추천 상품 저장
-  const [recommendedProducts, setRecommendedProducts] = useState<Product[]>([]);
+  const [reviews] = useState<Review[]>(initialReviews || []);// 초기값을 initialReview로 설정(서버에서 받은 데이터)
+  const { setOrders } = useEncryptStore();//바로 구매 api 성공 응답을 주스탠드 스토어에 저장
+  const [recommendedProducts, setRecommendedProducts] = useState<DetailProduct[]>([]);//추천 상품 저장
 
-  //추천 상품 api 요청
+  const [showDescription, setShowDescription] = useState(false);
+  const [showRecommended, setShowRecommended] = useState(false);
+  const [showReview, setShowReview] = useState(false);
+  const descriptionRef = useRef<HTMLDivElement | null>(null);
+  const recommendedRef = useRef<HTMLDivElement | null>(null);
+  const reviewRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    console.log("동적 임포트 useEffect 시작");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            if (entry.target === descriptionRef.current) {
+              setShowDescription(true);
+              observer.unobserve(entry.target); // 한 번만 관찰
+            }
+            if (entry.target === recommendedRef.current) {
+              setShowRecommended(true);
+              observer.unobserve(entry.target);
+            }
+            if (entry.target === reviewRef.current) {
+              setShowReview(true);
+              observer.unobserve(entry.target);
+            }
+          }
+        });
+      },
+      {
+        // rootMargin: "0px",
+        threshold: 0.1, // 10% 보이면 로딩 시작
+      }
+    );
+  
+    if (descriptionRef.current) {
+      observer.observe(descriptionRef.current);
+      console.log("descriptionRef 감지 대상 값:",descriptionRef.current);
+    }
+    if (recommendedRef.current) observer.observe(recommendedRef.current);
+    if (reviewRef.current) observer.observe(reviewRef.current);
+    // console.log("",descriptionRef.current);
+    // console.log("",recommendedRef.current);
+    // console.log("",reviewRef.current);
+
+  
+    return () => {
+      observer.disconnect(); // 클린업
+    };
+  }, [product]);
+
+  //추천 상품 api 요청 <- 문제가, 
   const fetchRecommendedProducts = async () => {
+    console.log("추천 상품 api 함수 진입");
     if (!product?.brandName) return; // 브랜드 이름이 없으면 요청 안 함
-
+    console.log("해당 상품의 브랜드 이름",product?.brandName);
     try {
-      // const response = await fetch(`${productApiUrl}?brand=${product.brandName}&page=0&size=12`);
-      const paramsString = `${productApiUrl}?brand=${product.brandName}&page=0&size=12`;
+      const paramsString = `${productApiUrl}?brand=${product.brandName}&offsetId=0&size=12`;
       const response = await getProduct(paramsString);
 
       const data = await response;
       setRecommendedProducts(data.data); // API 응답이 리스트라면 .content 사용
+      console.log("추천 상품 응답 데이터:", data.data);
     } catch (error) {
       console.error("추천 상품 API 요청 실패:", error);
     }
   };
-
-  useEffect(() => {
-    if (product) fetchRecommendedProducts();
-  }, [product]); // product가 변경될 때만 요청 실행
-  //원래 의존성배열에 product만 있었음
 
   //바로 구매
   const handleBuyNow = () => {
@@ -130,8 +181,6 @@ export default function ProductDetail({
           delivery: orderData.delivery || [],
         };
 
-        // 여기서 orderData 사용 가능
-        // 예: 상태에 저장
         setOrders([orderData, formattedOrder]);
 
         // 구매 성공 후 /buy 페이지로 이동
@@ -177,6 +226,10 @@ export default function ProductDetail({
     if (!productId) return;
     fetchProduct();
   }, [productId]);
+
+  useEffect(() => {
+    if (product) fetchRecommendedProducts();
+  }, [product]);
 
   //상품 상세 api 요청
   const fetchProduct = async () => {
@@ -235,7 +288,7 @@ export default function ProductDetail({
     setreviewExpanded(!reviewExpanded); // 상태 반전
   };
   //리뷰 모달창 상태
-  const reviewOopenModal = (review: Review) => {
+  const reviewOpenModal = (review: Review) => {
     setSelectedReview(review); // 선택한 리뷰 데이터 저장
     setIsreviewModalOpen(true); // 모달 열기
   };
@@ -244,7 +297,7 @@ export default function ProductDetail({
     setSelectedReview(null); // 선택한 리뷰 데이터 초기화
   };
   //선택한 옵션이 렌더링
-  const handleOptionSelect = (option: Product["items"][0]) => {
+  const handleOptionSelect = (option: DetailProduct["items"][0]) => {
     console.log("옵션 아이디", option.id);
     setSelectedOption(option);
     setIsDropdownOpen(false);
@@ -257,6 +310,7 @@ export default function ProductDetail({
         {/* 썸네일 이미지 */}
         <div className="w-1/2 px-8">
           <Image
+            priority
             src={`${imageUrl}${product.thumbnail.path}`}
             alt={product?.productName || "상품 이미지"}
             width={600}
@@ -419,8 +473,7 @@ export default function ProductDetail({
       </div>
 
       {/* 상세 섹션 */}
-      <section className="max-w-screen-lg mx-auto mt-16 px-4 border-t">
-        {/* 상세 설명 (이미지보다 위에 위치) */}
+      {/* <section className="max-w-screen-lg mx-auto mt-16 px-4 border-t">
         <div className="mt-12">
           {product?.description && (
             <div className="max-w-screen-lg mx-auto text-center mt-8 px-4">
@@ -433,12 +486,7 @@ export default function ProductDetail({
           )}
         </div>
 
-        {/* 상품 이미지 및 그라데이션 */}
-        <div
-          className={`${
-            showDetails ? "h-auto" : "h-[3300px] overflow-hidden"
-          } relative`}
-        >
+        <div className={`${showDetails ? "h-auto" : "h-[3300px] overflow-hidden"} relative`}>
           <div className="flex flex-col gap-6">
             {product?.productDescriptionImages.map((img, index) => (
               <Image
@@ -454,13 +502,12 @@ export default function ProductDetail({
             ))}
           </div>
 
-          {/* 그라데이션 효과 추가 (showDetails가 false일 때만 보이도록) */}
+          
           {!showDetails && (
             <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white to-transparent"></div>
           )}
         </div>
 
-        {/* 상품 정보 더보기 버튼 */}
         {!showDetails && (
           <div className="text-center mt-8 relative z-10">
             <button
@@ -472,7 +519,6 @@ export default function ProductDetail({
           </div>
         )}
 
-        {/* 접기 버튼 */}
         {showDetails && (
           <div className="text-center mt-6">
             <button
@@ -483,21 +529,23 @@ export default function ProductDetail({
             </button>
           </div>
         )}
-      </section>
+      </section> */}
+      <div ref={descriptionRef}>
+        {showDescription && (
+          <ProductDescription images={product.productDescriptionImages} 
+                              description={product.description}
+                              showDetails={showDetails}
+                              setShowDetails={setShowDetails}/>)}
+      </div>
 
       {/* 추천 상품 섹션 */}
-      <section className="max-w-screen-lg mx-auto mt-40 px-4">
+      {/* <section className="max-w-screen-lg mx-auto mt-40 px-4">
         <p className="text-2xl font-semibold mb-3">추천 상품</p>
 
-        {/* 가로 스크롤 가능한 상품 리스트 */}
         <div className="flex overflow-x-auto space-x-6 scrollbar-hide">
           {recommendedProducts.length > 0 ? (
             recommendedProducts.map((item) => (
-              <div
-                key={item.id}
-                className="w-[200px] flex flex-col items-center"
-              >
-                {/* 이미지 고정 크기 지정 */}
+              <div key={item.id} className="w-[200px] flex flex-col items-center">
                 <div className="w-[200px] h-[240px] flex items-center justify-center overflow-hidden">
                   <Image
                     src={`${imageUrl}${item.thumbnail.path}`}
@@ -506,26 +554,21 @@ export default function ProductDetail({
                     height={240}
                     className="object-contain"
                     onClick={() => router.push(`/detail/${item.id}`)}
-                    unoptimized={true}
-                  />
+                    unoptimized={true}/>
                 </div>
 
-                {/* 텍스트 영역 */}
                 <button
                   className="flex flex-col items-start w-full overflow-hidden "
                   onClick={() => router.push(`/product/${item.id}`)}
                 >
-                  {/* 브랜드명 */}
                   <p className="text-left text-sm font-semibold truncate w-full">
                     {item.brandName}
                   </p>
 
-                  {/* 상품명 (최대 2줄) */}
                   <p className="text-left text-sm text-gray-600 truncate w-full line-clamp-2">
                     {item.productName}
                   </p>
 
-                  {/* 가격 */}
                   <p className="text-left text-black font-semibold">
                     {item.price.toLocaleString()}원
                   </p>
@@ -536,46 +579,43 @@ export default function ProductDetail({
             <p className="text-gray-600">추천 상품이 없습니다.</p>
           )}
         </div>
-      </section>
+      </section> */}
+      <div ref={recommendedRef}>
+        {showRecommended && (
+          <ProductRecommend products={recommendedProducts} />
+        )}
+      </div>
 
       {/* 리뷰 섹션 */}
-      <section className="max-w-screen-lg mx-auto mt-32 px-4">
-        {/* 리뷰 헤더 */}
+      {/* <section className="max-w-screen-lg mx-auto mt-32 px-4">
         <p className="text-2xl font-semibold mb-7">리뷰 {reviews.length}</p>
 
-        {/* 리뷰 리스트 */}
         {reviews.length === 0 ? (
           <p className="text-center text-gray-600">작성된 리뷰가 없습니다.</p>
         ) : (
           <>
             <div
-              className={`${
-                reviewExpanded ? "h-auto" : "h-[600px] overflow-hidden relative"
-              } grid grid-cols-3 gap-6`}
+              className={`${reviewExpanded ? "h-auto" : "h-[600px] overflow-hidden relative"
+                } grid grid-cols-3 gap-6`}
             >
               {reviews.slice(0, visibleReviews).map((review, index) => (
                 <div key={index} className="flex flex-col items-center">
                   {review.images.length > 0 && (
                     <Image
-                      // src={review.images[0]} // images 배열의 첫 번째 이미지 사용
                       src={
                         review.images[0]
                           ? `${imageUrl}${review.images[0]}`
                           : "/images/noImage.svg"
                       }
-                      // src={"/images/noImage.svg"}
                       alt={`리뷰 이미지 ${index + 1}`}
                       width={300}
                       height={300}
                       className="rounded-lg w-full h-full object-cover"
                       onClick={() => reviewOopenModal(review)}
                       unoptimized={true}
-                      // onClick={() => setSelectedReview(review)} ??
-                      //   onError={(e) => (e.currentTarget.src = "/images/noImage.svg")} // 이미지 로드 실패 시 기본 이미지 사용
                     />
                   )}
 
-                  {/* 사용자 정보 및 좋아요 버튼 */}
                   <div className="flex justify-between items-center w-full mt-2 text-sm text-gray-700">
                     <div
                       className="flex items-center"
@@ -600,7 +640,6 @@ export default function ProductDetail({
                     </button>
                   </div>
 
-                  {/* 리뷰 내용 */}
                   <span
                     className="text-gray-600 mt-1 text-left w-full"
                     onClick={() => reviewOopenModal(review)}
@@ -609,13 +648,11 @@ export default function ProductDetail({
                   </span>
                 </div>
               ))}
-              {/* 그라데이션 효과 */}
               {!reviewExpanded && (
                 <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white to-transparent"></div>
               )}
             </div>
 
-            {/* 리뷰 더보기 버튼 */}
             <div className="text-center mt-8">
               <button
                 className="px-6 py-3 border border-gray-400 text-lg font-medium hover:bg-gray-100 transition"
@@ -626,7 +663,15 @@ export default function ProductDetail({
             </div>
           </>
         )}
-      </section>
+      </section> */}
+      <div ref={reviewRef}>
+        {showReview && (
+          <ProductReview reviews={reviews} reviewExpanded={reviewExpanded}
+                         visibleReviews={visibleReviews} 
+                         toggleReviews={toggleReviews}
+                         reviewOpenModal={reviewOpenModal}/>
+        )}
+      </div>
 
       {/* 배송정보 및 교환/환불 안내 섹션 */}
       <section className="max-w-screen-lg mx-auto mt-32 px-4">

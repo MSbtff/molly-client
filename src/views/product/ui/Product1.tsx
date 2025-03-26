@@ -2,8 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useScrollStore } from "@/app/provider/scrollStore";
-// import { useUrlStore } from "@/app/provider/UrlStore";
 import Image from "next/image";
 import FilterSidebar from "../FilterSidebar";
 import SortModal from "../SortModal";
@@ -34,10 +32,10 @@ export default function Product1() {
   const [selectedSort, setSelectedSort] = useState("신상품순");
   const [isSortModalOpen, setIsSortModalOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const { page, setPage } = useScrollStore();
+  const offsetIdRef = useRef(0);//리렌더없이 최신값 유지하기
   const [isLast, setIsLast] = useState(false);
   const [productList, setProductList] = useState<Product[] | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const triggerRef = useRef<HTMLDivElement | null>(null);
 
@@ -84,12 +82,13 @@ export default function Product1() {
     router.push(`/detail/${id}`);
   };
 
-  const fetchProductList = async (page: number) => {
+  //상품 api
+  const fetchProductList = async () => {
     setIsLoading(true);
     try {
       const params = new URLSearchParams(window.location.search);
-      params.append("page", page.toString());
-      console.log("api 호출 시 현재 페이지:", page);
+      params.append("offsetId", offsetIdRef.current.toString());//최신값 직접 접근
+      // console.log("api 호출 시 현재 offsetId:", offsetId);
       params.append("size", "48");
 
       const paramsString = `${productApiUrl}?${params.toString()}`;
@@ -113,7 +112,12 @@ export default function Product1() {
         price: item.price,
       }));
 
-      if (page === 0) {
+      // offsetId 갱신
+      const lastElementId = data.pageable?.lastElementId;
+      console.log("마지막 요소 Id 저장할게유", lastElementId)
+      offsetIdRef.current = lastElementId;
+
+      if (offsetIdRef.current === 0) {
         setProductList(formattedData);
       } else {
         setProductList((prev) => [
@@ -135,34 +139,39 @@ export default function Product1() {
   //파마리터가 바뀌면 api 호출
   useEffect(() => {
     console.log("searchParams 변경 시 api 호출");
-    fetchProductList(0);
+    fetchProductList();
   }, [searchParams]); //window.local.search
 
   //무한스크롤 감지 시 api 호출 : isLast, isLoading, trgRef를 모두 검사함
   useEffect(() => {
-    const trgRef = triggerRef.current;
-    if (!trgRef || isLast || isLoading) return; //로딩 중일 때 중복 호출 방지
+    console.log("무한스크롤 useEffect 동작");
+    // if (!trgRef || isLast || isLoading) return; //정환님이 수정하면 풀거임 지금 isLast가 true로 옴
 
-    const observer = new IntersectionObserver( //새로운 IntersectionObserver 객체 생성
-      //특정 요소가 뷰토프 안에 보일 때 콜백을 실행한다
-      (entries) => {
-        if (entries[0].isIntersecting && !isLoading) {
-          //감지 대상(triggerRef)가 화면에 보이면 true
-          fetchProductList(page);
-          console.log("페이지 증가 전", page);
-          setPage(page + 1); //페이지 증가
-          console.log("무한스크롤로 상품 목록 api 요청");
-        }
-      },
-      { threshold: 1.0 } //요소가 100퍼 화면에 보여야 감지됨
+    //콜백
+    const observer = new IntersectionObserver((entries) => {
+
+      if (entries[0].isIntersecting && !isLoading) {
+        console.log("트리거 요소가 화면에 보여짐");
+        fetchProductList();
+      }
+    },
+      { threshold: 0.1 }
     );
-    observer.observe(trgRef); //트리거 요소를 관찰
+    
+    const trgRef = triggerRef.current;
+    if(trgRef){
+      observer.observe(trgRef); //감시 대상 등록
+    }
+  
+    console.log("감시 대상 등록", trgRef);
 
+    // return () => {
+    //   if (trgRef) observer.unobserve(trgRef); //컴포넌트 언마운트 시 관찰 중단
+    // };
     return () => {
-      if (trgRef) observer.unobserve(trgRef); //컴포넌트 언마운트 시 관찰 중단
+      if (triggerRef.current) observer.unobserve(triggerRef.current);
     };
-  }, [page, isLoading, isLast]); //isLoading, fetchproductList, isLast를 넣으라는데
-  //왜 의존성 배열에 page, isLoading, isLast 넣어야 무한스크롤 트리거 되는지 모르겠음.
+  }, [productList]);//수정 전 : 왜 의존성 배열에 page, isLoading, isLast 넣어야 무한스크롤 트리거 되는지 모르겠음.
 
   return (
     <>
@@ -170,15 +179,9 @@ export default function Product1() {
         {/* 카테고리 버튼 */}
         <div className="flex gap-2 overflow-x-auto whitespace-nowrap scrollbar-hide">
           {categories.map((category) => (
-            <button
-              key={category}
-              className={
-                "px-4 py-2 rounded-full text-sm bg-gray-100 hover:bg-gray-300 flex-shrink-0"
-              }
-              onClick={() => setIsFilterOpen(true)}
-            >
-              {" "}
-              {category}
+            <button key={category}
+              className={"px-4 py-2 rounded-full text-sm bg-gray-100 hover:bg-gray-300 flex-shrink-0"}
+              onClick={() => setIsFilterOpen(true)}> {" "} {category}
             </button>
           ))}
         </div>
@@ -187,8 +190,7 @@ export default function Product1() {
         <div className="flex items-center justify-between mt-6">
           <div className="flex itmes-center gap-2">
             <label className="flex items-center gap-2 text-sm text-gray-700">
-              <input
-                type="checkbox"
+              <input type="checkbox"
                 id="exclude-sold-out"
                 className="w-4 h-4"
                 onChange={handleExcludeSoldOutChange}
@@ -203,11 +205,10 @@ export default function Product1() {
             {Object.keys(sortOptions).map((label) => (
               <button
                 key={label}
-                className={`hover:underline hover:text-black ${
-                  selectedSort === label
-                    ? "text-black underline"
-                    : "text-gray-500"
-                }`}
+                className={`hover:underline hover:text-black ${selectedSort === label
+                  ? "text-black underline"
+                  : "text-gray-500"
+                  }`}
                 onClick={() => handleSortChange(label)}
               >
                 {" "}
@@ -227,81 +228,56 @@ export default function Product1() {
         {/* 상품 리스트 */}
         <div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-2 sm:grid-cols-2 gap-2 mt-1">
           {productList && productList.length === 0 && !isLoading ? (
-            <p className="text-center text-gray-500 mt-10">
-              {" "}
-              검색된 상품이 없습니다.{" "}
+            <p className="text-center text-gray-500 mt-10">{" "} 검색된 상품이 없습니다.{" "}
             </p>
           ) : (
             <>
               {/* 기존 상품 UI */}
-              {productList &&
-                productList.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex flex-col items-center mt-10"
-                  >
-                    <Image
-                      src={
-                        item.url
-                          ? `${imageUrl}${item.url}`
-                          : "/images/noImage.svg"
-                      }
-                      alt={item.productName}
-                      width={250}
-                      height={300}
-                      loading="eager"
-                      priority={true}
-                      className="w-full h-auto object-contain cursor-pointer"
-                      onClick={() => handleProductClick(item.id)}
-                      unoptimized={true}
-                    />
-                    <button
-                      className="flex flex-col items-start w-full overflow-hidden"
-                      onClick={() => handleProductClick(item.id)}
-                    >
-                      <p className="text-left mt-1 text-sm font-semibold">
-                        {" "}
-                        {item.brandName}{" "}
-                      </p>
-                      <p className="text-left text-sm text-gray-500 truncate w-full">
-                        {" "}
-                        {item.productName}{" "}
-                      </p>
-                      <p className="text-left text-black-500 font-semibold">
-                        {" "}
-                        {item.price.toLocaleString()}원
-                      </p>
-                    </button>
-                  </div>
-                ))}
-
-              {/* 무한스크롤 트리거 */}
-              {!isLast && <div ref={triggerRef} className="h-20 w-full"></div>}
+              {productList && productList.map((item) => (
+                <div key={item.id} className="flex flex-col items-center mt-10">
+                  <Image
+                    src={item.url ? `${imageUrl}${item.url}` : "/images/noImage.svg"}
+                    alt={item.productName}
+                    width={250}
+                    height={300}
+                    loading="eager"
+                    priority={true}
+                    className="w-full h-auto object-contain cursor-pointer"
+                    onClick={() => handleProductClick(item.id)}
+                    unoptimized={true}
+                  />
+                  <button className="flex flex-col items-start w-full overflow-hidden"
+                    onClick={() => handleProductClick(item.id)}>
+                    <p className="text-left mt-1 text-sm font-semibold">{" "}{item.brandName}{" "}
+                    </p>
+                    <p className="text-left text-sm text-gray-500 truncate w-full"> {" "}{item.productName}{" "}
+                    </p>
+                    <p className="text -left text-black-500 font-semibold"> {" "}{item.price.toLocaleString()}원
+                    </p>
+                  </button>
+                </div>
+              ))}
 
               {/* 추가 로딩 중인 경우: 기존 UI는 그대로 유지하면서 하단에 스켈레톤 UI 추가 */}
               {isLoading &&
                 Array.from({ length: 48 }).map((_, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col items-left mt-10 animate-pulse"
-                  >
+                  <div key={index} className="flex flex-col items-left mt-10 animate-pulse">
                     <div className="w-full aspect-[5/6] bg-gray-300 animate-pulse" />
                     <div className="w-32 h-4 bg-gray-300 mt-2" />
                     <div className="w-28 h-4 bg-gray-200 mt-1" />
                     <div className="w-24 h-4 bg-gray-200 mt-1" />
                   </div>
                 ))}
+
+              {/* 무한스크롤 트리거 */}
+              {<div ref={triggerRef} className="h-20 w-full bg-red-200"></div>}
+
             </>
           )}
         </div>
 
         {isFilterOpen && <FilterSidebar setIsOpen={setIsFilterOpen} />}
-        <SortModal
-          isOpen={isSortModalOpen}
-          onClose={() => setIsSortModalOpen(false)}
-          onSortSelect={(sort) => handleSortChange(sort)}
-          selectedSort={selectedSort}
-        />
+        <SortModal isOpen={isSortModalOpen} onClose={() => setIsSortModalOpen(false)} onSortSelect={(sort) => handleSortChange(sort)} selectedSort={selectedSort} />
       </div>
     </>
   );

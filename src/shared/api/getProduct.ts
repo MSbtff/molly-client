@@ -9,9 +9,10 @@ export default async function getProduct(paramsString: string) {
       },
     });
 
-    if (!res.ok) {
-      throw new Error("상품 정보 요청 실패");
-    }
+    // if (!res.ok) {
+    //   throw new Error("상품 정보 요청 실패");
+    // }
+    console.log(res);
 
     return res.json();
   } catch (error) {

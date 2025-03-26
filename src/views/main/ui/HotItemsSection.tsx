@@ -31,7 +31,7 @@ export default function HotItemsSection() {
     // setLoading(true);
     try {
       // const response = await fetch(`${productApiUrl}?orderBy=CREATED_AT&page=0&size=8`);
-      const paramsString = `${productApiUrl}?orderBy=CREATED_AT&page=0&size=8`;
+      const paramsString = `${productApiUrl}?orderBy=CREATED_AT&offsetId=0&size=8`;
       const response = await getProduct(paramsString);
       const data = await response;
       console.log("지금 핫한 신상템 API 성공", data);

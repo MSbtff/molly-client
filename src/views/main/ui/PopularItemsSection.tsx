@@ -51,7 +51,7 @@ export default function PopularItemsSection() {
       // const response = await fetch(`${productApiUrl}?categories=${encodeURIComponent(category)}&orderBy=CREATED_AT&page=0&size=12`);
       const paramsString = `${productApiUrl}?categories=${encodeURIComponent(
         category
-      )}&orderBy=VIEW_COUNT&page=0&size=36`;
+      )}&orderBy=VIEW_COUNT&offsetId=0&size=36`;
       const response = await getProduct(paramsString);
       const data = await response;
       console.log("지금 인기있는 상품 api 성공", data);

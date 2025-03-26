@@ -29,7 +29,7 @@ export default function Trend() {
 
   const searchParams = useSearchParams();
   const scrollToId = searchParams.get("id");
-  console.log(scrollToId);
+  console.log("클릭한 상품의 Id?",scrollToId);
 
   const [reviews, setReviews] = useState<
     {

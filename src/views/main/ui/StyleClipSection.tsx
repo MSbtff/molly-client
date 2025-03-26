@@ -109,7 +109,6 @@ export default function StyleClipSection() {
                   }}
                 >
                   <Image
-                    // src={item.src}
                     src={`${imageUrl}${item.image}`}
                     alt={item.nickname}
                     layout="fill" //부모 div 크기에 맞게 조정
