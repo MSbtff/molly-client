@@ -21,12 +21,11 @@ export function ProductImage({
       style={{ width: width, height: height }}
     >
       <Image
-        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${url}`}
+        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${url}?w=${width}&h=${height}&r=false`}
         alt={alt || "상품"}
         width={width}
         height={height}
         priority={priority}
-        quality={80}
         fetchPriority="high"
         unoptimized={true}
       />
