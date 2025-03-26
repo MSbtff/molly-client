@@ -62,7 +62,7 @@ const CartProductInfoComponent = (props: CartProductInfoProps) => {
 
           <div className="flex-1">
             <p className="text-base font-semibold text-black line-clamp-1">
-              {/* {optimizedProductName} / {optimizedBrandName} */}
+              {optimizedProductName} / {optimizedBrandName}
             </p>
 
             <div className="text-sm text-gray-600">
@@ -80,15 +80,6 @@ const CartProductInfoComponent = (props: CartProductInfoProps) => {
     <div className="w-full h-full min-h-[1.5rem]">
       <div className="w-full h-20 flex gap-x-4 items-start">
         <div className="relative w-20 h-20 flex-shrink-0 bg-gray-50">
-          {/* <Image
-            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${url}`}
-            alt={productName}
-            width={80}
-            height={80}
-            priority={priority}
-            loading={priority ? "eager" : "lazy"}
-            className="object-cover"
-          /> */}
           <ProductImage
             url={url || ""}
             alt={productName || "상품"}

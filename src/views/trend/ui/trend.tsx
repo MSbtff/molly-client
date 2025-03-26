@@ -59,6 +59,8 @@ export default function Trend() {
         (review: (typeof reviewData)[number]) =>
           getProduct(`${baseUrl}/product/${review.productId}`).catch(() => null)
       );
+
+      console.log(productPromises);
       const products = await Promise.all(productPromises);
 
       // 리뷰와 상품 데이터를 결합

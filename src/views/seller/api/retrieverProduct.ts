@@ -13,7 +13,7 @@ export default async function retrieverProduct() {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_SERVER_URL}/product/seller?page=0&size=100`,
+      `${process.env.NEXT_SERVER_URL}/product/seller?offsetId=0&size=1000`,
       {
         method: "GET",
         headers: {

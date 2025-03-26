@@ -1,11 +1,12 @@
-'use client';
-import {useState} from 'react';
-import {Button} from '../../shared/ui/Button';
+"use client";
+import { useState } from "react";
+import { Button } from "../../../shared/ui/Button";
+import { registerPost } from "../api/registerPost";
 
-interface RegisterFormData {
+export interface RegisterFormData {
   nickname: string;
   cellPhone: string;
-  sex: 'MALE' | 'FEMALE';
+  sex: "MALE" | "FEMALE";
   birth: string;
   name: string;
   email: string;
@@ -35,35 +36,35 @@ const validatePassword = (password: string): boolean => {
 const terms = [
   {
     id: 1,
-    type: '필수',
-    content: '만 14세 이상입니다.',
+    type: "필수",
+    content: "만 14세 이상입니다.",
   },
   {
     id: 2,
-    type: '필수',
-    content: '이용약관 동의',
+    type: "필수",
+    content: "이용약관 동의",
   },
   {
     id: 3,
-    type: '필수',
-    content: '개인정보 수집 및 이용 동의',
+    type: "필수",
+    content: "개인정보 수집 및 이용 동의",
   },
   {
     id: 4,
-    type: '선택',
-    content: '마케팅 정보 수신 동의',
+    type: "선택",
+    content: "마케팅 정보 수신 동의",
   },
 ] as const;
 
 export const RegisterContain = () => {
   const [register, setRegister] = useState<RegisterFormData>({
-    nickname: '',
-    cellPhone: '',
-    sex: 'MALE',
-    birth: '',
-    name: '',
-    email: '',
-    password: '',
+    nickname: "",
+    cellPhone: "",
+    sex: "MALE",
+    birth: "",
+    name: "",
+    email: "",
+    password: "",
     isSeller: false,
   });
 
@@ -79,24 +80,24 @@ export const RegisterContain = () => {
     name: keyof RegisterFormData,
     value: RegisterFormValue
   ): void => {
-    let error = '';
+    let error = "";
 
     switch (name) {
-      case 'email':
-        if (!validateEmail(value as string)) error = '이메일 형식이 아닙니다';
+      case "email":
+        if (!validateEmail(value as string)) error = "이메일 형식이 아닙니다";
         break;
-      case 'password':
+      case "password":
         if (!validatePassword(value as string))
-          error = '비밀번호는 영문, 숫자, 특수문자를 포함해야 합니다';
+          error = "비밀번호는 영문, 숫자, 특수문자를 포함해야 합니다";
         break;
-      case 'name':
-        if ((value as string).length < 2) error = '이름을 입력해주세요';
+      case "name":
+        if ((value as string).length < 2) error = "이름을 입력해주세요";
         break;
-      case 'nickname':
-        if ((value as string).length < 1) error = '닉네임을 입력해주세요';
+      case "nickname":
+        if ((value as string).length < 1) error = "닉네임을 입력해주세요";
         break;
-      case 'cellPhone':
-        if ((value as string).length !== 11) error = '전화번호를 입력해주세요';
+      case "cellPhone":
+        if ((value as string).length !== 11) error = "전화번호를 입력해주세요";
         break;
     }
 
@@ -129,26 +130,16 @@ export const RegisterContain = () => {
       );
     });
 
-    if (Object.values(errors).some((error) => error !== '')) {
+    if (Object.values(errors).some((error) => error !== "")) {
       return;
     }
 
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/sign-up`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(register),
-      });
-
-      console.log(register);
-
-      if (!res.ok) {
-        throw new Error('회원가입에 실패했습니다.');
-      }
-    } catch (error) {
-      console.error(error);
+    const res = await registerPost(register);
+    if (res) {
+      alert("회원가입이 완료되었습니다.");
+      window.location.href = "/";
+    } else {
+      alert("회원가입에 실패했습니다.");
     }
   };
 
@@ -172,10 +163,10 @@ export const RegisterContain = () => {
               name="email"
               placeholder="이메일을 입력해주세요"
               className={`w-full border-b cursor-text font-medium${
-                errors.email ? ' border-red-500 border-b-1' : ''
+                errors.email ? " border-red-500 border-b-1" : ""
               }`}
-              onChange={(e) => handleInputChange('email', e.target.value)}
-              onBlur={(e) => validateField('email', e.target.value)}
+              onChange={(e) => handleInputChange("email", e.target.value)}
+              onBlur={(e) => validateField("email", e.target.value)}
             />
             {errors.email && (
               <span className="text-red-500">{errors.email}</span>
@@ -189,10 +180,10 @@ export const RegisterContain = () => {
               name="password"
               placeholder="영문, 숫자, 특수 문자 조합 8자 이상"
               className={`w-full border-b cursor-text font-medium${
-                errors.password ? ' border-red-500 border-b-1' : ''
+                errors.password ? " border-red-500 border-b-1" : ""
               }`}
-              onChange={(e) => handleInputChange('password', e.target.value)}
-              onBlur={(e) => validateField('password', e.target.value)}
+              onChange={(e) => handleInputChange("password", e.target.value)}
+              onBlur={(e) => validateField("password", e.target.value)}
             />
             {errors.password && (
               <span className="text-red-500">{errors.password}</span>
@@ -206,10 +197,10 @@ export const RegisterContain = () => {
               name="name"
               placeholder="이름을 입력해주세요"
               className={`w-full border-b cursor-text font-medium${
-                errors.name ? ' border-red-500 border-b-1' : ''
+                errors.name ? " border-red-500 border-b-1" : ""
               }`}
-              onChange={(e) => handleInputChange('name', e.target.value)}
-              onBlur={(e) => validateField('name', e.target.value)}
+              onChange={(e) => handleInputChange("name", e.target.value)}
+              onBlur={(e) => validateField("name", e.target.value)}
             />
             {errors.name && <span className="text-red-500">{errors.name}</span>}
           </label>
@@ -221,10 +212,10 @@ export const RegisterContain = () => {
               name="nickname"
               placeholder="닉네임을 입력해주세요"
               className={`w-full border-b cursor-text font-medium${
-                errors.nickname ? ' border-red-500 border-b-1' : ''
+                errors.nickname ? " border-red-500 border-b-1" : ""
               }`}
-              onChange={(e) => handleInputChange('nickname', e.target.value)}
-              onBlur={(e) => validateField('nickname', e.target.value)}
+              onChange={(e) => handleInputChange("nickname", e.target.value)}
+              onBlur={(e) => validateField("nickname", e.target.value)}
             />
             {errors.nickname && (
               <span className="text-red-500">{errors.nickname}</span>
@@ -237,7 +228,7 @@ export const RegisterContain = () => {
               type="date"
               name="birth"
               className="cursor-pointer"
-              onChange={(e) => handleInputChange('birth', e.target.value)}
+              onChange={(e) => handleInputChange("birth", e.target.value)}
             />
             {errors.birth && (
               <span className="text-red-500">{errors.birth}</span>
@@ -250,7 +241,7 @@ export const RegisterContain = () => {
               name="sex"
               className="cursor-pointer"
               onChange={(e) =>
-                handleInputChange('sex', e.target.value as 'MALE' | 'FEMALE')
+                handleInputChange("sex", e.target.value as "MALE" | "FEMALE")
               }
               value={register.sex}
             >
@@ -266,10 +257,10 @@ export const RegisterContain = () => {
               name="cellPhone"
               placeholder="전화번호를 입력해주세요"
               className={`w-full border-b cursor-text font-medium${
-                errors.cellPhone ? ' border-red-500 border-b-1' : ''
+                errors.cellPhone ? " border-red-500 border-b-1" : ""
               }`}
-              onChange={(e) => handleInputChange('cellPhone', e.target.value)}
-              onBlur={(e) => validateField('cellPhone', e.target.value)}
+              onChange={(e) => handleInputChange("cellPhone", e.target.value)}
+              onBlur={(e) => validateField("cellPhone", e.target.value)}
             />
             {errors.cellPhone && (
               <span className="text-red-500">{errors.cellPhone}</span>
@@ -283,7 +274,7 @@ export const RegisterContain = () => {
                 type="checkbox"
                 checked={register.isSeller}
                 onChange={(e) =>
-                  handleInputChange('isSeller', e.target.checked)
+                  handleInputChange("isSeller", e.target.checked)
                 }
               />
             </div>
@@ -303,10 +294,10 @@ export const RegisterContain = () => {
                       type="checkbox"
                       className="w-5 h-5"
                       checked={
-                        term.type === '필수' ? check.required : check.optional
+                        term.type === "필수" ? check.required : check.optional
                       }
                       onChange={(e) => {
-                        if (term.type === '필수') {
+                        if (term.type === "필수") {
                           setCheck((prev) => ({
                             ...prev,
                             required: e.target.checked,

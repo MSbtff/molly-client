@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
 
   images: {
     formats: ["image/webp"],
-    unoptimized: false,
+    unoptimized: true,
     domains: [
       "15.165.65.222",
       "172.16.24.53",

@@ -1,4 +1,4 @@
-import { RegisterContain } from "../../src/features/register/RegisterContain";
+import { RegisterContain } from "../../src/features/register/ui/RegisterContain";
 
 export default function RegisterPage() {
   return (
