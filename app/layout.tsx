@@ -80,11 +80,11 @@ export default async function RootLayout({
           content="upgrade-insecure-requests"
         ></meta>
       </head>
-      <SpeedInsights />
       <body className="min-h-screen">
         <Navbar nickname={nickname} />
         <main>{children}</main>
         <Footer />
+        <SpeedInsights />
       </body>
     </html>
   );
