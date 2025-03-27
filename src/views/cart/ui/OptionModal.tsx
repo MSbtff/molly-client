@@ -223,7 +223,7 @@ const OptionModal = {
       </div>
       <div className="w-full flex items-center gap-8 border-b-2 mt-12">
         <Image
-          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${cartItem.cartInfoDto.url}`}
+          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${cartItem.cartInfoDto.url}?w=80&h=80&r=false`}
           alt="product"
           width={80}
           height={80}

@@ -1,40 +1,32 @@
-'use client';
+"use client";
 
-import {useSearchParams} from 'next/navigation';
-import {useRouter} from 'next/navigation';
-import {useEffect, useState} from 'react';
-import TossRequest from '@/features/buy/api/tossRequest';
-import {useEncryptStore} from '@/app/provider/EncryptStore';
-
-
-
-
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import TossRequest from "@/features/buy/api/tossRequest";
+import { useEncryptStore } from "@/app/provider/EncryptStore";
 
 export default function PaymentProcessor() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const {orders} = useEncryptStore();
+  const { orders } = useEncryptStore();
   const [isProcessing] = useState(false);
 
-  
-  
-  
-
   useEffect(() => {
-    const paymentKey = searchParams.get('paymentKey') ?? '';
-    const amount = searchParams.get('amount') ?? '0';
-    const tossOrderId = searchParams.get('orderId') ?? '';
-    const paymentType = searchParams.get('paymentType') ?? '';
+    const paymentKey = searchParams.get("paymentKey") ?? "";
+    const amount = searchParams.get("amount") ?? "0";
+    const tossOrderId = searchParams.get("orderId") ?? "";
+    const paymentType = searchParams.get("paymentType") ?? "";
 
     // orders가 없거나 필수 파라미터가 없는 경우 처리
     if (!orders || orders.length === 0) {
-      console.log('주문 정보가 없습니다.');
+      console.log("주문 정보가 없습니다.");
       return;
     }
 
     const orderNumber = orders.length - 1;
 
-    const {orderId, userPoint: point} = orders[orderNumber];
+    const { orderId, userPoint: point } = orders[orderNumber];
     const {
       roadAddress,
       numberAddress,
@@ -56,24 +48,23 @@ export default function PaymentProcessor() {
           recipient,
           addrDetail,
           numberAddress,
-          roadAddress,
-          
+          roadAddress
         );
 
         console.log(data);
 
         if (data.success) {
           // setOrders([]);
-          localStorage.removeItem('order-storage');
-          router.push('/buy/success');
+          localStorage.removeItem("order-storage");
+          router.push("/buy/success");
         } else {
           router.push(`/fail?message=${data.message}`);
           // setOrders([]);
-          localStorage.removeItem('order-storage');
+          localStorage.removeItem("order-storage");
         }
       } catch (error) {
-        console.error('Payment confirmation failed:', error);
-        router.push('/fail?message=결제 처리 중 오류가 발생했습니다');
+        console.error("Payment confirmation failed:", error);
+        router.push("/fail?message=결제 처리 중 오류가 발생했습니다");
       }
     }
 
