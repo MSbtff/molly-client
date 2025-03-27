@@ -4,6 +4,7 @@ import Navbar from "@/widgets/navbar/Navbar";
 import Footer from "@/widgets/Footer";
 import { headers } from "next/headers";
 import { cookies } from "next/headers";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export interface UserInfoResponse {
   profileImage: string;
@@ -74,11 +75,12 @@ export default async function RootLayout({
   return (
     <html lang="ko">
       <head>
-      <meta
-        httpEquiv="Content-Security-Policy"
-        content="upgrade-insecure-requests"
-      ></meta>
+        <meta
+          httpEquiv="Content-Security-Policy"
+          content="upgrade-insecure-requests"
+        ></meta>
       </head>
+      <SpeedInsights />
       <body className="min-h-screen">
         <Navbar nickname={nickname} />
         <main>{children}</main>

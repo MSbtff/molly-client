@@ -7,13 +7,13 @@ import { useEncryptStore } from "@/app/provider/EncryptStore";
 
 export const BuyComplete = () => {
   const { orders } = useEncryptStore();
-  const { orderId, totalAmount, orderedAt } = orders[orders.length - 1];
+  const { orderId, totalAmount } = orders[orders.length - 1];
   const item = orders[orders.length - 1].orderDetails.length;
   // 실제 구현 시 이 데이터는 API에서 받아오거나 파라미터로 전달받아야 함
   const orderInfo = {
     orderNumber: orderId,
     totalAmount: totalAmount.toLocaleString(),
-    paymentTime: orderedAt.slice(0, 16),
+    // paymentTime: orderedAt.slice(0, 16),
     items: item,
     quantity: orders[orders.length - 1].orderDetails.map(
       (item) => item.quantity
@@ -55,7 +55,7 @@ export const BuyComplete = () => {
 
             <div className="flex justify-between py-3 border-b border-gray-100">
               <span className="text-gray-600">결제 시간</span>
-              <span className="font-medium">{orderInfo.paymentTime}</span>
+              {/* <span className="font-medium">{orderInfo.paymentTime}</span> */}
             </div>
 
             <div className="flex justify-between py-3">
