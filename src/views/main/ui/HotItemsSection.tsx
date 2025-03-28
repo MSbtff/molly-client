@@ -23,12 +23,10 @@ export default function HotItemsSection() {
   const router = useRouter();
 
   const [products, setProducts] = useState<Product[]>([]); // 상품 데이터
-  // const [loading, setLoading] = useState(false); // 로딩 상태
   const [imageError, setImageError] = useState<{ [key: number]: boolean }>({}); //이미지 에러 처리
 
   // API 요청
   const fetchProducts = async () => {
-    // setLoading(true);
     try {
       const paramsString = `${productApiUrl}?orderBy=CREATED_AT&offsetId=0&size=8`;
       const response = await getProduct(paramsString);
@@ -64,7 +62,6 @@ export default function HotItemsSection() {
       {/* 메인 배너 map으로 돌릴거임*/}
       <div className="grid grid-cols-2 gap-2">
         {products.slice(0, 2).map((product) => (
-          // <div key={product.id} className="relative w-full h-auto">
           <div key={product.id} className="relative w-full aspect-[3/2]">
             {imageUrl && (
               <Image
@@ -100,7 +97,7 @@ export default function HotItemsSection() {
           <div key={product.id} className="flex flex-col items-center mt-10">
             <Image
               src={
-                imageError[product.id] ? "/images/noImage.svg" : `${imageUrl}${product.thumbnail.path}?w=200&h=250`
+                imageError[product.id] ? "/images/noImage.svg" : `${imageUrl}${product.thumbnail.path}?w=200&h=250&r=true`
               }
               alt={product.brandName}
               width={200}
@@ -127,6 +124,7 @@ export default function HotItemsSection() {
           </div>
         ))}
       </div>
+      
       {/* "다른 상품 더보기" 버튼 */}
       <div className="flex justify-center mt-8">
         <button

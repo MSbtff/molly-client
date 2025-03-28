@@ -40,24 +40,15 @@ export default function PopularItemsSection() {
 
   const [selectedCategory, setSelectedCategory] = useState("아우터"); //현재 선택된 카테고리
   const [allProducts, setAllProducts] = useState<Product[]>([]); // API로 가져온 36개 상품 전체
-  // const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-  // const [loading, setLoading] = useState(false);///데이터 로딩 상태
-  // const [imageError, setImageError] = useState(false);
 
   const fetchProducts = async (category: string) => {
-    // setLoading(true);
     try {
-      // const response = await fetch(`${productApiUrl}?categories=${encodeURIComponent(category)}&orderBy=CREATED_AT&page=0&size=12`);
-      const paramsString = `${productApiUrl}?categories=${encodeURIComponent(
-        category
-      )}&orderBy=VIEW_COUNT&offsetId=0&size=36`;
+      const paramsString = `${productApiUrl}?categories=${encodeURIComponent(category)}&orderBy=VIEW_COUNT&offsetId=0&size=36`;
       const response = await getProduct(paramsString);
       const data = await response;
       console.log("지금 인기있는 상품 api 성공", data);
       setAllProducts(data.data || []); // 받아온 데이터 저장
-      if (swiperRef.current) {
-        swiperRef.current.slideTo(0);
-      }
+      if (swiperRef.current) { swiperRef.current.slideTo(0); }
     } catch (error) {
       console.error("지금 인기있는 상품 api 요청 실패:", error);
     }
@@ -71,7 +62,6 @@ export default function PopularItemsSection() {
   //카테고리 선택 핸들러 추가
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
-    // fetchProducts(category); 이거 없어도 될거 같은데
   };
 
   // "다른 추천 상품 보기" 버튼 클릭 핸들러
@@ -109,26 +99,19 @@ export default function PopularItemsSection() {
         {popularCategories.map((category, index) => (
           <button
             key={index}
-            className={`px-4 py-2 rounded-full border border-gray-600 ${
-              selectedCategory === category ? "bg-black text-white" : "bg-gray"
-            }`}
+            className={`px-4 py-2 rounded-full border border-gray-600 ${ selectedCategory === category ? "bg-black text-white" : "bg-gray" }`}
             onClick={() => handleCategoryChange(category)}
-          >
-            {" "}
-            {category}
+          > {" "} {category}
           </button>
         ))}
       </div>
 
       {/* 상품 리스트 */}
       <Swiper
-        onSwiper={(swiper) => {
-          swiperRef.current = swiper;
-        }}
+        onSwiper={(swiper) => { swiperRef.current = swiper; }}
         modules={[Autoplay, Navigation]}
         autoplay={{ delay: 3000, disableOnInteraction: false }}
         loop={true}
-        // onSlideChange={(swiper) => setCurrentSlideIndex(swiper.realIndex)}
         className="w-full"
       >
         {getProductGroups().map((group, groupIndex) => (
@@ -141,11 +124,7 @@ export default function PopularItemsSection() {
                 >
                   {imageUrl && (
                     <Image
-                      src={
-                        !product.thumbnail.path
-                          ? "/images/noImage.svg"
-                          : `${imageUrl}${product.thumbnail.path}?w=200&h=250`
-                      }
+                      src={!product.thumbnail.path ? "/images/noImage.svg" : `${imageUrl}${product.thumbnail.path}?w=200&h=250&r=true`}
                       alt={product.brandName}
                       width={200}
                       height={250}

@@ -1,5 +1,5 @@
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 const categories = [
   { id: 1, title: "구호플러스", imgSrc: "/main/kuho.webp" },
@@ -15,10 +15,10 @@ const categories = [
 ];
 
 export default function BrandSection() {
-  const router = useRouter();
+  const router = useRouter();  
   const handleBrandClick = (brandName: string) => {
     const newSearchParams = `brandName=${brandName}`;
-    router.push(`/product?${newSearchParams}`); //실제 url에 반영
+    router.push(`/product?${newSearchParams}`);//실제 url에 반영
   };
 
   return (
@@ -27,22 +27,16 @@ export default function BrandSection() {
       <div className="grid grid-cols-5 gap-1">
         {categories.map((category) => (
           <div key={category.id} className="flex flex-col items-center ">
-            <button
-              className="w-full h-24 flex flex-col items-center justify-center rounded-lg bg-gray-100 "
-              onClick={() => handleBrandClick(category.title)}
-            >
-              <Image
-                src={category.imgSrc}
-                alt={category.title}
-                unoptimized={true}
-                width={150}
-                height={80}
-              />
+            <button className="w-full h-24 flex flex-col items-center justify-center rounded-lg bg-gray-100 "
+              onClick={() => handleBrandClick(category.title)} >
+              <Image src={category.imgSrc} 
+                     alt={category.title} 
+                     width={150} 
+                     height={80} 
+                     className={category.id === 9 ? 'max-w-[100px] max-h-[55px] object-contain' : 'object-contain'}/>
             </button>
-            <p
-              className="text-sm font-semibold mt-2"
-              onClick={() => handleBrandClick(category.title)}
-            >
+            <p className="text-sm font-semibold mt-2"
+              onClick={() => handleBrandClick(category.title)}>
               {category.title}
             </p>
           </div>
