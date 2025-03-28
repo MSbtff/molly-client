@@ -22,9 +22,7 @@ export default function StyleClipSection() {
 
   const router = useRouter();
 
-  const [reviews, setReviews] = useState<
-    { id: number; image: string; nickname: string }[]
-  >([]);
+  const [reviews, setReviews] = useState< { id: number; image: string; nickname: string }[]>([]);
 
   const fetchTrendingReviews = async () => {
     try {
@@ -32,12 +30,13 @@ export default function StyleClipSection() {
       const response = await getProduct(paramsString);
       const data = await response;
       console.log("트렌드 리뷰 api 성공", data);
-      // API 응답을 Swiper에 맞는 형식으로 변환
+
       const formattedData = data.map((item: TrendReview, index: number) => ({
         id: index, // 고유한 ID 할당
         image: item.images?.[0] || "/images/noImage.svg", // 이미지 배열의 첫 번째 이미지 사용 (없으면 기본 이미지)
         nickname: item.reviewResDto.nickname, // 닉네임
       }));
+      
       setReviews(formattedData);
     } catch (error) {
       console.error("인기 있는 리뷰 api 요청 실패:", error);
