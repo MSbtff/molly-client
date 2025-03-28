@@ -38,9 +38,7 @@ export default function ProductReview({ reviews, reviewExpanded, visibleReviews,
                     <div key={index} className="flex flex-col items-center">
                       {review.images.length > 0 && (
                         <Image
-                          // src={review.images[0]} // images 배열의 첫 번째 이미지 사용
-                          src={ review.images[0] ? `${imageUrl}${review.images[0]}?w=300&h=300` : "/images/noImage.svg"}
-                          // src={"/images/noImage.svg"}
+                          src={ review.images[0] ? `${imageUrl}${review.images[0]}?w=300&h=300&r=true` : "/images/noImage.svg"}
                           alt={`리뷰 이미지 ${index + 1}`}
                           width={300}
                           height={300}

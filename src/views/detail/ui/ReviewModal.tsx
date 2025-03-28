@@ -42,10 +42,7 @@ export default function ReviewModal({ review, onClose }: ReviewModalProps) {
       {/* 모달 박스 */}
       <div className="bg-white shadow-lg max-w-sm w-full p-4 relative z-50">
         {/* 닫기 버튼 */}
-        <button
-          className="absolute top-4 right-4 text-gray-500 text-xl z-50"
-          onClick={onClose}
-        >
+        <button className="absolute top-4 right-4 text-gray-500 text-xl z-50"  onClick={onClose}>
           ✕
         </button>
 
@@ -63,7 +60,7 @@ export default function ReviewModal({ review, onClose }: ReviewModalProps) {
 
           <div className=" overflow-hidden">
             <Image
-              src={`${imageUrl}${review.images[currentIndex]}?w=500&h=500`} // 현재 인덱스의 이미지 표시
+              src={`${imageUrl}${review.images[currentIndex]}?w=500&h=500&r=true`} // 현재 인덱스의 이미지 표시
               alt="리뷰 이미지"
               width={500}
               height={500}
@@ -89,7 +86,6 @@ export default function ReviewModal({ review, onClose }: ReviewModalProps) {
         {/* 사용자 정보 */}
         <div className="flex items-center mt-2">
           <Image
-            // src={review.user.profileImage}
             src={"/logo.webp"}
             alt="User Profile"
             width={30}
