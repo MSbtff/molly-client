@@ -75,7 +75,7 @@ export default function FeaturedBrandSection() {
         {brands.slice(2).map((brand, index) => (
           <div key={index} className="flex flex-col items-center">
             <Image
-              src={!brand.brandThumbnailUrl ? "/images/noImage.svg" : `${imageUrl}${brand.brandThumbnailUrl}?w=300&h=350`}
+              src={!brand.brandThumbnailUrl ? "/images/noImage.svg" : `${imageUrl}${brand.brandThumbnailUrl}?w=300&h=350&r=true`}
               alt={brand.brandName}
               width={300}
               height={350}

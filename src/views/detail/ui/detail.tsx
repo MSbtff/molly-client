@@ -72,6 +72,7 @@ export default function ProductDetail({productId,initialReviews}: ProductDetailP
   const recommendedRef = useRef<HTMLDivElement | null>(null);
   const reviewRef = useRef<HTMLDivElement | null>(null);
 
+  //동적 임포트  useEffect
   useEffect(() => {
     console.log("동적 임포트 useEffect 시작");
     const observer = new IntersectionObserver(
@@ -94,7 +95,6 @@ export default function ProductDetail({productId,initialReviews}: ProductDetailP
         });
       },
       {
-        // rootMargin: "0px",
         threshold: 0.1, // 10% 보이면 로딩 시작
       }
     );
@@ -111,13 +111,12 @@ export default function ProductDetail({productId,initialReviews}: ProductDetailP
     };
   }, [product]);
 
-  //추천 상품 api 요청 <- 문제가, 
+  //추천 상품 api 요청
   const fetchRecommendedProducts = async () => {
-    console.log("추천 상품 api 함수 진입");
     if (!product?.brandName) return; // 브랜드 이름이 없으면 요청 안 함
-    console.log("해당 상품의 브랜드 이름",product?.brandName);
+
     try {
-      const paramsString = `${productApiUrl}?brand=${product.brandName}&offsetId=0&size=12`;
+      const paramsString = `${productApiUrl}?brandName=${product.brandName}&offsetId=0&size=12`;
       const response = await getProduct(paramsString);
 
       const data = await response;
@@ -193,7 +192,7 @@ export default function ProductDetail({productId,initialReviews}: ProductDetailP
       }
     });
   };
-
+  //장바구니 담을 시 알람
   const handleToastClose = () => {
     setShowToast(false);
   };
@@ -225,11 +224,10 @@ export default function ProductDetail({productId,initialReviews}: ProductDetailP
         };
       }
 
-      console.log("API 요청 성공:", data);
-      console.log("첫번째 상품의 url:", data.thumbnail.path);
+      console.log("상품 상세 API 요청 성공:", data);
       setProduct(data);
     } catch (error) {
-      console.error("API 요청 에러:", error);
+      console.error("상품 상세 API 요청 에러:", error);
     } finally {
       setIsLoading(false); // API 응답 완료 후 isLoading = false
     }
@@ -288,7 +286,7 @@ export default function ProductDetail({productId,initialReviews}: ProductDetailP
         <div className="w-1/2 px-8">
           <Image
             priority={true}
-            src={`${imageUrl}${product.thumbnail.path}?w=600&h=600`}
+            src={`${imageUrl}${product.thumbnail.path}?w=600&h=600&r=true`}
             alt={product?.productName || "상품 이미지"}
             width={600}
             height={600}
@@ -541,7 +539,7 @@ export default function ProductDetail({productId,initialReviews}: ProductDetailP
         <ReviewModal review={selectedReview} onClose={reviewCloseModal} />
       )}
 
-      {showToast && (  <CartToast productImage={`${imageUrl}${product.thumbnail.path}`} onClose={handleToastClose}/>
+      {showToast && (  <CartToast productImage={`${imageUrl}${product.thumbnail.path}?w=30&h=30&r=true`} onClose={handleToastClose}/>
       )}
     </>
   );

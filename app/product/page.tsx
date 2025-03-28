@@ -1,7 +1,7 @@
-import Product1 from '../../src/views/product/ui/Product1';
+import Product from '../../src/views/product/ui/Product';
 
 export default function Page() {
   return (
-    <Product1 />
+    <Product />
   );
 }

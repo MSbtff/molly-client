@@ -8,7 +8,9 @@ export default async function Footer() {
     // }>
 
     <footer
-      className="min-h-48 bg-white border-t border-gray-300 py-10 px-6 text-gray-700 mt-16 sticky"
+      // className="min-h-48 bg-white border-t border-gray-300 py-10 px-6 text-gray-700 mt-16 sticky"
+      className="min-h-48 bg-white border-t border-gray-300 py-10 px-6 text-gray-700 mt-16"
+
       style={{ contain: "layout paint style", contentVisibility: "auto" }}
     >
 
