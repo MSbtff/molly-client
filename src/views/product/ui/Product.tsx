@@ -89,9 +89,11 @@ export default function Product() {
     try {
       const params = new URLSearchParams(window.location.search);
       params.append("offsetId", offsetIdRef.current.toString());//최신값 직접 접근
+      console.log("요청 시 offsetId 값", offsetIdRef.current.toString());
       params.append("size", "48");
 
       const paramsString = `${productApiUrl}?${params.toString()}`;
+      console.log("요청 시 ParamsString", paramsString);
       const response = await getProduct(paramsString);
 
       if (!response) throw new Error("상품 목록 API 요청 실패");
@@ -137,6 +139,7 @@ export default function Product() {
   useEffect(() => {
     console.log("searchParams 변경 시 api 호출");
     setProductList(null);
+    offsetIdRef.current = 0;
     fetchProductList();
   }, [searchParams]); //window.local.search
 
