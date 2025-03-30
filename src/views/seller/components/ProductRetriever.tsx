@@ -123,13 +123,18 @@ export const ProductRetriever = ({ productRes }: SellerContainerProps) => {
                 <TableRow key={product.id}>
                   <TableCell className="font-medium">{product.id}</TableCell>
                   <TableCell>
-                    <Image
-                      src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${product.thumbnail?.path}`}
-                      alt={product.productName}
-                      width={50}
-                      height={50}
-                      unoptimized={true}
-                    />
+                    <div className="aspect-[1/1.2] relative w-[50px] h-[50px] flex-shrink-0">
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${product.thumbnail?.path}?w=50&h=50&r=false`}
+                        alt={product.productName}
+                        fill
+                        className="object-cover"
+                        unoptimized={true}
+                        fetchPriority="high"
+                        priority={true}
+                        sizes="50px"
+                      />
+                    </div>
                     {product.productName}
                   </TableCell>
                   <TableCell>{product.brandName}</TableCell>

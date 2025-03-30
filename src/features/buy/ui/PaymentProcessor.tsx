@@ -58,7 +58,7 @@ export default function PaymentProcessor() {
           localStorage.removeItem("order-storage");
           router.push("/buy/success");
         } else {
-          router.push(`/fail?message=${data.message}`);
+          // router.push(`/fail?message=${data.message}`);
           // setOrders([]);
           localStorage.removeItem("order-storage");
         }
