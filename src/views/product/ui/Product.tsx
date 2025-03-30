@@ -240,6 +240,7 @@ export default function Product() {
                     // height={300}
                     fill
                     loading="eager"
+                    fetchPriority="high"
                     priority={true}
                     className="h-full object-cover cursor-pointer"
                     onClick={() => handleProductClick(item.id)}
