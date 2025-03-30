@@ -41,16 +41,6 @@ const CartProductInfoComponent = (props: CartProductInfoProps) => {
       <div className="w-full py-2">
         <div className="flex gap-4">
           <div className=" w-16 h-16 flex-shrink-0 bg-gray-50">
-            {/* <Image
-              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${url}`}
-              alt={productName || "상품"}
-              width={64}
-              height={64}
-              fetchPriority="high"
-              priority={priority}
-              sizes="(max-width: 768px) 64px, 80px"
-              quality={80}
-            /> */}
             <ProductImage
               url={url}
               alt={productName || "상품"}

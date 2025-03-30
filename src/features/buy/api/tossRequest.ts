@@ -43,8 +43,9 @@ export default async function TossRequest(
         message: "인증 토큰이 없습니다. 다시 로그인해주세요.",
       };
     }
+
     const res = await fetch(
-      `${process.env.NEXT_SERVER_URL}/orders/${userOrderId}/payment`,
+      `${process.env.NEXT_SERVER_URL}/orders2/${userOrderId}/payment`,
       {
         method: "POST",
         headers: {
