@@ -1,141 +1,38 @@
 "use client";
-import { useState } from "react";
-import { Button } from "../../../shared/ui/Button";
-import { registerPost } from "../api/registerPost";
-
-export interface RegisterFormData {
-  nickname: string;
-  cellPhone: string;
-  sex: "MALE" | "FEMALE";
-  birth: string;
-  name: string;
-  email: string;
-  password: string;
-  isSeller: boolean;
-}
-
-interface CheckFormData {
-  all: boolean;
-  required: boolean;
-  optional: boolean;
-}
-
-type ErrorState = Partial<Record<keyof RegisterFormData, string>>;
-type RegisterFormValue = RegisterFormData[keyof RegisterFormData];
-
-const validateEmail = (email: string): boolean => {
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return re.test(email);
-};
-
-const validatePassword = (password: string): boolean => {
-  const re = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-  return re.test(password);
-};
-
-const terms = [
-  {
-    id: 1,
-    type: "필수",
-    content: "만 14세 이상입니다.",
-  },
-  {
-    id: 2,
-    type: "필수",
-    content: "이용약관 동의",
-  },
-  {
-    id: 3,
-    type: "필수",
-    content: "개인정보 수집 및 이용 동의",
-  },
-  {
-    id: 4,
-    type: "선택",
-    content: "마케팅 정보 수신 동의",
-  },
-] as const;
+import { Button } from "@/shared/ui/Button";
+import { useRegisterForm } from "../hook/useRegisterForm";
+import { useTermsAgreement } from "../hook/useTermsAgreement";
 
 export const RegisterContain = () => {
-  const [register, setRegister] = useState<RegisterFormData>({
-    nickname: "",
-    cellPhone: "",
-    sex: "MALE",
-    birth: "",
-    name: "",
-    email: "",
-    password: "",
-    isSeller: false,
-  });
+  const {
+    formData,
+    errors,
+    handleInputChange,
+    validateField,
+    submitRegistration,
+  } = useRegisterForm();
 
-  const [check, setCheck] = useState<CheckFormData>({
-    all: false,
-    required: false,
-    optional: false,
-  });
-
-  const [errors, setErrors] = useState<ErrorState>({});
-
-  const validateField = (
-    name: keyof RegisterFormData,
-    value: RegisterFormValue
-  ): void => {
-    let error = "";
-
-    switch (name) {
-      case "email":
-        if (!validateEmail(value as string)) error = "이메일 형식이 아닙니다";
-        break;
-      case "password":
-        if (!validatePassword(value as string))
-          error = "비밀번호는 영문, 숫자, 특수문자를 포함해야 합니다";
-        break;
-      case "name":
-        if ((value as string).length < 2) error = "이름을 입력해주세요";
-        break;
-      case "nickname":
-        if ((value as string).length < 1) error = "닉네임을 입력해주세요";
-        break;
-      case "cellPhone":
-        if ((value as string).length !== 11) error = "전화번호를 입력해주세요";
-        break;
-    }
-
-    setErrors((prev) => ({
-      ...prev,
-      [name]: error,
-    }));
-  };
-
-  const handleInputChange = (
-    name: keyof RegisterFormData,
-    value: RegisterFormValue
-  ): void => {
-    setRegister((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    validateField(name, value);
-  };
+  const {
+    checkState,
+    handleAllCheck,
+    handleRequiredCheck,
+    handleOptionalCheck,
+    isValidTerms,
+    terms,
+  } = useTermsAgreement();
 
   const handleSubmit = async (
     e: React.MouseEvent<HTMLButtonElement>
   ): Promise<void> => {
     e.preventDefault();
 
-    Object.keys(register).forEach((key) => {
-      validateField(
-        key as keyof RegisterFormData,
-        register[key as keyof RegisterFormData]
-      );
-    });
-
-    if (Object.values(errors).some((error) => error !== "")) {
+    if (!isValidTerms()) {
+      alert("필수 약관에 동의해주세요.");
       return;
     }
 
-    const res = await registerPost(register);
-    if (res) {
+    const success = await submitRegistration();
+    if (success) {
       alert("회원가입이 완료되었습니다.");
       window.location.href = "/";
     } else {
@@ -143,19 +40,12 @@ export const RegisterContain = () => {
     }
   };
 
-  const handleAllCheck = (checked: boolean): void => {
-    setCheck({
-      all: checked,
-      required: checked,
-      optional: checked,
-    });
-  };
-
   return (
     <div className="w-full h-full bg-gray2 flex justify-center items-center p-2">
       <div className="bg-white w-[480px] h-full flex flex-col rounded-[10px]">
         <h1 className="p-4 text-2xl mt-4 font-bold">회원가입</h1>
         <form className="p-4 flex flex-col gap-6 justify-between h-full">
+          {/* 이메일 필드 */}
           <label className="flex flex-col font-semibold">
             이메일주소
             <input
@@ -173,6 +63,7 @@ export const RegisterContain = () => {
             )}
           </label>
 
+          {/* 비밀번호 필드 */}
           <label className="flex flex-col font-semibold">
             비밀번호
             <input
@@ -190,6 +81,7 @@ export const RegisterContain = () => {
             )}
           </label>
 
+          {/* 나머지 필드들 (중복 코드 생략) */}
           <label className="flex flex-col font-semibold">
             이름
             <input
@@ -243,7 +135,7 @@ export const RegisterContain = () => {
               onChange={(e) =>
                 handleInputChange("sex", e.target.value as "MALE" | "FEMALE")
               }
-              value={register.sex}
+              value={formData.sex}
             >
               <option value="MALE">남성</option>
               <option value="FEMALE">여성</option>
@@ -267,23 +159,26 @@ export const RegisterContain = () => {
             )}
           </label>
 
+          {/* 판매자 체크박스 */}
           <div className="flex flex-col gap-4">
             <div className="mt-4 flex gap-2">
               <span className="font-medium">판매자 입니다.</span>
               <input
                 type="checkbox"
-                checked={register.isSeller}
+                checked={formData.isSeller}
                 onChange={(e) =>
                   handleInputChange("isSeller", e.target.checked)
                 }
               />
             </div>
+
+            {/* 약관 체크박스 */}
             <div className="flex flex-col pr-4 gap-2">
               <div className="flex gap-2">
                 <span>모두 동의합니다.</span>
                 <input
                   type="checkbox"
-                  checked={check.all}
+                  checked={checkState.all}
                   onChange={(e) => handleAllCheck(e.target.checked)}
                 />
               </div>
@@ -294,19 +189,15 @@ export const RegisterContain = () => {
                       type="checkbox"
                       className="w-5 h-5"
                       checked={
-                        term.type === "필수" ? check.required : check.optional
+                        term.type === "필수"
+                          ? checkState.required
+                          : checkState.optional
                       }
                       onChange={(e) => {
                         if (term.type === "필수") {
-                          setCheck((prev) => ({
-                            ...prev,
-                            required: e.target.checked,
-                          }));
+                          handleRequiredCheck(e.target.checked);
                         } else {
-                          setCheck((prev) => ({
-                            ...prev,
-                            optional: e.target.checked,
-                          }));
+                          handleOptionalCheck(e.target.checked);
                         }
                       }}
                     />
@@ -318,6 +209,8 @@ export const RegisterContain = () => {
               </div>
             </div>
           </div>
+
+          {/* 제출 버튼 */}
           <Button
             width="450px"
             height="52px"

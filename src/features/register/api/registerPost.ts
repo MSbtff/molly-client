@@ -1,6 +1,6 @@
 "use server";
 
-import { RegisterFormData } from "../ui/RegisterContain";
+import { RegisterFormData } from "../hook/useRegisterForm";
 
 export async function registerPost(register: RegisterFormData) {
   try {
