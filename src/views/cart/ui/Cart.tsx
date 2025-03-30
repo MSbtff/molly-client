@@ -221,7 +221,12 @@ const CartRoot = ({ children }: { children: React.ReactNode }) => {
           tryUpdateOption={tryUpdateOption}
         />
       )}
-      <div className={`w-screen flex flex-col justify-center`}>{children}</div>
+      <div
+        className={`w-screen flex flex-col justify-center`}
+        style={{ contain: "layout paint" }}
+      >
+        {children}
+      </div>
     </CartContext.Provider>
   );
 };
