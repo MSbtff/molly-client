@@ -75,6 +75,9 @@ export default function Navbar({ nickname }: { nickname: string }) {
           {/* 검색 */}
           <div
             className="flex items-center w-[150px] bg-[#F5F5F5] rounded-full px-3 py-1 border-none hover:bg-gray-200"
+            role="button"
+            tabIndex={0}
+            aria-label="검색 열기"
             onClick={() => {
               setIsSearchOpen(true);
             }}
@@ -124,9 +127,8 @@ export default function Navbar({ nickname }: { nickname: string }) {
             <button
               key={category}
               onClick={() => handleCategoryClick(category)}
-              className={`hover:text-gray-600 ${
-                selectedCategory === category ? "font-bold underline" : ""
-              }`}
+              className={`hover:text-gray-600 ${selectedCategory === category ? "font-bold underline" : ""
+                }`}
             >
               {category}
             </button>
@@ -137,6 +139,7 @@ export default function Navbar({ nickname }: { nickname: string }) {
             {/* 검색 (모바일에서는 아이콘만) */}
             <button
               className="p-2 rounded-[10px] hover:bg-gray-200 transition"
+              aria-label="검색 열기"
               onClick={() => {
                 setIsSearchOpen(true);
               }}
@@ -150,6 +153,7 @@ export default function Navbar({ nickname }: { nickname: string }) {
                 setProfileIsOpen(!isProfileOpen);
               }}
               className="p-2 rounded-[10px] hover:bg-gray-200 transition"
+              aria-label="사용자 페이지 열기"
             >
               {nickname ? (
                 <div className="rounded-full overflow-hidden text-sm truncate max-w-16">
@@ -166,6 +170,7 @@ export default function Navbar({ nickname }: { nickname: string }) {
             <Link
               href="/cart"
               className="p-2 rounded-[10px] hover:bg-gray-200 transition"
+              aria-label="장바구니 페이지로 이동"
             >
               <ShoppingCart size={20} />
             </Link>
