@@ -36,7 +36,12 @@ export function middleware(request: NextRequest) {
   const authToken = request.cookies.get("Authorization");
 
   if (!authToken) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    const returnUrl = encodeURIComponent(
+      request.nextUrl.pathname + request.nextUrl.search
+    );
+    return NextResponse.redirect(
+      new URL(`/login?returnUrl=${returnUrl}`, request.url)
+    );
   }
 
   // 응답에 토큰 추가 및 쿠키 재설정
