@@ -99,7 +99,7 @@ export default function PopularItemsSection() {
         {popularCategories.map((category, index) => (
           <button
             key={index}
-            className={`px-4 py-2 rounded-full border border-gray-600 ${ selectedCategory === category ? "bg-black text-white" : "bg-gray" }`}
+            className={`px-4 py-2 rounded-full border border-gray-600 ${selectedCategory === category ? "bg-black text-white" : "bg-gray"}`}
             onClick={() => handleCategoryChange(category)}
           > {" "} {category}
           </button>
@@ -118,21 +118,19 @@ export default function PopularItemsSection() {
           <SwiperSlide key={groupIndex}>
             <div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-2 sm:grid-cols-2 gap-2 mt-1">
               {group.map((product) => (
-                <div
-                  key={product.id}
-                  className="flex flex-col items-center mt-10"
-                >
-                  {imageUrl && (
-                    <Image
-                      src={!product.thumbnail.path ? "/images/noImage.svg" : `${imageUrl}${product.thumbnail.path}?w=200&h=250&r=true`}
-                      alt={product.brandName}
-                      width={200}
-                      height={250}
-                      className="w-full h-auto object-contain cursor-pointer"
-                      onClick={() => handleProductClick(product.id)}
-                      unoptimized={true}
-                    />
-                  )}
+                <div key={product.id}  className="flex flex-col items-center mt-10">
+                   <div className="aspect-[5/6] relative w-full">
+                  <Image
+                    src={!product.thumbnail.path ? "/images/noImage.svg" : `${imageUrl}${product.thumbnail.path}?w=200&h=250&r=true`}
+                    alt={product.brandName}
+                    // width={200}
+                    // height={250}
+                    fill
+                    className="w-full object-cover cursor-pointer"
+                    onClick={() => handleProductClick(product.id)}
+                    unoptimized={true}
+                  />
+                  </div>
                   <button
                     className="flex flex-col items-start w-full overflow-hidden"
                     onClick={() => handleProductClick(product.id)}
