@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Button } from "../../../shared/ui/Button";
 import Logo from "../../../../public/moollyLogo.svg";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Input {
   username: string;
@@ -21,6 +21,14 @@ export default function LoginPage({ handleLogin }: LoginPageProps) {
     username: "",
     password: "",
   });
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (ref.current) {
+        ref.current.focus();
+      }
+    }, 100);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,7 +70,6 @@ export default function LoginPage({ handleLogin }: LoginPageProps) {
             className="w-[435px] border-b-2 text-md"
             value={input.password}
             required={true}
-            ref={ref}
             onChange={(e) =>
               setInput((state) => ({ ...state, password: e.target.value }))
             }

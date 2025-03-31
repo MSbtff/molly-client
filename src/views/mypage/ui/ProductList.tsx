@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import {useState} from 'react';
-import {PurchasePageProps} from './PurchasePage';
+import Image from "next/image";
+import { useState } from "react";
+import { PurchasePageProps } from "./PurchasePage";
 
-type DeliveryStatus = 'READY' | 'SHIPPING' | 'COMPLETED';
+type DeliveryStatus = "READY" | "SHIPPING" | "COMPLETED";
 
-export const ProductList = ({orders}: PurchasePageProps) => {
+export const ProductList = ({ orders }: PurchasePageProps) => {
   const [selectedOrder, setSelectedOrder] = useState<number | null>(null);
 
   const statusMap = {
-    READY: '배송대기',
-    SHIPPING: '배송중',
-    COMPLETED: '배송완료',
+    READY: "배송대기",
+    SHIPPING: "배송중",
+    COMPLETED: "배송완료",
   };
 
   return (
@@ -30,7 +30,7 @@ export const ProductList = ({orders}: PurchasePageProps) => {
         const day = new Date(order.orderedAt);
         const orderDay = `${day.getMonth() + 1}월 ${day.getDate()}일`;
         const status =
-          statusMap[order.deliveryStatus as DeliveryStatus] || '결제완료';
+          statusMap[order.deliveryStatus as DeliveryStatus] || "결제완료";
 
         // orderDetails가 비어있는지 확인
         const hasOrderDetails =
@@ -40,7 +40,7 @@ export const ProductList = ({orders}: PurchasePageProps) => {
         const otherProducts =
           hasOrderDetails && order.orderDetails.length > 1
             ? ` 외 ${order.orderDetails.length - 1}개`
-            : '';
+            : "";
 
         return (
           <div key={order.tossOrderId}>
@@ -69,7 +69,7 @@ export const ProductList = ({orders}: PurchasePageProps) => {
               <div className="truncate">
                 {mainProduct
                   ? mainProduct.productName + otherProducts
-                  : '상품 정보 없음'}
+                  : "상품 정보 없음"}
               </div>
               <div>{order.orderDetails.length}개</div>
               <div>{orderDay}</div>
@@ -85,14 +85,16 @@ export const ProductList = ({orders}: PurchasePageProps) => {
                     className="flex justify-between items-center p-4 border-b"
                   >
                     <div className="flex items-center gap-4">
-                      <Image
-                        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${detail.image}?w=80&h=80&r=false`}
-                        alt={detail.productName}
-                        width={80}
-                        height={80}
-                        loading="eager"
-                        unoptimized={true}
-                      />
+                      <div className="w-full aspect-[1/1.2] relative">
+                        <Image
+                          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${detail.image}?w=80&h=80&r=false`}
+                          alt={detail.productName}
+                          fill
+                          loading="eager"
+                          className="object-cover rounded-md"
+                          unoptimized={true}
+                        />
+                      </div>
                       <div className="flex flex-col">
                         <strong>{detail.productName}</strong>
                         <p className="text-sm text-gray-600">
