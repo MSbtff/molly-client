@@ -7,6 +7,7 @@ export default async function getProduct(paramsString: string) {
       headers: {
         "Content-Type": "application/json",
       },
+      // cache:'no-store'
     });
     console.log("url 정보:", paramsString);
 
