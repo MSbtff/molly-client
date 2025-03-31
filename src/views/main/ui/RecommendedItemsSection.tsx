@@ -22,7 +22,7 @@ export default function RecommendedItemsSection() {
 
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]); // 상품 데이터
-  const [imageError, setImageError] = useState<{ [key: number]: boolean }>({}); //이미지 에러 처리
+  // const [imageError, setImageError] = useState<{ [key: number]: boolean }>({}); //이미지 에러 처리
 
   // API 요청
   const fetchProducts = async () => {
@@ -49,11 +49,11 @@ export default function RecommendedItemsSection() {
     }
   };
   // 이미지 로딩 실패 시 기본 이미지로 대체
-  const handleImageError = (id: number) => {
-    setImageError((prev) => ({ ...prev, [id]: true }));
-    console.log("이미지 에러 상태 업데이트:", imageError);
-  };
-  
+  // const handleImageError = (id: number) => {
+  //   setImageError((prev) => ({ ...prev, [id]: true }));
+  //   console.log("이미지 에러 상태 업데이트:", imageError);
+  // };
+
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -73,26 +73,34 @@ export default function RecommendedItemsSection() {
       <h3 className="text-xl font-semibold">랭킹</h3>
       {/* 상품 리스트 (2줄, 5개씩) */}
       <div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-2 sm:grid-cols-2  gap-2">
-
         {products.map((item, index) => (
-          <div key={item.id} className="relative flex flex-col items-center mt-10">
+          <div
+            key={item.id}
+            className="relative flex flex-col items-center mt-10"
+          >
             {/* 숫자 배지 */}
             <span className="absolute top-0 left-0 bg-black text-white text-sm px-2 py-1 w-[30px] text-center z-10">
               {index + 1}
             </span>
 
             <Image
-              src={imageError[item.id] ? "/images/noImage.svg" : `${imageUrl}${item.thumbnail.path}?w=200&h=250&r=true`}
+              src={`${imageUrl}${item.thumbnail.path}?w=200&h=250&r=true`}
               alt={item.brandName}
               width={250}
               height={250}
               className="w-full h-auto object-contain cursor-pointer"
               unoptimized={true}
-              onClick={()=>{handleProductClick(item.id);}}
+              onClick={() => {
+                handleProductClick(item.id);
+              }}
             />
 
-            <button className="flex flex-col items-start w-full overflow-hidden"
-                    onClick={()=>{handleProductClick(item.id);}}>
+            <button
+              className="flex flex-col items-start w-full overflow-hidden"
+              onClick={() => {
+                handleProductClick(item.id);
+              }}
+            >
               <span className="text-left mt-1 text-sm font-semibold">
                 {item.brandName}
               </span>
@@ -109,8 +117,12 @@ export default function RecommendedItemsSection() {
 
       {/* "다른 상품 더보기" 버튼 */}
       <div className="flex justify-center mt-8">
-        <button className="px-6 py-3 border border-gray-400 text-base font-medium hover:bg-gray-100 transition"
-          onClick={() => { handleOtherProductClick(); }}>
+        <button
+          className="px-6 py-3 border border-gray-400 text-base font-medium hover:bg-gray-100 transition"
+          onClick={() => {
+            handleOtherProductClick();
+          }}
+        >
           랭킹 바로가기
         </button>
       </div>
