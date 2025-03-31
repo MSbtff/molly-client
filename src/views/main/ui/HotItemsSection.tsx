@@ -95,18 +95,21 @@ export default function HotItemsSection() {
       <div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-2 sm:grid-cols-2  gap-2 mt-1">
         {products.slice(2).map((product) => (
           <div key={product.id} className="flex flex-col items-center mt-10">
+            <div className="aspect-[5/6] relative w-full">
             <Image
               src={
                 imageError[product.id] ? "/images/noImage.svg" : `${imageUrl}${product.thumbnail.path}?w=200&h=250&r=true`
               }
               alt={product.brandName}
-              width={200}
-              height={250}
-              className="w-full h-auto object-contain cursor-pointer"
+              // width={200}
+              // height={250}
+              fill
+              className="w-full object-cover cursor-pointer"
               onError={() => handleImageError(product.id)}
               onClick={() => handleProductClick(product.id)}
               unoptimized={true}
             />
+            </div>
             <button
               className="flex flex-col items-start w-full overflow-hidden"
               onClick={() => handleProductClick(product.id)}

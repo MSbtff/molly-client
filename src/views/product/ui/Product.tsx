@@ -39,6 +39,8 @@ export default function Product() {
 
   const triggerRef = useRef<HTMLDivElement | null>(null);
 
+  const isRankingPage = searchParams.has("rank"); //랭킹페이지 구별하기 위한 변수
+
   // 정렬 옵션 매핑 (한글 → API 값)
   const sortOptions: Record<string, string> = {
     조회순: "VIEW_COUNT",
@@ -85,7 +87,7 @@ export default function Product() {
   //상품 api
   const fetchProductList = async () => {
     setIsLoading(true);
-    
+
     try {
       const params = new URLSearchParams(window.location.search);
       params.append("offsetId", offsetIdRef.current.toString());//최신값 직접 접근
@@ -99,7 +101,7 @@ export default function Product() {
       if (!response) throw new Error("상품 목록 API 요청 실패");
 
       const data = await response;
-      console.log("상품 목록 api 응답 데이터:", data); 
+      console.log("상품 목록 api 응답 데이터:", data);
 
       const formattedData = data.data.map((item: Product) => ({
         id: item.id,
@@ -110,12 +112,21 @@ export default function Product() {
       }));
       console.log("매핑된 데이터:", formattedData);
 
-      // offsetId 갱신
-      const lastElementId = data.pageable?.lastElementId;
-      offsetIdRef.current = lastElementId;
-
       if (offsetIdRef.current === 0) {
-        setProductList(formattedData);
+        
+        console.log("offsetId가 0일 때 productList 데이터 저장 로직");
+        const uniqueProductsMap = new Map<number, Product>();
+        formattedData.forEach((item: Product) => {
+          if (!uniqueProductsMap.has(item.id)) {
+            uniqueProductsMap.set(item.id, item);
+          }
+        });
+
+        const uniqueProducts = Array.from(uniqueProductsMap.values());
+        console.log("중복된 productid 제거", uniqueProducts);
+
+        // setProductList(formattedData);
+        setProductList(uniqueProducts);
       } else {
         setProductList((prev) => [
           ...(prev ?? []),
@@ -125,6 +136,37 @@ export default function Product() {
           ),
         ]);
       }
+
+      // offsetId 갱신
+      const lastElementId = data.pageable?.lastElementId;
+      offsetIdRef.current = lastElementId;
+
+      console.log("offsetId 업데이트 이후",offsetIdRef.current);
+
+      // if (offsetIdRef.current === 0) {
+        
+      //   console.log("offsetId가 0일 때 productList 데이터 저장 로직");
+      //   const uniqueProductsMap = new Map<number, Product>();
+      //   formattedData.forEach((item: Product) => {
+      //     if (!uniqueProductsMap.has(item.id)) {
+      //       uniqueProductsMap.set(item.id, item);
+      //     }
+      //   });
+
+      //   const uniqueProducts = Array.from(uniqueProductsMap.values());
+      //   console.log("중복된 productid 제거", uniqueProducts);
+
+      //   // setProductList(formattedData);
+      //   setProductList(uniqueProducts);
+      // } else {
+      //   setProductList((prev) => [
+      //     ...(prev ?? []),
+      //     ...formattedData.filter(
+      //       (newItem: Product) =>
+      //         !(prev ?? []).some((item) => item.id === newItem.id)
+      //     ),
+      //   ]);
+      // }
 
       setIsLast(data.pageable.isLast);
       setIsLoading(false);
@@ -157,12 +199,12 @@ export default function Product() {
     },
       { threshold: 0.1 }
     );
-    
+
     const trgRef = triggerRef.current;
-    if(trgRef){
+    if (trgRef) {
       observer.observe(trgRef); //감시 대상 등록
     }
-  
+
     console.log("감시 대상 등록", trgRef);
 
     return () => {
@@ -174,53 +216,57 @@ export default function Product() {
     <>
       <div className="px-20 mt-10">
         {/* 카테고리 버튼 */}
-        <div className="flex gap-2 overflow-x-auto whitespace-nowrap scrollbar-hide">
-          {categories.map((category) => (
-            <button key={category}
-              className={"px-4 py-2 rounded-full text-sm bg-gray-100 hover:bg-gray-300 flex-shrink-0"}
-              onClick={() => setIsFilterOpen(true)}> {" "} {category}
-            </button>
-          ))}
-        </div>
-
-        {/* 품절, 정렬 */}
-        <div className="flex items-center justify-between mt-6">
-          <div className="flex itmes-center gap-2">
-            <label className="flex items-center gap-2 text-sm text-gray-700">
-              <input type="checkbox"
-                id="exclude-sold-out"
-                className="w-4 h-4"
-                onChange={handleExcludeSoldOutChange}
-                checked={!!searchParams.get("excludeSoldOut")} // URL의 파라미터 값에 따라 체크 여부 결정
-              />{" "}
-              품절 제외
-            </label>
-          </div>
-
-          {/* 정렬 : 큰 화면에서 정렬 버튼 전체 표시 */}
-          <div className="hidden md:flex gap-4">
-            {Object.keys(sortOptions).map((label) => (
-              <button
-                key={label}
-                className={`hover:underline hover:text-black ${selectedSort === label
-                  ? "text-black underline"
-                  : "text-gray-500"
-                  }`}
-                onClick={() => handleSortChange(label)}
-              >
-                {" "}
-                {label}
+        {!isRankingPage && (
+          <div className="flex gap-2 overflow-x-auto whitespace-nowrap scrollbar-hide">
+            {categories.map((category) => (
+              <button key={category}
+                className={"px-4 py-2 rounded-full text-sm bg-gray-100 hover:bg-gray-300 flex-shrink-0"}
+                onClick={() => setIsFilterOpen(true)}> {" "} {category}
               </button>
             ))}
           </div>
-          {/* 정렬 : 작은 화면에서는 단일 버튼으로 변경 */}
-          <button
-            className="md:hidden hover:underline"
-            onClick={() => setIsSortModalOpen(true)}
-          >
-            {selectedSort || "조회순"}
-          </button>
-        </div>
+        )}
+
+        {/* 품절, 정렬 */}
+        {!isRankingPage && (
+          <div className="flex items-center justify-between mt-6">
+            <div className="flex itmes-center gap-2">
+              <label className="flex items-center gap-2 text-sm text-gray-700">
+                <input type="checkbox"
+                  id="exclude-sold-out"
+                  className="w-4 h-4"
+                  onChange={handleExcludeSoldOutChange}
+                  checked={!!searchParams.get("excludeSoldOut")} // URL의 파라미터 값에 따라 체크 여부 결정
+                />{" "}
+                품절 제외
+              </label>
+            </div>
+
+            {/* 정렬 : 큰 화면에서 정렬 버튼 전체 표시 */}
+            <div className="hidden md:flex gap-4">
+              {Object.keys(sortOptions).map((label) => (
+                <button
+                  key={label}
+                  className={`hover:underline hover:text-black ${selectedSort === label
+                    ? "text-black underline"
+                    : "text-gray-500"
+                    }`}
+                  onClick={() => handleSortChange(label)}
+                >
+                  {" "}
+                  {label}
+                </button>
+              ))}
+            </div>
+            {/* 정렬 : 작은 화면에서는 단일 버튼으로 변경 */}
+            <button
+              className="md:hidden hover:underline"
+              onClick={() => setIsSortModalOpen(true)}
+            >
+              {selectedSort || "조회순"}
+            </button>
+          </div>
+        )}
 
         {/* 상품 리스트 */}
         <div className="grid grid-cols-1 lg:grid-cols-5 md:grid-cols-2 sm:grid-cols-2 gap-2 mt-1">
@@ -230,22 +276,26 @@ export default function Product() {
           ) : (
             <>
               {/* 기존 상품 UI : productList가 null이 아니고 비어있지 않을 때*/}
-              { productList && productList.map((item) => (
+              {productList && productList.map((item, index) => (
                 <div key={item.id} className="flex flex-col items-center mt-10">
                   <div className="aspect-square relative w-full">
-                  <Image
-                    src={item.url ? `${imageUrl}${item.url}?w=300&h=300&r=true` : "/images/noImage.svg"}
-                    alt={item.productName}
-                    // width={250}
-                    // height={300}
-                    fill
-                    loading="eager"
-                    fetchPriority="high"
-                    priority={true}
-                    className="h-full object-cover cursor-pointer"
-                    onClick={() => handleProductClick(item.id)}
-                    unoptimized={true}
-                  />
+                    {/* 랭킹 뱃지 */}
+                    {isRankingPage && (
+                      <div className="absolute top-0 left-0 bg-black text-white text-sm px-2 py-1 z-10 text-center">
+                        {index + 1}
+                      </div>
+                    )}
+                    <Image
+                      src={item.url ? `${imageUrl}${item.url}?w=300&h=300&r=true` : "/images/noImage.svg"}
+                      alt={item.productName}
+                      fill
+                      loading="eager"
+                      fetchPriority="high"
+                      priority={true}
+                      className="h-full object-cover cursor-pointer"
+                      onClick={() => handleProductClick(item.id)}
+                      unoptimized={true}
+                    />
                   </div>
                   <button className="flex flex-col items-start w-full overflow-hidden"
                     onClick={() => handleProductClick(item.id)}>

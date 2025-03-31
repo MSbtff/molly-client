@@ -23,13 +23,12 @@ export default function Navbar({ nickname }: { nickname: string }) {
 
     const params = new URLSearchParams();
     if (category === "랭킹") {
+      params.append("rank", "");
       params.set("orderBy", "PURCHASE_COUNT");
     } else {
       params.set("categories", category);
     }
     router.push(`/product?${params.toString()}`);
-    // const newSearchParams = `categories=${encodeURIComponent(category)}`;
-    // router.push(`/product?${newSearchParams}`);
   };
 
   useEffect(() => {
