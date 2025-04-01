@@ -5,6 +5,7 @@ import Footer from "@/widgets/Footer";
 import { headers } from "next/headers";
 import { cookies } from "next/headers";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Metadata } from "next";
 
 export interface UserInfoResponse {
   profileImage: string;
@@ -15,9 +16,34 @@ export interface UserInfoResponse {
   email: string;
 }
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Molly",
   description: "패션을 쉽게 Molly에서 만나보세요.",
+
+  openGraph: {
+    title: "Molly - 패션을 쉽게",
+    description: "패션을 쉽게 Molly에서 만나보세요.",
+    url: "https://mollymol.com",
+    siteName: "Molly",
+    images: [
+      {
+        url: "/optimize1.avif",
+        width: 800,
+        height: 600,
+        alt: "Molly Logo",
+      },
+    ],
+    locale: "ko_KR",
+    type: "website",
+  },
+
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/molly.svg", type: "image/svg+xml" },
+    ],
+    apple: "/mollyLogo.svg", // 180x180 크기 권장
+  },
 };
 
 export default async function RootLayout({
@@ -75,6 +101,15 @@ export default async function RootLayout({
   return (
     <html lang="ko">
       <head>
+        <link
+          rel="dns-prefetch"
+          href={process.env.NEXT_PUBLIC_IMAGE_URL || ""}
+        />
+        <link
+          rel="preconnect"
+          href={process.env.NEXT_PUBLIC_IMAGE_URL || ""}
+          crossOrigin="anonymous"
+        />
         <meta
           httpEquiv="Content-Security-Policy"
           content="upgrade-insecure-requests"

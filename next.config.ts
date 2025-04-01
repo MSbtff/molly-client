@@ -56,6 +56,20 @@ const nextConfig: NextConfig = {
     ],
   },
 
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Link",
+            value: `<${process.env.NEXT_PUBLIC_IMAGE_URL}>; rel=preconnect; crossorigin=anonymous`,
+          },
+        ],
+      },
+    ];
+  },
+
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
