@@ -113,19 +113,19 @@ export default function Product() {
       console.log("매핑된 데이터:", formattedData);
 
       if (offsetIdRef.current === 0) {
-        console.log("offsetId가 0일 때 productList 데이터 저장 로직");
-        const uniqueProductsMap = new Map<number, Product>();
-        formattedData.forEach((item: Product) => {
-          if (!uniqueProductsMap.has(item.id)) {
-            uniqueProductsMap.set(item.id, item);
-          }
-        });
+        // console.log("offsetId가 0일 때 productList 데이터 저장 로직");
+        // const uniqueProductsMap = new Map<number, Product>();
+        // formattedData.forEach((item: Product) => {
+        //   if (!uniqueProductsMap.has(item.id)) {
+        //     uniqueProductsMap.set(item.id, item);
+        //   }
+        // });
 
-        const uniqueProducts = Array.from(uniqueProductsMap.values());
-        console.log("중복된 productid 제거", uniqueProducts);
+        // const uniqueProducts = Array.from(uniqueProductsMap.values());
+        // console.log("중복된 productid 제거", uniqueProducts);
 
-        // setProductList(formattedData);
-        setProductList(uniqueProducts);
+        setProductList(formattedData);
+        // setProductList(uniqueProducts);
       } else {
         setProductList((prev) => [
           ...(prev ?? []),
