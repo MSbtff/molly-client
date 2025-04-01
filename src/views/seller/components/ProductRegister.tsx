@@ -20,7 +20,6 @@ const productType = z.object({
   productDescriptionImages: z.array(z.string()),
   items: z.array(
     z.object({
-      id: z.nullable(z.number()),
       color: z.string().min(1, "색상을 입력해주세요"),
       colorCode: z.string(),
       size: z.string(),
@@ -83,7 +82,6 @@ export const ProductRegister = () => {
     productDescriptionImages: [],
     items: [
       {
-        id: null,
         color: "",
         colorCode: "",
         size: "",
@@ -191,7 +189,6 @@ export const ProductRegister = () => {
           productDescriptionImages: [],
           items: [
             {
-              id: null,
               color: "",
               colorCode: "",
               size: "",
