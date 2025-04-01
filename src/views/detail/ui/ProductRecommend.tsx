@@ -20,13 +20,15 @@ export default function ProductRecommend({ products }: ProductRecommendProps) {
                 products.map((item) => (
                   <div key={item.id} className="w-[200px] flex flex-col items-center">
                     {/* 이미지 고정 크기 지정 */}
-                    <div className="w-[200px] h-[240px] flex items-center justify-center overflow-hidden">
+                    {/* <div className="w-[200px] h-[240px] flex items-center justify-center overflow-hidden"> */}
+                    <div className="aspect-[5/6] relative w-full">
                       <Image
                         src={`${imageUrl}${item.thumbnail.path}?w=200&h=240&r=true`}
                         alt={item.productName}
-                        width={200}
-                        height={240}
-                        className="object-contain"
+                        // width={200}
+                        // height={240}
+                        fill
+                        className="object-cover"
                         onClick={() => router.push(`/detail/${item.id}`)}
                         unoptimized={true}
                       />
