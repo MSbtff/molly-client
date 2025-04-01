@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     siteName: "Molly",
     images: [
       {
-        url: "https://mollymol.com/12.jpg",
+        url: "/12.jpg",
         width: 1200,
         height: 630,
         alt: "Molly Logo",
