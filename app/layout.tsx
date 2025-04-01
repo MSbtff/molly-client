@@ -31,6 +31,7 @@ export const metadata: Metadata = {
         width: 800,
         height: 600,
         alt: "Molly Logo",
+        type: "image/avif",
       },
     ],
     locale: "ko_KR",
