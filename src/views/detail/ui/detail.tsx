@@ -12,7 +12,7 @@ import { useEncryptStore } from "@/app/provider/EncryptStore";
 import { OrderItem } from "@/app/provider/OrderStore";
 import getProduct from "@/shared/api/getProduct";
 import CartToast from "./CartToast";
-import {DetailProduct} from "@/shared/types/product";
+import { DetailProduct } from "@/shared/types/product";
 //응답 데이터 매핑
 interface Review {
   reviewId: number;
@@ -30,13 +30,19 @@ interface ProductDetailProps {
   initialReviews: Review[]; // 서버에서 받은 초기 데이터
 }
 
-const ProductDescription = dynamic(() => import("@/views/detail/ui/ProductDescription"), {
-  ssr: false,
-  loading: () => <p className="mb=50"></p>,
-});
-const ProductRecommend = dynamic(() => import("@/views/detail/ui/ProductRecommend"), {
-  ssr: false,
-});
+const ProductDescription = dynamic(
+  () => import("@/views/detail/ui/ProductDescription"),
+  {
+    ssr: false,
+    loading: () => <p className="mb=50"></p>,
+  }
+);
+const ProductRecommend = dynamic(
+  () => import("@/views/detail/ui/ProductRecommend"),
+  {
+    ssr: false,
+  }
+);
 const ProductReview = dynamic(() => import("@/views/detail/ui/ProductReview"), {
   ssr: false,
 });
@@ -45,11 +51,16 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 const imageUrl = process.env.NEXT_PUBLIC_IMAGE_URL;
 const productApiUrl = `${baseUrl}/product`;
 
-export default function ProductDetail({productId,initialReviews}: ProductDetailProps) {
+export default function ProductDetail({
+  productId,
+  initialReviews,
+}: ProductDetailProps) {
   const router = useRouter();
   const [product, setProduct] = useState<DetailProduct | null>(null);
   const [isLoading, setIsLoading] = useState(true); // 초기값을 true로 설정 (초기 렌더링 시 무조건 로딩 UI 보장)
-  const [selectedOption, setSelectedOption] = useState<DetailProduct["items"][0] | null>(null);
+  const [selectedOption, setSelectedOption] = useState<
+    DetailProduct["items"][0] | null
+  >(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const [quantity, setQuantity] = useState(1);
@@ -61,9 +72,11 @@ export default function ProductDetail({productId,initialReviews}: ProductDetailP
   const [showToast, setShowToast] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  const [reviews] = useState<Review[]>(initialReviews || []);// 초기값을 initialReview로 설정(서버에서 받은 데이터)
-  const { setOrders } = useEncryptStore();//바로 구매 api 성공 응답을 주스탠드 스토어에 저장
-  const [recommendedProducts, setRecommendedProducts] = useState<DetailProduct[]>([]);//추천 상품 저장
+  const [reviews] = useState<Review[]>(initialReviews || []); // 초기값을 initialReview로 설정(서버에서 받은 데이터)
+  const { setOrders } = useEncryptStore(); //바로 구매 api 성공 응답을 주스탠드 스토어에 저장
+  const [recommendedProducts, setRecommendedProducts] = useState<
+    DetailProduct[]
+  >([]); //추천 상품 저장
 
   const [showDescription, setShowDescription] = useState(false);
   const [showRecommended, setShowRecommended] = useState(false);
@@ -98,10 +111,10 @@ export default function ProductDetail({productId,initialReviews}: ProductDetailP
         threshold: 0.1, // 10% 보이면 로딩 시작
       }
     );
-  
+
     if (descriptionRef.current) {
       observer.observe(descriptionRef.current);
-      console.log("descriptionRef 감지 대상 값:",descriptionRef.current);
+      console.log("descriptionRef 감지 대상 값:", descriptionRef.current);
     }
     if (recommendedRef.current) observer.observe(recommendedRef.current);
     if (reviewRef.current) observer.observe(reviewRef.current);
@@ -209,7 +222,6 @@ export default function ProductDetail({productId,initialReviews}: ProductDetailP
 
   //상품 상세 api 요청
   const fetchProduct = async () => {
-
     try {
       const paramsString = `${baseUrl}/product/${productId}`;
       const response = await getProduct(paramsString);
@@ -304,11 +316,17 @@ export default function ProductDetail({productId,initialReviews}: ProductDetailP
             {/* 아이콘 컨테이너 */}
             <div className="flex items-center gap-4">
               {/* 찜하기 아이콘 (하트) */}
-              <button aria-label="찜하기" className="text-gray-600 hover:text-red-600">
+              <button
+                aria-label="찜하기"
+                className="text-gray-600 hover:text-red-600"
+              >
                 <Heart className="w-6 h-6" fill="none" />
               </button>
               {/* 공유 아이콘 */}
-              <button aria-label="공유하기" className="text-gray-600 hover:text-gray-700">
+              <button
+                aria-label="공유하기"
+                className="text-gray-600 hover:text-gray-700"
+              >
                 <Share2 className="w-6 h-6" />
               </button>
             </div>
@@ -316,18 +334,9 @@ export default function ProductDetail({productId,initialReviews}: ProductDetailP
           <p className="text-gray-600">{product.productName}</p>
           {/* 가격 정보 */}
           <div className="text-lg">
-            <span className="text-gray-600 line-through block">
+            <span className="text-black font-bold text-2xl  block">
               {product.price.toLocaleString()}원
             </span>
-            <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-red-600 font-bold text-2xl">
-                {product.price.toLocaleString()}원
-              </span>
-              <span className="text-red-600 text-lg">30%</span>
-              {/* <span className="text-black-500 font-bold text-2xl">
-                {product.price}원
-              </span> */}
-            </div>
           </div>
           {/* 포인트 및 혜택 */}
           <div className="border-t pt-4 space-y-1">
@@ -449,23 +458,32 @@ export default function ProductDetail({productId,initialReviews}: ProductDetailP
 
       {/* 상세 섹션 */}
       <div ref={descriptionRef}>
-        {showDescription && ( <ProductDescription images={product.productDescriptionImages} 
-                              description={product.description}
-                              showDetails={showDetails}
-                              setShowDetails={setShowDetails}/>)}
+        {showDescription && (
+          <ProductDescription
+            images={product.productDescriptionImages}
+            description={product.description}
+            showDetails={showDetails}
+            setShowDetails={setShowDetails}
+          />
+        )}
       </div>
 
       {/* 추천 상품 섹션 */}
       <div ref={recommendedRef}>
-        {showRecommended && (<ProductRecommend products={recommendedProducts} />)}
+        {showRecommended && <ProductRecommend products={recommendedProducts} />}
       </div>
 
       {/* 리뷰 섹션 */}
       <div ref={reviewRef}>
-        {showReview && ( <ProductReview reviews={reviews} reviewExpanded={reviewExpanded}
-                         visibleReviews={visibleReviews} 
-                         toggleReviews={toggleReviews}
-                         reviewOpenModal={reviewOpenModal}/>)}
+        {showReview && (
+          <ProductReview
+            reviews={reviews}
+            reviewExpanded={reviewExpanded}
+            visibleReviews={visibleReviews}
+            toggleReviews={toggleReviews}
+            reviewOpenModal={reviewOpenModal}
+          />
+        )}
       </div>
 
       {/* 배송정보 및 교환/환불 안내 섹션 */}
@@ -539,9 +557,12 @@ export default function ProductDetail({productId,initialReviews}: ProductDetailP
         <ReviewModal review={selectedReview} onClose={reviewCloseModal} />
       )}
 
-      {showToast && (  <CartToast productImage={`${imageUrl}${product.thumbnail.path}?w=30&h=30&r=true`} onClose={handleToastClose}/>
+      {showToast && (
+        <CartToast
+          productImage={`${imageUrl}${product.thumbnail.path}?w=30&h=30&r=true`}
+          onClose={handleToastClose}
+        />
       )}
     </>
   );
 }
-
