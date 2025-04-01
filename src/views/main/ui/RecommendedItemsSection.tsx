@@ -27,7 +27,7 @@ export default function RecommendedItemsSection() {
   // API 요청
   const fetchProducts = async () => {
     try {
-      const paramsString = `${productApiUrl}?orderBy=PURCHASE_COUNT&offsetId=0&size=19`;
+      const paramsString = `${productApiUrl}?orderBy=VIEW_COUNT&offsetId=0&size=18`;
       const response = await getProduct(paramsString);
       const data = await response;
       console.log("랭킹 API 성공", data);
@@ -60,7 +60,7 @@ export default function RecommendedItemsSection() {
 
   //랭킹 바로가기
   const handleOtherProductClick = () => {
-    router.push(`/product?rank=&orderBy=PURCHASE_COUNT`);
+    router.push(`/product?rank=&orderBy=VIEW_COUNT`);
   };
 
   //특정 상품 클릭 시 url 변경
@@ -83,17 +83,20 @@ export default function RecommendedItemsSection() {
               {index + 1}
             </span>
 
+            <div className="aspect-[5/6] relative w-full">
             <Image
               src={`${imageUrl}${item.thumbnail.path}?w=200&h=250&r=true`}
               alt={item.brandName}
-              width={250}
-              height={250}
-              className="w-full h-auto object-contain cursor-pointer"
+              // width={250}
+              // height={250}
+              fill
+              className="w-full object-cover cursor-pointer"
               unoptimized={true}
               onClick={() => {
                 handleProductClick(item.id);
               }}
             />
+            </div>
 
             <button
               className="flex flex-col items-start w-full overflow-hidden"

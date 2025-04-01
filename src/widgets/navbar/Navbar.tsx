@@ -24,7 +24,7 @@ export default function Navbar({ nickname }: { nickname: string }) {
     const params = new URLSearchParams();
     if (category === "랭킹") {
       params.append("rank", "");
-      params.set("orderBy", "PURCHASE_COUNT");
+      params.set("orderBy", "VIEW_COUNT");
     } else {
       params.set("categories", category);
     }
