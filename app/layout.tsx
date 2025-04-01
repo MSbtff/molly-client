@@ -27,11 +27,11 @@ export const metadata: Metadata = {
     siteName: "Molly",
     images: [
       {
-        url: "/images/banner/optimize1.avif",
+        url: "/images/suggestion/추천12.jpg",
         width: 800,
         height: 600,
         alt: "Molly Logo",
-        type: "image/avif",
+        type: "image/jpeg",
       },
     ],
     locale: "ko_KR",
