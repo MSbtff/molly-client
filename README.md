@@ -35,7 +35,7 @@ https://drive.google.com/file/d/13Jez_t-zlCY9VO-dskcfzjaCsl4pcMxr/view
 ### 팀 역할
 
 ---
-
+https://file.notion.so/f/f/998faef7-0f0f-440d-8bfc-e0612091e624/bff4f771-7580-4581-a944-072fbd3d1fc2/image.png?table=block&id=1c9e2be2-c947-80ca-b4e5-fb51aab034d9&spaceId=998faef7-0f0f-440d-8bfc-e0612091e624&expirationTimestamp=1743638400000&signature=TyJC-YHjPPEHuouwcKqLaMVShJG9E_KUcbUnJh9trGI&downloadName=image.png
 ![image.png](attachment:bff4f771-7580-4581-a944-072fbd3d1fc2:image.png)
 
 ### **📚 기술 스택**
