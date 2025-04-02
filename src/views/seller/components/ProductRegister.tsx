@@ -196,7 +196,7 @@ export const ProductRegister = () => {
             },
           ],
         });
-        router.push("/seller");
+        router.push("/seller?tab=상품조회");
       }
     } catch (error) {
       console.error(error);
