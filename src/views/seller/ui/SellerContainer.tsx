@@ -36,6 +36,7 @@ export default function SellerContainer({ productRes }: SellerContainerProps) {
     // URL 쿼리 파라미터에서 탭 정보 가져오기
     const tabParam = searchParams.get("tab");
     if (tabParam) {
+      console.log(activeTab);
       setActiveTab(tabParam);
     }
   }, [searchParams]);
