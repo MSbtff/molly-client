@@ -1,4 +1,4 @@
-## **패션을 쉽게 MollyMol**
+**패션을 쉽게 MollyMol**
 
 ---
 
@@ -10,12 +10,16 @@ https://mollymol.com/
 
 https://drive.google.com/file/d/13Jez_t-zlCY9VO-dskcfzjaCsl4pcMxr/view
 
+<br>
+
 ### **🔖 프로젝트 개요**
 
 ---
 
 - 의류 E-commerce
 - Fashionista, anyone can be
+
+<br>
 
 ### **🎯 목표**
 
@@ -24,55 +28,76 @@ https://drive.google.com/file/d/13Jez_t-zlCY9VO-dskcfzjaCsl4pcMxr/view
 - 대용량 트래픽에서 준수한 속도를 유지
 - 다수의 트랜잭션에서 동시성 처리 및 일관성 보장
 
+<br>
+
+
 ### 팀 구성
 
 ---
 
-프론트엔드: 진종환, 최세은
+**프론트엔드**: 진종환, 최세은
 
-백엔드: 이지은, 김정환, 모창일, 이제윤
+**백엔드**: 이지은, 김정환, 모창일, 이제윤
 
-### 팀 역할
+<br>
+
+### 🧑‍🤝‍🧑 팀 역할
 
 ---
 
-![image.png]([attachment:bff4f771-7580-4581-a944-072fbd3d1fc2:image.png](https://file.notion.so/f/f/998faef7-0f0f-440d-8bfc-e0612091e624/bff4f771-7580-4581-a944-072fbd3d1fc2/image.png?table=block&id=1c9e2be2-c947-80ca-b4e5-fb51aab034d9&spaceId=998faef7-0f0f-440d-8bfc-e0612091e624&expirationTimestamp=1743638400000&signature=TyJC-YHjPPEHuouwcKqLaMVShJG9E_KUcbUnJh9trGI&downloadName=image.png))
+![image](https://github.com/user-attachments/assets/97fbfff2-ec90-4350-952c-7050890ae2a7)
+
+<br>
 
 ### **📚 기술 스택**
 
 ---
 
-![스크린샷 2025-04-02 오전 10.06.18.png](attachment:b5b49f46-a62a-4ae8-a0dd-204d188c8f25:스크린샷_2025-04-02_오전_10.06.18.png)
+![image](https://github.com/user-attachments/assets/e4fbaec5-dde3-48b4-9706-fba3f6fc3f36)
+
+<br>
 
 ### **🌏 서버 아키텍쳐**
 
 ---
 
-![스크린샷 2025-04-02 오전 10.05.36.png](attachment:de69a8b4-4db7-449f-ab30-b1ac5a7d7108:스크린샷_2025-04-02_오전_10.05.36.png)
+![image](https://github.com/user-attachments/assets/f4ff3c43-79f9-47f4-978a-34aab6a6b43f)
+
+<br>
 
 ### 🗺️ ERD
 
 ---
 
-![스크린샷 2025-04-02 오전 10.09.02.png](attachment:edb3f577-1e33-4ae2-9dff-6fb2316d84a1:스크린샷_2025-04-02_오전_10.09.02.png)
+![image](https://github.com/user-attachments/assets/d9ddd0fa-e303-4643-a723-b88219edd958)
+
+<br>
 
 ### 🗺️ 프론트엔드 아키텍처
 
 ---
 
-![image.png](attachment:ca121973-9ff9-44c4-9772-c4c3c2b523ab:image.png)
+![image](https://github.com/user-attachments/assets/eda493f6-6069-42db-8ce1-811e84083eb2)
+
+
+<br>
 
 ### 🎞️ 와이어프레임
 
 ---
 
-![image.png](attachment:9a10af81-89cb-4fbb-bff0-c1b35a3c6ec8:image.png)
+![image](https://github.com/user-attachments/assets/cca35677-13ef-4991-9f9b-ab23a22c79c7)
 
-### 👬 협업
+<br>
+
+### 🧑‍🤝‍🧑 협업
 
 ---
 
-![image.png](attachment:69977ba7-dcce-4b7d-ae38-06e3648488b1:image.png)
+![image](https://github.com/user-attachments/assets/c636d5a7-bbc6-4f2f-9f0b-239c29359a7e)
+
+
+<br>
 
 ### **🔗주요 기능**
 
