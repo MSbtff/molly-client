@@ -1,6 +1,5 @@
-**패션을 쉽게 MollyMol**
+## **패션을 쉽게 MollyMol**
 
----
 
 ### 🛒 서비스 바로가기
 
@@ -145,9 +144,108 @@ https://drive.google.com/file/d/13Jez_t-zlCY9VO-dskcfzjaCsl4pcMxr/view
 - 리뷰에 대한 좋아요 기능을 제공합니다.
 - 최근 7일간 누적 좋아요가 많은 인기순위 Top 12를 조회할 수 있습니다.
 
+<br>
+
+
+---
 
 
 
+
+
+## **개선사항**
+
+### 🏎️ Performance Tuning Log
+
+> **Goal**  
+> • Cart(LCP ≤ 0.5 s / CLS ≈ 0)  
+> • Buy(LCP ≤ 0.5 s / CLS ≈ 0)
+
+### 1. Cart Page
+
+| 단계 | 문제 | 조치 | 결과 |
+|------|------|------|------|
+| 1차  | LCP 2.3 s<br>CLS 0.50 | **`next/image`**<br>• `priority` 사용<br>• `fill` → `width/height` | **LCP 0.30 s** (-87 %)<br>CLS 0.01 |
+| 2차  | LCP 2.3 s (재발) | **구조 개선**<br>컴파운드 컴포넌트 도입 | **LCP 0.40 s** (-82 %) |
+| 3차  | CLS 0.30 | **Layout shift 방지**<br>• Skeleton + `contain: layout paint`<br>• Notice 영역 `min-height` 확보 | **CLS 0.00** |
+
+### 1차 문제상항
+- Lighthouse 측정시에 LCP 점수가 2.3초로 렌더링 및 CLS 0.5 측정 됨
+- performance 탭 성능 측정시에 이미지 렌더링 속도와 이미지로딩에 오랜시간 걸리는걸 확인
+
+#### 해결방안
+
+- LCP 개선을 위해 Next/Image priority 적용 및 fill 대신 width, height 재지정
+- CLS 개선을 위해 장바구니 페이지의 스켈레톤을 우선 적용 스켈레톤과 레이아웃 시프를 방지하는 `contain:'layout paint'` 적용
+- LCP 점수 2.3 에서 0.3으로 87% 감소, CLS 점수 0.5에서 0으로 감소
+<img width="305" height='305' alt="image" src="https://github.com/user-attachments/assets/8056b311-7a1d-4bfe-a726-8cf9281e8a4a" />
+<img width="305" height='305' alt="image" src="https://github.com/user-attachments/assets/60ee4ec6-cff3-4bad-a8e2-9027553dbbe6" />
+ 
+
+### 2차 문제상황
+- LCP가 다시 2.3초로 증가함
+
+#### 해결방안
+- Font 최적화, 동적임포트, 레이지 로딩 적용시 변화 없음
+- 구조적 문제가 있다고 생각 하여 컴포넌트 자체를 컴파운드 컴포넌트 구조로 변경
+- LCP 점수 2.3 에서 0.4으로 82% 감소
+
+<img width="305" height='305' alt="image" src="https://github.com/user-attachments/assets/9b2dba8a-f16b-4223-9148-a01f19e6a77b" />
+
+
+
+#### 3차 문제 상황 
+E2E 테스트 및 부하세트스시 CLS 점수가 0.3으로 높게 나옴
+notice 컴포넌트가 layoutshift가 일어나는걸 발견
+
+<img width="305" height='305' alt="image" src="https://github.com/user-attachments/assets/f1e7331e-d26c-44bc-a643-ab0d445fc300" />
+
+
+해결 방안
+1. 최소 높이 지정과 컨텐츠 영역 미리 확보하여 방지
+
+결과
+
+<img width="305" height='305' alt="image" src="https://github.com/user-attachments/assets/b7159d26-60f7-41ae-a223-2179e5d818c8" />
+<img width="305" height='305' alt="image" src="https://github.com/user-attachments/assets/8b5304a5-e35e-4c4b-8e46-8265f0920a10" />
+
+<br>
+
+### 2. Buy Page
+
+ 단계 | 핵심 이슈 | 조치 | 결과 |
+|------|-----------|------|------|
+| 1. **SOP 리다이렉트** | Toss 결제 완료 후 `successUrl` → **다른 도메인**으로 인식 → **주문 상태 초기화** | `zustand + persist`<br>• 주문정보를 **암호화-로컬스토리지**에 임시 보관<br>• 성공 콜백에서 서버 저장 후 상태 초기화 | 상태 손실 0건 |
+| 2-1. **LCP 2.3 s** | 대용량 이미지(상품 썸네일) 지연 로딩 | `next/image` 최적화<br>• `priority` & 정확한 `width/height` 지정 | **LCP 0.40 s** |
+| 2-2. **구조적 병목** | 무거운 UI 트리 재랜더 | **컴파운드 컴포넌트** 도입 + **커스텀 훅 분리** | **LCP 0.30 s** |
+| 3. **CLS ≈ 0** | 레이아웃 시프트 없음 (Cart와 동일 패턴 적용) | Skeleton + `contain:layout paint` + 고정 높이 | **CLS 0.00** |
+
+
+### 1차 문제상항
+토스결제 결제정보 입력 후 successUrl로 이동시
+sop 정책에 의해 다른 도메인으로 인식 -> 주문 상태 초기화
+
+#### 해결방안
+1.zustand의 persist 사용하여 로컬 스토리지에 데이터 암호화 하여 저장 후
+2.주문 정보를 서버 전송 후 초기화
+
+<img width="326" alt="image" src="https://github.com/user-attachments/assets/1d764733-2b42-4988-9eef-6994acf1d39b" />
+
+### 2차 문제상항
+- 장바구니 페이지에서 일어났던 문제와 마찬가지로 이미지 로딩 시간으로 인해 LCP 점수가 2.3초로 측정
+- Font 최적화, 동적임포트, 레이지 로딩등 변화 없음
+
+<img width="305" height='305' alt="image" src="https://github.com/user-attachments/assets/c9c34f30-68e8-4110-a962-79777001cc4f" />
+
+#### 해결방안 
+- 장바구니 페이지와 마찬가지로 구조적으로 컴파운드 컴포넌트 적용 및 커스텀 훅 분리
+
+결과
+
+<img width="305" height='305' alt="image" src="https://github.com/user-attachments/assets/d3b1def2-a440-400e-9d9c-a62ac63929bd" />
+
+
+<br>
 
 ## Git Convention
 
