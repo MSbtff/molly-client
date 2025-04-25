@@ -159,7 +159,7 @@ https://drive.google.com/file/d/13Jez_t-zlCY9VO-dskcfzjaCsl4pcMxr/view
 
 > **Goal**  
 > • Cart(LCP ≤ 0.5 s / CLS ≈ 0)  
-> • Buy(LCP ≤ 0.5 s / CLS ≈ 0)
+> • Buy(LCP ≤ 1.0 s / CLS ≈ 0)
 
 ### 1. Cart Page
 
@@ -216,8 +216,8 @@ notice 컴포넌트가 layoutshift가 일어나는걸 발견
  단계 | 핵심 이슈 | 조치 | 결과 |
 |------|-----------|------|------|
 | 1. **SOP 리다이렉트** | Toss 결제 완료 후 `successUrl` → **다른 도메인**으로 인식 → **주문 상태 초기화** | `zustand + persist`<br>• 주문정보를 **암호화-로컬스토리지**에 임시 보관<br>• 성공 콜백에서 서버 저장 후 상태 초기화 | 상태 손실 0건 |
-| 2-1. **LCP 2.3 s** | 대용량 이미지(상품 썸네일) 지연 로딩 | `next/image` 최적화<br>• `priority` & 정확한 `width/height` 지정 | **LCP 0.40 s** |
-| 2-2. **구조적 병목** | 무거운 UI 트리 재랜더 | **컴파운드 컴포넌트** 도입 + **커스텀 훅 분리** | **LCP 0.30 s** |
+| 2-1. **LCP 2.3 s** | 대용량 이미지(상품 썸네일) 지연 로딩 | `next/image` 최적화<br>• `priority` & 정확한 `width/height` 지정 | **LCP 2.3 s** |
+| 2-2. **구조적 병목** | 구조 개선 | **컴파운드 컴포넌트** 도입 + **커스텀 훅 분리** | **LCP 0.90 s** |
 | 3. **CLS ≈ 0** | 레이아웃 시프트 없음 (Cart와 동일 패턴 적용) | Skeleton + `contain:layout paint` + 고정 높이 | **CLS 0.00** |
 
 
