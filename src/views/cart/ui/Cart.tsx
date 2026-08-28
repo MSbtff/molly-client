@@ -52,7 +52,7 @@ const CartRoot = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [cartItems, setCartItems] = useState<CartItemType[]>([]);
   const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
-  const { orders, setOrders } = useEncryptStore();
+  const { setOrders } = useEncryptStore();
   const { setCartState } = useCartStore();
 
   const refreshCartItems = async () => {
@@ -183,7 +183,7 @@ const CartRoot = ({ children }: { children: React.ReactNode }) => {
       };
 
       // 상태 업데이트
-      setOrders([...orders, formattedOrder]);
+      setOrders([formattedOrder]);
       await refreshCartItems();
       setSelectedItems(new Set());
       router.push("/buy");

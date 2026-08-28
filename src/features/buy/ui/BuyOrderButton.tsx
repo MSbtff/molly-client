@@ -33,22 +33,38 @@ export const BuyOrderButton = ({
   currentOrder,
 }: BuyOrderButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handlePayment = async () => {
     try {
       setIsLoading(true);
-      if (!widgets || !currentOrder) {
-        return;
+      setErrorMessage("");
+
+      const firstProduct = currentOrder?.orderDetails?.[0];
+      if (
+        !widgets ||
+        !currentOrder ||
+        !firstProduct ||
+        !currentOrder.tossOrderId ||
+        !Number.isSafeInteger(currentOrder.totalAmount) ||
+        currentOrder.totalAmount <= 0
+      ) {
+        throw new Error("결제 요청에 필요한 주문 정보가 올바르지 않습니다.");
       }
 
       await widgets.requestPayment({
         orderId: currentOrder.tossOrderId,
-        orderName: currentOrder.orderDetails[0].productName,
+        orderName: firstProduct.productName,
         successUrl: window.location.origin + "/buy/success",
         failUrl: window.location.origin + "/fail",
       });
     } catch (error) {
       console.error("Payment request failed:", error);
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "결제창을 열지 못했습니다. 잠시 후 다시 시도해 주세요."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -103,6 +119,11 @@ export const BuyOrderButton = ({
             : `${formatPrice(totalAmount)}원 결제하기`}
         </button>
       </div>
+      {errorMessage && (
+        <p role="alert" className="mx-auto mt-3 max-w-7xl text-sm text-red-600">
+          {errorMessage}
+        </p>
+      )}
     </div>
   );
 };

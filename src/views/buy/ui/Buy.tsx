@@ -9,7 +9,6 @@ import { ChevronRight } from "lucide-react";
 import { TestCheckoutPage } from "@/features/buy/api/TestCheckoutPage";
 import { CartProductInfo } from "@/views/cart/ui/CartProductInfo";
 import { BuyAddress } from "./BuyAddress";
-import { PointUse } from "@/features/buy/ui/PointUse";
 import { BuySkeleton } from "./BuySkeleton";
 import buyCancel from "@/features/buy/api/buyCancel";
 import { Order as BuyAddressOrder } from "./BuyAddress";
@@ -66,11 +65,9 @@ interface BuyContextType {
   currentOrder: Order | null;
   widgets: TossPaymentsWidgets | null;
   ready: boolean;
-  usedPoint: number;
   isLoading: boolean;
   totalItems: number;
   totalPrice: number;
-  handlePointChange: (point: number) => void;
   contentHeight: number;
   handleWidgetsReady: ({
     widgets,
@@ -103,7 +100,6 @@ const BuyRoot = ({ children }: { children: React.ReactNode }) => {
 
   const [widgets, setWidgets] = useState<TossPaymentsWidgets | null>(null);
   const [ready, setReady] = useState<boolean>(false);
-  const [usedPoint, setUsedPoint] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   // useEffect 수정
@@ -177,21 +173,14 @@ const BuyRoot = ({ children }: { children: React.ReactNode }) => {
     setReady(ready);
   };
 
-  // 포인트 변경 핸들러
-  const handlePointChange = (point: number) => {
-    setUsedPoint(point);
-  };
-
   // 컨텍스트 값 설정 시 타입 단언 사용
   const value: BuyContextType = {
     currentOrder: currentOrder as Order,
     widgets,
     ready,
-    usedPoint,
     isLoading,
     totalItems,
     totalPrice,
-    handlePointChange,
     contentHeight,
     handleWidgetsReady, // 누락된 함수 추가
   };
@@ -281,22 +270,6 @@ const BuyProducts = () => {
   );
 };
 
-// Point 컴포넌트
-const BuyPointSection = () => {
-  const { currentOrder, totalPrice, handlePointChange, ready } = useBuy();
-
-  if (!currentOrder) return null;
-
-  return (
-    <PointUse
-      userPoint={currentOrder.userPoint || 0}
-      totalAmount={totalPrice}
-      onPointChange={handlePointChange}
-      ready={ready}
-    />
-  );
-};
-
 // Payment 컴포넌트 수정
 const BuyPaymentWidget = () => {
   const { handleWidgetsReady } = useBuy();
@@ -310,7 +283,9 @@ const BuyPaymentWidget = () => {
 
 // Summary 컴포넌트
 const BuySummary = () => {
-  const { totalPrice, currentOrder, usedPoint } = useBuy();
+  const { totalPrice, currentOrder } = useBuy();
+  const pointUsage = currentOrder?.pointUsage || 0;
+  const paymentAmount = currentOrder?.totalAmount || 0;
 
   return (
     <>
@@ -330,14 +305,16 @@ const BuySummary = () => {
         </div>
         <div className="w-full flex justify-between py-1">
           <div>포인트 사용</div>
-          <div>{usedPoint > 0 ? `-${usedPoint.toLocaleString()}원` : "-"}</div>
+          <div>
+            {pointUsage > 0 ? `-${pointUsage.toLocaleString()}원` : "-"}
+          </div>
         </div>
       </div>
 
       <div className="flex flex-col bg-gray-300 xs:w-[480px] sm:w-[700px] rounded-b-[10px] px-4 py-2">
         <div className="font-bold text-lg">총 결제금액</div>
         <div className="text-right font-bold">
-          {(totalPrice - (currentOrder?.pointUsage || 0)).toLocaleString()}원
+          {paymentAmount.toLocaleString()}원
         </div>
       </div>
     </>
@@ -366,7 +343,6 @@ const Buy = {
   Content: BuyContent,
   Address: BuyAddressSection,
   Products: BuyProducts,
-  Point: BuyPointSection,
   Payment: BuyPaymentWidget,
   Summary: BuySummary,
   OrderButton: BuyOrderSection,

@@ -5,6 +5,7 @@ import {AES, enc} from 'crypto-js';
 import {OrderImage, OrderItem} from './OrderStore';
 
 const secret = process.env.NEXT_PUBLIC_SECRET_KEY as string;
+export const ORDER_ENCRYPT_STORAGE_KEY = 'orderEncrypt-storage';
 
 interface EncryptedAddress {
   recipient: string;
@@ -165,9 +166,14 @@ export const useEncryptStore = create(
       },
     }),
     {
-      name: 'orderEncrypt-storage',
+      name: ORDER_ENCRYPT_STORAGE_KEY,
       storage: createJSONStorage(() => localStorage),
       // onRehydrateStorage에서 복호화하지 않음
     }
   )
 );
+
+export function clearEncryptedOrderStorage() {
+  useEncryptStore.setState({orders: [], orderImages: []});
+  useEncryptStore.persist.clearStorage();
+}

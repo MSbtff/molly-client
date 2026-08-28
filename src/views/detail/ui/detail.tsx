@@ -170,7 +170,7 @@ export default function ProductDetail({
           delivery: orderData.delivery || [],
         };
 
-        setOrders([orderData, formattedOrder]);
+        setOrders([formattedOrder]);
 
         // 구매 성공 후 /buy 페이지로 이동
         router.push("/buy");

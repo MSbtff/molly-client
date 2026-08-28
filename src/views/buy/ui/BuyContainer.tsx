@@ -10,7 +10,6 @@ export default function BuyContainer() {
       <Buy.Content>
         <Buy.Address />
         <Buy.Products />
-        <Buy.Point />
         <Buy.Payment />
         <Buy.Summary />
         <Buy.OrderButton />
