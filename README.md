@@ -161,7 +161,7 @@ https://drive.google.com/file/d/13Jez_t-zlCY9VO-dskcfzjaCsl4pcMxr/view
 > • Cart(LCP ≤ 0.5 s / CLS ≈ 0)  
 > • Buy(LCP ≤ 1.0 s / CLS ≈ 0)
 
-### 1. Cart Page
+### 1. 장바구니 페이지
 
 | 단계 | 문제 | 조치 | 결과 |
 |------|------|------|------|
@@ -211,7 +211,7 @@ notice 컴포넌트가 layoutshift가 일어나는걸 발견
 
 <br>
 
-### 2. Buy Page
+### 2. 결제 페이지
 
  단계 | 핵심 이슈 | 조치 | 결과 |
 |------|-----------|------|------|
